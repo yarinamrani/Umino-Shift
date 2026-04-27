@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -27,351 +28,384 @@
     --radius: 14px;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { background: var(--bg); color: var(--ink); font-family: 'Heebo', system-ui, sans-serif; min-height: 100vh; overscroll-behavior-y: contain; }
+- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { background: var(–bg); color: var(–ink); font-family: ‘Heebo’, system-ui, sans-serif; min-height: 100vh; overscroll-behavior-y: contain; }
   body { padding: 0 0 120px 0; }
 
-  /* Header */
-  .header {
-    background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
-    border-bottom: 1px solid var(--line);
-    padding: 18px 16px 14px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(10px);
-  }
-  .brand-row {
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-  }
-  .brand {
-    display: flex; align-items: baseline; gap: 8px;
-  }
-  .brand-jp {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 28px;
-    color: var(--accent);
-    line-height: 1;
-    font-weight: 700;
-  }
-  .brand-en {
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--ink-faint);
-    text-transform: uppercase;
-  }
-  .header h1 {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink-dim);
-    margin-top: 6px;
-    letter-spacing: 0.5px;
-  }
-  .status-pill {
-    font-size: 10px;
-    padding: 4px 8px;
-    border-radius: 999px;
-    background: rgba(74, 222, 128, 0.1);
-    color: var(--ok);
-    border: 1px solid rgba(74, 222, 128, 0.3);
-  }
-  .status-pill.offline { background: rgba(239, 68, 68, 0.1); color: var(--err); border-color: rgba(239, 68, 68, 0.3); }
+/* Header */
+.header {
+background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+border-bottom: 1px solid var(–line);
+padding: 18px 16px 14px;
+position: sticky;
+top: 0;
+z-index: 100;
+backdrop-filter: blur(10px);
+}
+.brand-row {
+display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.brand {
+display: flex; align-items: baseline; gap: 8px;
+}
+.brand-jp {
+font-family: ‘Noto Serif JP’, serif;
+font-size: 28px;
+color: var(–accent);
+line-height: 1;
+font-weight: 700;
+}
+.brand-en {
+font-size: 11px;
+letter-spacing: 4px;
+color: var(–ink-faint);
+text-transform: uppercase;
+}
+.header h1 {
+font-size: 13px;
+font-weight: 500;
+color: var(–ink-dim);
+margin-top: 6px;
+letter-spacing: 0.5px;
+}
+.status-pill {
+font-size: 10px;
+padding: 4px 8px;
+border-radius: 999px;
+background: rgba(74, 222, 128, 0.1);
+color: var(–ok);
+border: 1px solid rgba(74, 222, 128, 0.3);
+}
+.status-pill.offline { background: rgba(239, 68, 68, 0.1); color: var(–err); border-color: rgba(239, 68, 68, 0.3); }
 
-  /* Sections */
-  .section {
-    padding: 18px 16px 8px;
-  }
-  .section-title {
-    font-size: 11px;
-    letter-spacing: 2.5px;
-    color: var(--ink-faint);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    font-weight: 600;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-title::before {
-    content: ""; width: 16px; height: 1px; background: var(--accent);
-  }
-  .section-num {
-    display: inline-block;
-    color: var(--accent-2);
-    font-family: 'Noto Serif JP', serif;
-    font-size: 13px;
-    margin-left: 4px;
-  }
+/* Sections */
+.section {
+padding: 18px 16px 8px;
+}
+.section-title {
+font-size: 11px;
+letter-spacing: 2.5px;
+color: var(–ink-faint);
+text-transform: uppercase;
+margin-bottom: 12px;
+font-weight: 600;
+display: flex; align-items: center; gap: 8px;
+}
+.section-title::before {
+content: “”; width: 16px; height: 1px; background: var(–accent);
+}
+.section-num {
+display: inline-block;
+color: var(–accent-2);
+font-family: ‘Noto Serif JP’, serif;
+font-size: 13px;
+margin-left: 4px;
+}
 
-  /* Cards & inputs */
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 14px;
-    margin-bottom: 12px;
-  }
-  .field {
-    margin-bottom: 12px;
-  }
-  .field:last-child { margin-bottom: 0; }
-  label {
-    display: block;
-    font-size: 13px;
-    color: var(--ink);
-    margin-bottom: 6px;
-    font-weight: 500;
-  }
-  label .hint {
-    color: var(--ink-faint);
-    font-weight: 400;
-    font-size: 11px;
-    margin-right: 4px;
-  }
-  input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], textarea, select {
-    width: 100%;
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 12px 14px;
-    color: var(--ink);
-    font-family: inherit;
-    font-size: 16px; /* prevent iOS zoom */
-    outline: none;
-    transition: border-color 0.15s, background 0.15s;
-  }
-  input:focus, textarea:focus, select:focus {
-    border-color: var(--accent-2);
-    background: #1f1f1f;
-  }
-  textarea {
-    resize: vertical;
-    min-height: 90px;
-    line-height: 1.6;
-  }
-  textarea.large { min-height: 140px; }
+/* Cards & inputs */
+.card {
+background: var(–bg-card);
+border: 1px solid var(–line);
+border-radius: var(–radius);
+padding: 14px;
+margin-bottom: 12px;
+}
+.field {
+margin-bottom: 12px;
+}
+.field:last-child { margin-bottom: 0; }
+label {
+display: block;
+font-size: 13px;
+color: var(–ink);
+margin-bottom: 6px;
+font-weight: 500;
+}
+label .hint {
+color: var(–ink-faint);
+font-weight: 400;
+font-size: 11px;
+margin-right: 4px;
+}
+input[type=“text”], input[type=“number”], input[type=“date”], input[type=“datetime-local”], textarea, select {
+width: 100%;
+background: var(–bg-elev);
+border: 1px solid var(–line);
+border-radius: 10px;
+padding: 12px 14px;
+color: var(–ink);
+font-family: inherit;
+font-size: 16px; /* prevent iOS zoom */
+outline: none;
+transition: border-color 0.15s, background 0.15s;
+}
+input:focus, textarea:focus, select:focus {
+border-color: var(–accent-2);
+background: #1f1f1f;
+}
+textarea {
+resize: vertical;
+min-height: 90px;
+line-height: 1.6;
+}
+textarea.large { min-height: 140px; }
 
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
-  /* Numeric prefix */
-  .num-input {
-    position: relative;
-  }
-  .num-input .suffix {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--ink-faint);
-    font-size: 13px;
-    pointer-events: none;
-  }
-  .num-input input { padding-left: 40px; }
+/* Numeric prefix */
+.num-input {
+position: relative;
+}
+.num-input .suffix {
+position: absolute;
+left: 14px;
+top: 50%;
+transform: translateY(-50%);
+color: var(–ink-faint);
+font-size: 13px;
+pointer-events: none;
+}
+.num-input input { padding-left: 40px; }
 
-  /* Floor/kitchen sub-cards */
-  .sub-card {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 10px;
-  }
-  .sub-card-title {
-    font-size: 12px;
-    color: var(--accent-2);
-    margin-bottom: 8px;
-    font-weight: 600;
-    letter-spacing: 1px;
-  }
+/* Floor/kitchen sub-cards */
+.sub-card {
+background: rgba(255,255,255,0.02);
+border: 1px solid var(–line);
+border-radius: 10px;
+padding: 12px;
+margin-bottom: 10px;
+}
+.sub-card-title {
+font-size: 12px;
+color: var(–accent-2);
+margin-bottom: 8px;
+font-weight: 600;
+letter-spacing: 1px;
+}
 
-  /* Returned dishes */
-  .dish-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 8px;
-    margin-bottom: 8px;
-    align-items: center;
-  }
-  .dish-row input { font-size: 14px; padding: 10px; }
-  .icon-btn {
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: var(--err);
-    width: 38px; height: 38px;
-    border-radius: 8px;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .add-row-btn {
-    width: 100%;
-    background: transparent;
-    border: 1px dashed var(--line-strong);
-    color: var(--ink-dim);
-    padding: 10px;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 13px;
-    cursor: pointer;
-    margin-top: 4px;
-  }
-  .add-row-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
+/* Returned dishes */
+.dish-row {
+display: grid;
+grid-template-columns: 1fr 1fr auto;
+gap: 8px;
+margin-bottom: 8px;
+align-items: center;
+}
+.dish-row input { font-size: 14px; padding: 10px; }
+.icon-btn {
+background: rgba(239, 68, 68, 0.1);
+border: 1px solid rgba(239, 68, 68, 0.3);
+color: var(–err);
+width: 38px; height: 38px;
+border-radius: 8px;
+font-size: 18px;
+cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+}
+.add-row-btn {
+width: 100%;
+background: transparent;
+border: 1px dashed var(–line-strong);
+color: var(–ink-dim);
+padding: 10px;
+border-radius: 8px;
+font-family: inherit;
+font-size: 13px;
+cursor: pointer;
+margin-top: 4px;
+}
+.add-row-btn:hover { border-color: var(–accent-2); color: var(–accent-2); }
 
-  /* Submit bar */
-  .submit-bar {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(180deg, rgba(10,10,10,0.6) 0%, var(--bg) 50%);
-    padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
-    z-index: 200;
-    backdrop-filter: blur(12px);
-    border-top: 1px solid var(--line);
-  }
-  .btn-primary {
-    width: 100%;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    padding: 16px;
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    transition: transform 0.1s, background 0.2s;
-    box-shadow: 0 4px 20px rgba(192, 57, 43, 0.3);
-  }
-  .btn-primary:active { transform: scale(0.98); }
-  .btn-primary:disabled {
-    background: var(--line-strong); box-shadow: none; cursor: not-allowed;
-  }
-  .btn-secondary {
-    background: transparent;
-    color: var(--ink-dim);
-    border: 1px solid var(--line-strong);
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 13px;
-    cursor: pointer;
-    margin-left: 8px;
-  }
+/* Submit bar */
+.submit-bar {
+position: fixed;
+bottom: 0; left: 0; right: 0;
+background: linear-gradient(180deg, rgba(10,10,10,0.6) 0%, var(–bg) 50%);
+padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+z-index: 200;
+backdrop-filter: blur(12px);
+border-top: 1px solid var(–line);
+}
+.btn-primary {
+width: 100%;
+background: var(–accent);
+color: #fff;
+border: none;
+padding: 16px;
+border-radius: 12px;
+font-family: inherit;
+font-size: 16px;
+font-weight: 700;
+cursor: pointer;
+letter-spacing: 0.5px;
+transition: transform 0.1s, background 0.2s;
+box-shadow: 0 4px 20px rgba(192, 57, 43, 0.3);
+}
+.btn-primary:active { transform: scale(0.98); }
+.btn-primary:disabled {
+background: var(–line-strong); box-shadow: none; cursor: not-allowed;
+}
+.btn-secondary {
+background: transparent;
+color: var(–ink-dim);
+border: 1px solid var(–line-strong);
+padding: 10px 16px;
+border-radius: 10px;
+font-family: inherit;
+font-size: 13px;
+cursor: pointer;
+margin-left: 8px;
+}
 
-  /* Toast */
-  .toast {
-    position: fixed;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-20px);
-    background: var(--bg-card);
-    border: 1px solid var(--line-strong);
-    color: var(--ink);
-    padding: 12px 18px;
-    border-radius: 12px;
-    z-index: 1000;
-    opacity: 0;
-    transition: all 0.3s;
-    pointer-events: none;
-    max-width: 90vw;
-    text-align: center;
-    font-size: 14px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-  }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-  .toast.ok { border-color: var(--ok); color: var(--ok); }
-  .toast.err { border-color: var(--err); color: var(--err); }
+/* Toast */
+.toast {
+position: fixed;
+top: 80px;
+left: 50%;
+transform: translateX(-50%) translateY(-20px);
+background: var(–bg-card);
+border: 1px solid var(–line-strong);
+color: var(–ink);
+padding: 12px 18px;
+border-radius: 12px;
+z-index: 1000;
+opacity: 0;
+transition: all 0.3s;
+pointer-events: none;
+max-width: 90vw;
+text-align: center;
+font-size: 14px;
+box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+.toast.show {
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+}
+.toast.ok { border-color: var(–ok); color: var(–ok); }
+.toast.err { border-color: var(–err); color: var(–err); }
 
-  /* Modal for review */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(4px);
-    z-index: 500;
-    display: none;
-    align-items: flex-end;
-  }
-  .modal-overlay.show { display: flex; }
-  .modal {
-    background: var(--bg-elev);
-    width: 100%;
-    max-height: 80vh;
-    border-radius: 20px 20px 0 0;
-    border-top: 1px solid var(--line-strong);
-    padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
-    overflow-y: auto;
-  }
-  .modal h2 {
-    font-size: 18px;
-    margin-bottom: 16px;
-    color: var(--accent-2);
-    text-align: center;
-  }
-  .preview-text {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 14px;
-    font-size: 13px;
-    line-height: 1.7;
-    white-space: pre-wrap;
-    color: var(--ink-dim);
-    max-height: 50vh;
-    overflow-y: auto;
-    margin-bottom: 14px;
-    font-family: 'Heebo', monospace;
-  }
-  .modal-actions { display: flex; gap: 10px; }
-  .modal-actions .btn-primary { flex: 1; }
-  .modal-actions .btn-secondary { flex: 0 0 auto; }
+/* Modal for review */
+.modal-overlay {
+position: fixed; inset: 0;
+background: rgba(0,0,0,0.7);
+backdrop-filter: blur(4px);
+z-index: 500;
+display: none;
+align-items: flex-end;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+background: var(–bg-elev);
+width: 100%;
+max-height: 80vh;
+border-radius: 20px 20px 0 0;
+border-top: 1px solid var(–line-strong);
+padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+overflow-y: auto;
+}
+.modal h2 {
+font-size: 18px;
+margin-bottom: 16px;
+color: var(–accent-2);
+text-align: center;
+}
+.preview-text {
+background: var(–bg-card);
+border: 1px solid var(–line);
+border-radius: 10px;
+padding: 14px;
+font-size: 13px;
+line-height: 1.7;
+white-space: pre-wrap;
+color: var(–ink-dim);
+max-height: 50vh;
+overflow-y: auto;
+margin-bottom: 14px;
+font-family: ‘Heebo’, monospace;
+}
+.modal-actions { display: flex; gap: 10px; }
+.modal-actions .btn-primary { flex: 1; }
+.modal-actions .btn-secondary { flex: 0 0 auto; }
 
-  /* Last submission indicator */
-  .last-saved {
-    text-align: center;
-    color: var(--ink-faint);
-    font-size: 11px;
-    padding: 8px;
-    margin-top: 4px;
-  }
+/* Last submission indicator */
+.last-saved {
+text-align: center;
+color: var(–ink-faint);
+font-size: 11px;
+padding: 8px;
+margin-top: 4px;
+}
 
-  /* Watermark */
-  .watermark {
-    position: fixed;
-    bottom: 90px;
-    left: 16px;
-    font-family: 'Noto Serif JP', serif;
-    font-size: 60px;
-    color: rgba(192, 57, 43, 0.04);
-    pointer-events: none;
-    z-index: 0;
-    line-height: 1;
-  }
+/* Share grid (success modal) */
+.share-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin-bottom: 4px;
+}
+.share-btn {
+background: var(–bg-card);
+border: 1px solid var(–line-strong);
+border-radius: 12px;
+padding: 18px 12px;
+color: var(–ink);
+font-family: inherit;
+font-size: 14px;
+font-weight: 600;
+cursor: pointer;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 6px;
+transition: transform 0.1s, border-color 0.2s;
+}
+.share-btn:active { transform: scale(0.97); }
+.share-btn .share-icon { font-size: 26px; line-height: 1; }
+.share-btn .share-label { font-size: 13px; }
+.share-btn.whatsapp { border-color: #25D366; color: #25D366; }
+.share-btn.share { border-color: var(–accent-2); color: var(–accent-2); }
+.share-btn.copy { border-color: var(–ink-dim); }
+.share-btn.copy.copied { border-color: var(–ok); color: var(–ok); background: rgba(74, 222, 128, 0.08); }
+.share-btn.email { border-color: #60a5fa; color: #60a5fa; }
 
-  /* Settings link */
-  .settings-link {
-    color: var(--ink-faint);
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    padding: 4px 8px;
-  }
+/* Watermark */
+.watermark {
+position: fixed;
+bottom: 90px;
+left: 16px;
+font-family: ‘Noto Serif JP’, serif;
+font-size: 60px;
+color: rgba(192, 57, 43, 0.04);
+pointer-events: none;
+z-index: 0;
+line-height: 1;
+}
 
-  /* Settings modal specific */
-  .settings-field { margin-bottom: 14px; }
-  .settings-field code {
-    display: block;
-    background: var(--bg-card);
-    padding: 8px;
-    border-radius: 6px;
-    font-size: 11px;
-    color: var(--accent-2);
-    margin-top: 4px;
-    word-break: break-all;
-  }
+/* Settings link */
+.settings-link {
+color: var(–ink-faint);
+background: none;
+border: none;
+font-size: 18px;
+cursor: pointer;
+padding: 4px 8px;
+}
+
+/* Settings modal specific */
+.settings-field { margin-bottom: 14px; }
+.settings-field code {
+display: block;
+background: var(–bg-card);
+padding: 8px;
+border-radius: 6px;
+font-size: 11px;
+color: var(–accent-2);
+margin-top: 4px;
+word-break: break-all;
+}
 </style>
+
 </head>
 <body>
 
@@ -387,6 +421,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
       <span class="status-pill" id="connStatus">מחובר</span>
+      <a href="dashboard.html" class="settings-link" title="היסטוריה" style="text-decoration:none;">📊</a>
       <button class="settings-link" onclick="openSettings()">⚙</button>
     </div>
   </div>
@@ -396,6 +431,7 @@
 <form id="shiftForm" autocomplete="off">
 
   <!-- 1. Date & basic data -->
+
   <div class="section">
     <div class="section-title">פרטי משמרת <span class="section-num">一</span></div>
     <div class="card">
@@ -421,6 +457,7 @@
   </div>
 
   <!-- 2. Numbers -->
+
   <div class="section">
     <div class="section-title">מספרים <span class="section-num">二</span></div>
     <div class="card">
@@ -462,6 +499,7 @@
   </div>
 
   <!-- 3. Shift narrative -->
+
   <div class="section">
     <div class="section-title">מהלך המשמרת <span class="section-num">三</span></div>
     <div class="card">
@@ -470,19 +508,23 @@
         <textarea name="shift_narrative" class="large" placeholder="עומס, אווירה, אירועים מיוחדים, חירומים..."></textarea>
       </div>
 
-      <div class="sub-card">
-        <div class="sub-card-title">פלור</div>
-        <textarea name="floor_notes" placeholder="בר, אקספו, קופה, מפנות, הוסטסיות — שמות וביצועים"></textarea>
-      </div>
+```
+  <div class="sub-card">
+    <div class="sub-card-title">פלור</div>
+    <textarea name="floor_notes" placeholder="בר, אקספו, קופה, מפנות, הוסטסיות — שמות וביצועים"></textarea>
+  </div>
 
-      <div class="sub-card">
-        <div class="sub-card-title">מטבח</div>
-        <textarea name="kitchen_notes" placeholder="פס חם, סושי, בקר, פסים — שמות וביצועים"></textarea>
-      </div>
-    </div>
+  <div class="sub-card">
+    <div class="sub-card-title">מטבח</div>
+    <textarea name="kitchen_notes" placeholder="פס חם, סושי, בקר, פסים — שמות וביצועים"></textarea>
+  </div>
+</div>
+```
+
   </div>
 
   <!-- 4. Returned dishes -->
+
   <div class="section">
     <div class="section-title">מנות חוזרות <span class="section-num">四</span></div>
     <div class="card">
@@ -496,6 +538,7 @@
   </div>
 
   <!-- 5. Exceptions -->
+
   <div class="section">
     <div class="section-title">חריגים <span class="section-num">五</span></div>
     <div class="card">
@@ -515,6 +558,7 @@
   </div>
 
   <!-- 6. Tech issues -->
+
   <div class="section">
     <div class="section-title">תקלות טכניות <span class="section-num">六</span></div>
     <div class="card">
@@ -525,6 +569,7 @@
   </div>
 
   <!-- 7. Shortages -->
+
   <div class="section">
     <div class="section-title">חוסרים <span class="section-num">七</span></div>
     <div class="card">
@@ -536,6 +581,7 @@
   </div>
 
   <!-- 8. Credits -->
+
   <div class="section">
     <div class="section-title">זיכויים <span class="section-num">八</span></div>
     <div class="card">
@@ -547,6 +593,7 @@
   </div>
 
   <!-- 9. Daily tasks -->
+
   <div class="section">
     <div class="section-title">משימות יומיות שבוצעו <span class="section-num">九</span></div>
     <div class="card">
@@ -565,21 +612,65 @@
 </div>
 
 <!-- Review modal -->
+
 <div class="modal-overlay" id="reviewModal">
   <div class="modal">
-    <h2>סיכום לפני שליחה</h2>
+    <h2>תצוגה מקדימה</h2>
     <div class="preview-text" id="previewText"></div>
     <div class="modal-actions">
       <button type="button" class="btn-secondary" onclick="closeReview()">ערוך</button>
-      <button type="button" class="btn-primary" id="confirmSubmitBtn" onclick="doSubmit()">שלח</button>
+      <button type="button" class="btn-primary" id="confirmSubmitBtn" onclick="doSubmit()">שמור ושלח</button>
     </div>
   </div>
 </div>
 
+<!-- Success modal — shown after DB save -->
+
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div style="text-align:center;padding:8px 0 16px;">
+      <div style="font-size:48px;margin-bottom:8px;">✓</div>
+      <h2 style="color:var(--ok);">הדוח נשמר בהצלחה</h2>
+      <p style="color:var(--ink-dim);font-size:13px;margin-top:4px;">
+        הדוח נשמר במערכת ויגיע אל המנהלים.<br>
+        כעת בחרי איך לשתף את הסיכום:
+      </p>
+    </div>
+
+```
+<div class="share-grid">
+  <button type="button" class="share-btn whatsapp" onclick="shareWhatsApp()">
+    <span class="share-icon">💬</span>
+    <span class="share-label">WhatsApp</span>
+  </button>
+  <button type="button" class="share-btn share" onclick="shareNative()">
+    <span class="share-icon">📤</span>
+    <span class="share-label">שתף...</span>
+  </button>
+  <button type="button" class="share-btn copy" onclick="copyReport()">
+    <span class="share-icon">📋</span>
+    <span class="share-label" id="copyLabel">העתק</span>
+  </button>
+  <button type="button" class="share-btn email" onclick="shareEmail()">
+    <span class="share-icon">✉️</span>
+    <span class="share-label">מייל</span>
+  </button>
+</div>
+
+<button type="button" class="btn-secondary" style="width:100%;margin-top:14px;" onclick="closeSuccess()">סיום</button>
+```
+
+  </div>
+</div>
+
 <!-- Settings modal -->
+
 <div class="modal-overlay" id="settingsModal">
   <div class="modal">
     <h2>הגדרות</h2>
+    <p style="color:var(--ink-faint);font-size:12px;text-align:center;margin-bottom:14px;">
+      הגדרות אלה כבר מוגדרות מראש. אין צורך לשנות.
+    </p>
     <div class="settings-field">
       <label>Supabase URL</label>
       <input type="text" id="cfg_supabase_url" placeholder="https://xxx.supabase.co">
@@ -587,14 +678,6 @@
     <div class="settings-field">
       <label>Supabase anon key</label>
       <input type="text" id="cfg_supabase_key" placeholder="eyJ...">
-    </div>
-    <div class="settings-field">
-      <label>WhatsApp server URL <span class="hint">(אופציונלי)</span></label>
-      <input type="text" id="cfg_whatsapp_url" placeholder="http://10.0.0.90:3000">
-    </div>
-    <div class="settings-field">
-      <label>WhatsApp group ID <span class="hint">(אומינו)</span></label>
-      <input type="text" id="cfg_whatsapp_group" placeholder="120363xxx@g.us">
     </div>
     <div class="modal-actions">
       <button type="button" class="btn-secondary" onclick="closeSettings()">סגור</button>
@@ -612,9 +695,7 @@ const DRAFT_KEY = 'umino-shift-draft-v1';
 
 const DEFAULT_CFG = {
   supabase_url: 'https://vzeowbriddhvhpishmhn.supabase.co',
-  supabase_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6ZW93YnJpZGRodmhwaXNobWhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MTAyNDUsImV4cCI6MjA4ODM4NjI0NX0.PWvjFj41l0wB9awroZdDsMhCJ0yJXdrf1-k-45n0Rwk',
-  whatsapp_url: '',
-  whatsapp_group: ''
+  supabase_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6ZW93YnJpZGRodmhwaXNobWhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MTAyNDUsImV4cCI6MjA4ODM4NjI0NX0.PWvjFj41l0wB9awroZdDsMhCJ0yJXdrf1-k-45n0Rwk'
 };
 
 function getCfg() {
@@ -797,16 +878,15 @@ async function doSubmit() {
   const cfg = getCfg();
   const btn = document.getElementById('confirmSubmitBtn');
   btn.disabled = true;
-  btn.textContent = 'שולח...';
+  btn.textContent = 'שומר...';
 
   const data = getFormData();
   const textReport = buildTextReport(data);
 
   let supabaseOk = false;
-  let whatsappOk = false;
   const errors = [];
 
-  // 1. Save to Supabase
+  // Save to Supabase
   if (cfg.supabase_url && cfg.supabase_key) {
     try {
       const res = await fetch(`${cfg.supabase_url}/rest/v1/shift_reports`, {
@@ -828,43 +908,115 @@ async function doSubmit() {
     errors.push('חסרה הגדרת Supabase');
   }
 
-  // 2. Send WhatsApp
-  if (cfg.whatsapp_url && cfg.whatsapp_group) {
-    try {
-      const res = await fetch(`${cfg.whatsapp_url}/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ to: cfg.whatsapp_group, message: textReport })
-      });
-      if (res.ok) whatsappOk = true;
-      else errors.push(`WA: ${res.status}`);
-    } catch (e) {
-      errors.push(`WA: ${e.message}`);
-    }
-  }
-
   btn.disabled = false;
-  btn.textContent = 'שלח';
+  btn.textContent = 'שמור ושלח';
 
   if (supabaseOk) {
     clearDraft();
+    // Store the text for share/copy actions
+    window._lastReportText = textReport;
+    // Close review and show success
     closeReview();
-    document.getElementById('shiftForm').reset();
-    document.getElementById('dishesContainer').innerHTML = '';
-    // Reset date to today
-    const today = new Date();
-    document.getElementById('shift_date').value = today.toISOString().split('T')[0];
-    let msg = '✓ נשמר ל-DB';
-    if (whatsappOk) msg += ' + נשלח ל-WhatsApp';
-    else if (cfg.whatsapp_url) msg += ' (WhatsApp נכשל)';
-    showToast(msg, 'ok');
+    document.getElementById('successModal').classList.add('show');
   } else {
     // Save offline queue
     const queue = JSON.parse(localStorage.getItem('umino-queue') || '[]');
     queue.push(data);
     localStorage.setItem('umino-queue', JSON.stringify(queue));
-    showToast('נכשל — נשמר לתור לשליחה מאוחרת. שגיאה: ' + errors.join('; '), 'err');
+    showToast('לא הצלחנו לשמור — הדוח נשמר במכשיר וננסה שוב מאוחר יותר. ' + errors.join('; '), 'err');
   }
+}
+
+// ============== SHARE ACTIONS ==============
+function getReportText() {
+  return window._lastReportText || '';
+}
+
+function shareWhatsApp() {
+  const text = getReportText();
+  if (!text) return;
+  // Open WhatsApp picker with pre-filled text — user picks recipient/group
+  const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+}
+
+async function shareNative() {
+  const text = getReportText();
+  if (!text) return;
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'סיכום משמרת — אומינו',
+        text: text
+      });
+    } catch (e) {
+      // User cancelled or error — fall back to copy
+      if (e.name !== 'AbortError') {
+        copyReport();
+      }
+    }
+  } else {
+    showToast('המכשיר לא תומך בשיתוף — מעתיק ללוח', '');
+    copyReport();
+  }
+}
+
+async function copyReport() {
+  const text = getReportText();
+  if (!text) return;
+  let success = false;
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      success = true;
+    }
+  } catch (e) { /* fallback below */ }
+  if (!success) {
+    // Legacy fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { success = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  if (success) {
+    const btn = document.querySelector('.share-btn.copy');
+    const lbl = document.getElementById('copyLabel');
+    if (btn && lbl) {
+      btn.classList.add('copied');
+      lbl.textContent = '✓ הועתק';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        lbl.textContent = 'העתק';
+      }, 2500);
+    }
+  } else {
+    showToast('ההעתקה נכשלה', 'err');
+  }
+}
+
+function shareEmail() {
+  const text = getReportText();
+  if (!text) return;
+  const data = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}');
+  const dateStr = data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '';
+  const subject = `סיכום משמרת אומינו — ${dateStr}`;
+  // mailto: pre-fills the manager's email; she can change recipient
+  const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+  window.location.href = url;
+}
+
+function closeSuccess() {
+  document.getElementById('successModal').classList.remove('show');
+  // Reset form for next shift
+  document.getElementById('shiftForm').reset();
+  document.getElementById('dishesContainer').innerHTML = '';
+  const today = new Date();
+  document.getElementById('shift_date').value = today.toISOString().split('T')[0];
+  window._lastReportText = null;
 }
 
 // ============== UTIL ==============
@@ -895,8 +1047,6 @@ function openSettings() {
   const cfg = getCfg();
   document.getElementById('cfg_supabase_url').value = cfg.supabase_url;
   document.getElementById('cfg_supabase_key').value = cfg.supabase_key;
-  document.getElementById('cfg_whatsapp_url').value = cfg.whatsapp_url;
-  document.getElementById('cfg_whatsapp_group').value = cfg.whatsapp_group;
   document.getElementById('settingsModal').classList.add('show');
 }
 function closeSettings() {
@@ -905,9 +1055,7 @@ function closeSettings() {
 function saveSettings() {
   const cfg = {
     supabase_url: document.getElementById('cfg_supabase_url').value.trim().replace(/\/$/, ''),
-    supabase_key: document.getElementById('cfg_supabase_key').value.trim(),
-    whatsapp_url: document.getElementById('cfg_whatsapp_url').value.trim().replace(/\/$/, ''),
-    whatsapp_group: document.getElementById('cfg_whatsapp_group').value.trim()
+    supabase_key: document.getElementById('cfg_supabase_key').value.trim()
   };
   setCfg(cfg);
   closeSettings();
