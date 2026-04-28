@@ -492,8 +492,10 @@ function showDetail(idx) {
     ${sec('📉 חוסרים', r.shortages)}
     ${sec('🎁 זיכויים', r.credits)}
     ${sec('✅ משימות יומיות', r.daily_tasks)}
-    <div style="text-align:center;margin-top:14px;">
-      <button onclick="copyDetail(${idx})" style="background:var(--bg-card);border:1px solid var(--line-strong);color:var(--ink);padding:10px 18px;border-radius:10px;font-family:inherit;cursor:pointer;">📋 העתק דוח מלא</button>
+    <div style="text-align:center;margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+      <button onclick="copyDetail(${idx})" style="background:var(--bg-card);border:1px solid var(--line-strong);color:var(--ink);padding:10px 18px;border-radius:10px;font-family:inherit;cursor:pointer;">📋 העתק</button>
+      <button onclick="editReport(${idx})" style="background:var(--bg-card);border:1px solid var(--accent-2);color:var(--accent-2);padding:10px 18px;border-radius:10px;font-family:inherit;cursor:pointer;">✏️ ערוך</button>
+      <button onclick="deleteReport(${idx})" style="background:rgba(239,68,68,0.1);border:1px solid var(--err);color:var(--err);padding:10px 18px;border-radius:10px;font-family:inherit;cursor:pointer;">🗑️ מחק</button>
     </div>
   `;
   document.getElementById('detailModal').classList.add('show');
@@ -510,6 +512,43 @@ async function copyDetail(idx) {
     alert('הועתק ✓');
   } catch (e) {
     alert('ההעתקה נכשלה');
+  }
+}
+
+// ============== EDIT ==============
+function editReport(idx) {
+  const r = window._renderedReports[idx];
+  if (!r) return;
+  // Pass the full record to index.html via sessionStorage
+  sessionStorage.setItem('umino-edit-record', JSON.stringify(r));
+  window.location.href = 'index.html?edit=' + r.id;
+}
+
+// ============== DELETE ==============
+async function deleteReport(idx) {
+  const r = window._renderedReports[idx];
+  if (!r) return;
+
+  const dateStr = new Date(r.shift_date).toLocaleDateString('he-IL');
+  const confirmText = `למחוק את הדוח של ${r.manager_name || '—'} מתאריך ${dateStr}?\n\nפעולה זו אינה ניתנת לביטול.`;
+  if (!confirm(confirmText)) return;
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/shift_reports?id=eq.${r.id}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    // Remove from local list and re-render
+    allReports = allReports.filter(x => x.id !== r.id);
+    closeDetail();
+    render();
+  } catch (e) {
+    alert('המחיקה נכשלה: ' + e.message);
   }
 }
 
