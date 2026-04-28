@@ -1,1 +1,556 @@
-.
+<!DOCTYPE html>
+
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0a0a">
+<title>היסטוריית סיכומי משמרת — אומינו</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-elev: #161616;
+    --bg-card: #1c1c1c;
+    --line: #2a2a2a;
+    --line-strong: #3a3a3a;
+    --ink: #f4f1ea;
+    --ink-dim: #a8a8a8;
+    --ink-faint: #6a6a6a;
+    --accent: #c0392b;
+    --accent-2: #d4af37;
+    --ok: #4ade80;
+    --warn: #fbbf24;
+    --err: #ef4444;
+    --info: #60a5fa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { background: var(--bg); color: var(--ink); font-family: 'Heebo', system-ui, sans-serif; min-height: 100vh; }
+  body { padding-bottom: 40px; }
+
+.header {
+background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+border-bottom: 1px solid var(–line);
+padding: 18px 16px 14px;
+position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
+}
+.brand-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.brand { display: flex; align-items: baseline; gap: 8px; }
+.brand-jp { font-family: ‘Noto Serif JP’, serif; font-size: 28px; color: var(–accent); line-height: 1; font-weight: 700; }
+.brand-en { font-size: 11px; letter-spacing: 4px; color: var(–ink-faint); text-transform: uppercase; }
+.header h1 { font-size: 13px; font-weight: 500; color: var(–ink-dim); margin-top: 6px; letter-spacing: 0.5px; }
+.back-link { color: var(–ink-faint); text-decoration: none; font-size: 18px; padding: 4px 8px; }
+
+.container { padding: 16px; max-width: 900px; margin: 0 auto; }
+
+/* Filters */
+.filter-bar {
+display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;
+}
+.filter-bar select, .filter-bar input {
+background: var(–bg-card); border: 1px solid var(–line);
+color: var(–ink); padding: 8px 12px; border-radius: 8px;
+font-family: inherit; font-size: 13px;
+}
+.filter-bar input { flex: 1; min-width: 120px; }
+
+/* KPI strip */
+.kpi-grid {
+display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+margin-bottom: 18px;
+}
+@media (min-width: 600px) { .kpi-grid { grid-template-columns: repeat(4, 1fr); } }
+.kpi {
+background: var(–bg-card); border: 1px solid var(–line); border-radius: 12px;
+padding: 14px; text-align: center;
+}
+.kpi-label { font-size: 11px; color: var(–ink-faint); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.kpi-value { font-size: 22px; font-weight: 700; color: var(–accent-2); }
+.kpi-sub { font-size: 11px; color: var(–ink-dim); margin-top: 2px; }
+
+/* Chart cards */
+.chart-card {
+background: var(–bg-card); border: 1px solid var(–line); border-radius: 12px;
+padding: 14px; margin-bottom: 14px;
+}
+.chart-title {
+font-size: 12px; letter-spacing: 2px; color: var(–ink-faint);
+text-transform: uppercase; margin-bottom: 10px; font-weight: 600;
+}
+.chart-wrap { position: relative; height: 220px; }
+
+/* Reports list */
+.report-card {
+background: var(–bg-card); border: 1px solid var(–line); border-radius: 12px;
+padding: 14px; margin-bottom: 10px; cursor: pointer;
+transition: border-color 0.15s;
+}
+.report-card:hover { border-color: var(–accent-2); }
+.report-head {
+display: flex; justify-content: space-between; align-items: center; gap: 8px;
+margin-bottom: 8px;
+}
+.report-date { font-size: 14px; font-weight: 600; }
+.report-shift {
+font-size: 11px; padding: 3px 8px; border-radius: 999px;
+background: rgba(212, 175, 55, 0.1); color: var(–accent-2);
+border: 1px solid rgba(212, 175, 55, 0.3);
+}
+.report-shift.morning { background: rgba(96, 165, 250, 0.1); color: var(–info); border-color: rgba(96, 165, 250, 0.3); }
+.report-meta { font-size: 12px; color: var(–ink-dim); display: flex; gap: 12px; flex-wrap: wrap; }
+.report-meta strong { color: var(–ink); }
+.report-flags { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+.flag {
+font-size: 10px; padding: 2px 6px; border-radius: 4px;
+background: rgba(255,255,255,0.05); color: var(–ink-dim);
+}
+.flag.warn { background: rgba(251, 191, 36, 0.1); color: var(–warn); }
+.flag.err { background: rgba(239, 68, 68, 0.1); color: var(–err); }
+.flag.ok { background: rgba(74, 222, 128, 0.1); color: var(–ok); }
+
+/* Detail modal */
+.modal-overlay {
+position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+backdrop-filter: blur(4px); z-index: 500;
+display: none; align-items: flex-end;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+background: var(–bg-elev); width: 100%; max-height: 90vh;
+border-radius: 20px 20px 0 0; border-top: 1px solid var(–line-strong);
+padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+overflow-y: auto;
+}
+.modal-close {
+position: absolute; top: 12px; left: 16px;
+background: none; border: none; color: var(–ink-dim);
+font-size: 24px; cursor: pointer; padding: 4px 8px;
+}
+.detail-section { margin-bottom: 16px; }
+.detail-section h3 {
+font-size: 11px; letter-spacing: 2px; color: var(–accent-2);
+text-transform: uppercase; margin-bottom: 6px;
+}
+.detail-section p, .detail-section li {
+font-size: 14px; color: var(–ink); line-height: 1.6; white-space: pre-wrap;
+}
+.detail-section ul { padding-right: 20px; }
+
+/* Section heading */
+.section-title {
+font-size: 11px; letter-spacing: 2.5px; color: var(–ink-faint);
+text-transform: uppercase; margin: 24px 0 12px; font-weight: 600;
+display: flex; align-items: center; gap: 8px;
+}
+.section-title::before { content: “”; width: 16px; height: 1px; background: var(–accent); }
+
+.empty {
+text-align: center; padding: 40px 20px; color: var(–ink-faint); font-size: 14px;
+}
+.loading { text-align: center; padding: 40px; color: var(–ink-faint); }
+
+/* PIN gate */
+.pin-gate {
+position: fixed; inset: 0; background: var(–bg);
+display: flex; align-items: center; justify-content: center; z-index: 9999;
+flex-direction: column; gap: 16px;
+}
+.pin-gate.hidden { display: none; }
+.pin-gate h2 { color: var(–accent-2); font-family: ‘Noto Serif JP’, serif; }
+.pin-input {
+background: var(–bg-card); border: 1px solid var(–line);
+color: var(–ink); padding: 14px 20px; border-radius: 12px;
+font-family: inherit; font-size: 24px; text-align: center;
+width: 200px; letter-spacing: 8px;
+}
+.pin-error { color: var(–err); font-size: 12px; height: 16px; }
+</style>
+
+</head>
+<body>
+
+<!-- PIN gate -->
+
+<div class="pin-gate" id="pinGate">
+  <div style="font-family:'Noto Serif JP',serif;font-size:48px;color:var(--accent);">海味</div>
+  <h2>היסטוריית משמרות</h2>
+  <p style="color:var(--ink-faint);font-size:13px;">הזן קוד גישה</p>
+  <input type="password" inputmode="numeric" maxlength="4" class="pin-input" id="pinInput" autofocus>
+  <div class="pin-error" id="pinError"></div>
+</div>
+
+<header class="header">
+  <div class="brand-row">
+    <div class="brand">
+      <span class="brand-jp">海味</span>
+      <div><div class="brand-en">UMINO</div></div>
+    </div>
+    <a href="index.html" class="back-link">←</a>
+  </div>
+  <h1>היסטוריית סיכומי משמרת</h1>
+</header>
+
+<div class="container" id="mainContent" style="display:none;">
+
+  <div class="filter-bar">
+    <select id="rangeFilter">
+      <option value="7">7 ימים</option>
+      <option value="30" selected>30 יום</option>
+      <option value="90">90 יום</option>
+      <option value="all">הכל</option>
+    </select>
+    <select id="managerFilter">
+      <option value="">כל האחמ"שים</option>
+    </select>
+    <input type="text" id="searchFilter" placeholder="🔍 חיפוש בטקסט הדוחות...">
+  </div>
+
+  <div id="content"><div class="loading">טוען...</div></div>
+</div>
+
+<!-- Detail modal -->
+
+<div class="modal-overlay" id="detailModal">
+  <div class="modal" style="position:relative;">
+    <button class="modal-close" onclick="closeDetail()">×</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://vzeowbriddhvhpishmhn.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6ZW93YnJpZGRodmhwaXNobWhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MTAyNDUsImV4cCI6MjA4ODM4NjI0NX0.PWvjFj41l0wB9awroZdDsMhCJ0yJXdrf1-k-45n0Rwk';
+const PIN = '1234'; // Manager-only PIN
+const PIN_KEY = 'umino-dash-auth';
+
+let allReports = [];
+let charts = {};
+
+// ============== PIN GATE ==============
+function checkAuth() {
+  const auth = sessionStorage.getItem(PIN_KEY);
+  if (auth === 'ok') {
+    document.getElementById('pinGate').classList.add('hidden');
+    document.getElementById('mainContent').style.display = '';
+    loadReports();
+    return true;
+  }
+  return false;
+}
+
+document.getElementById('pinInput').addEventListener('input', (e) => {
+  const v = e.target.value;
+  const errEl = document.getElementById('pinError');
+  errEl.textContent = '';
+  if (v.length === 4) {
+    if (v === PIN) {
+      sessionStorage.setItem(PIN_KEY, 'ok');
+      checkAuth();
+    } else {
+      errEl.textContent = 'קוד שגוי';
+      e.target.value = '';
+    }
+  }
+});
+
+// ============== LOAD ==============
+async function loadReports() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/shift_reports?select=*&order=shift_date.desc,submitted_at.desc&limit=500`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    allReports = await res.json();
+    populateManagerFilter();
+    render();
+  } catch (e) {
+    document.getElementById('content').innerHTML = `<div class="empty">שגיאה בטעינה: ${e.message}</div>`;
+  }
+}
+
+function populateManagerFilter() {
+  const sel = document.getElementById('managerFilter');
+  const managers = [...new Set(allReports.map(r => r.manager_name).filter(Boolean))].sort();
+  managers.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m; opt.textContent = m;
+    sel.appendChild(opt);
+  });
+}
+
+// ============== FILTERING ==============
+function getFiltered() {
+  const range = document.getElementById('rangeFilter').value;
+  const mgr = document.getElementById('managerFilter').value;
+  const search = document.getElementById('searchFilter').value.trim().toLowerCase();
+
+  let cutoff = null;
+  if (range !== 'all') {
+    cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - parseInt(range));
+    cutoff = cutoff.toISOString().split('T')[0];
+  }
+
+  return allReports.filter(r => {
+    if (cutoff && r.shift_date < cutoff) return false;
+    if (mgr && r.manager_name !== mgr) return false;
+    if (search) {
+      const blob = [
+        r.manager_name, r.shift_narrative, r.floor_notes, r.kitchen_notes,
+        r.discipline_issues, r.tech_issues, r.shortages, r.credits, r.daily_tasks,
+        ...(r.returned_dishes || []).map(d => `${d.name} ${d.reason}`)
+      ].join(' ').toLowerCase();
+      if (!blob.includes(search)) return false;
+    }
+    // Skip blank/test reports (no manager name or no narrative)
+    if (!r.manager_name || r.manager_name.length < 2) return false;
+    return true;
+  });
+}
+
+// ============== RENDER ==============
+function render() {
+  const reports = getFiltered();
+  const content = document.getElementById('content');
+
+  if (reports.length === 0) {
+    content.innerHTML = '<div class="empty">אין דוחות בטווח הזה</div>';
+    return;
+  }
+
+  content.innerHTML = `
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <div class="chart-card">
+      <div class="chart-title">הכנסה יומית</div>
+      <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">ש"ח לסועד (PPA)</div>
+      <div class="chart-wrap"><canvas id="ppaChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">סועדים יומי</div>
+      <div class="chart-wrap"><canvas id="coversChart"></canvas></div>
+    </div>
+    <div class="section-title">דוחות (<span id="reportCount">${reports.length}</span>)</div>
+    <div id="reportsList"></div>
+  `;
+
+  renderKPIs(reports);
+  renderCharts(reports);
+  renderList(reports);
+}
+
+function renderKPIs(reports) {
+  const totalRevenue = reports.reduce((s, r) => s + (Number(r.revenue) || 0), 0);
+  const totalCovers = reports.reduce((s, r) => s + (r.covers || 0), 0);
+  const ppa = totalCovers > 0 ? Math.round(totalRevenue / totalCovers) : 0;
+  const totalReturns = reports.reduce((s, r) => s + (r.returns_count || 0), 0);
+
+  const fmt = (n) => new Intl.NumberFormat('he-IL').format(n);
+  document.getElementById('kpiGrid').innerHTML = `
+    <div class="kpi"><div class="kpi-label">דוחות</div><div class="kpi-value">${reports.length}</div></div>
+    <div class="kpi"><div class="kpi-label">הכנסה</div><div class="kpi-value">₪${fmt(totalRevenue)}</div><div class="kpi-sub">סה"כ בטווח</div></div>
+    <div class="kpi"><div class="kpi-label">סועדים</div><div class="kpi-value">${fmt(totalCovers)}</div><div class="kpi-sub">PPA: ₪${ppa}</div></div>
+    <div class="kpi"><div class="kpi-label">החזרות</div><div class="kpi-value">${totalReturns}</div></div>
+  `;
+}
+
+function renderCharts(reports) {
+  // Group by date (oldest first for charts)
+  const sorted = [...reports].sort((a, b) => a.shift_date.localeCompare(b.shift_date));
+  const byDate = {};
+  sorted.forEach(r => {
+    const d = r.shift_date;
+    if (!byDate[d]) byDate[d] = { revenue: 0, covers: 0, count: 0 };
+    byDate[d].revenue += Number(r.revenue) || 0;
+    byDate[d].covers += r.covers || 0;
+    byDate[d].count += 1;
+  });
+  const dates = Object.keys(byDate).sort();
+  const labels = dates.map(d => new Date(d).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' }));
+  const revenues = dates.map(d => byDate[d].revenue);
+  const covers = dates.map(d => byDate[d].covers);
+  const ppas = dates.map(d => byDate[d].covers > 0 ? Math.round(byDate[d].revenue / byDate[d].covers) : 0);
+
+  Object.values(charts).forEach(c => c?.destroy());
+  charts = {};
+
+  const baseOpts = {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { ticks: { color: '#a8a8a8', font: { size: 10 } }, grid: { color: '#2a2a2a' } },
+      y: { ticks: { color: '#a8a8a8', font: { size: 10 } }, grid: { color: '#2a2a2a' }, beginAtZero: true }
+    }
+  };
+
+  charts.revenue = new Chart(document.getElementById('revenueChart'), {
+    type: 'bar',
+    data: { labels, datasets: [{ data: revenues, backgroundColor: '#c0392b', borderRadius: 4 }] },
+    options: baseOpts
+  });
+
+  charts.ppa = new Chart(document.getElementById('ppaChart'), {
+    type: 'line',
+    data: { labels, datasets: [{
+      data: ppas, borderColor: '#d4af37', backgroundColor: 'rgba(212,175,55,0.1)',
+      fill: true, tension: 0.3, pointBackgroundColor: '#d4af37', pointRadius: 4
+    }] },
+    options: baseOpts
+  });
+
+  charts.covers = new Chart(document.getElementById('coversChart'), {
+    type: 'bar',
+    data: { labels, datasets: [{ data: covers, backgroundColor: '#60a5fa', borderRadius: 4 }] },
+    options: baseOpts
+  });
+}
+
+function renderList(reports) {
+  const list = document.getElementById('reportsList');
+  list.innerHTML = reports.map((r, idx) => {
+    const d = new Date(r.shift_date).toLocaleDateString('he-IL', { weekday: 'short', day: '2-digit', month: '2-digit', year: '2-digit' });
+    const shiftLabel = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[r.shift_type] || r.shift_type;
+    const shiftClass = r.shift_type === 'morning' ? 'morning' : '';
+
+    const flags = [];
+    if (r.tech_issues && r.tech_issues.trim() && r.tech_issues !== '0') flags.push({ t: '🔧 תקלות', c: 'warn' });
+    if (r.shortages && r.shortages.trim() && r.shortages !== '0') flags.push({ t: '📉 חוסרים', c: 'warn' });
+    if (r.returns_count > 0) flags.push({ t: `↩️ ${r.returns_count} החזרות`, c: 'warn' });
+    if (r.discipline_issues && r.discipline_issues.trim() && r.discipline_issues !== '0' && !r.discipline_issues.match(/^(אין|לא|לא היה|0)/)) flags.push({ t: '⚠️ משמעת', c: 'err' });
+    if (r.cash_diff && Number(r.cash_diff) !== 0) flags.push({ t: `💵 קופה ${r.cash_diff > 0 ? 'חוסר' : 'עודף'}`, c: 'err' });
+    if (flags.length === 0 && r.shift_narrative) flags.push({ t: '✓ ללא חריגים', c: 'ok' });
+
+    const ppa = r.covers > 0 && r.revenue ? Math.round(Number(r.revenue) / r.covers) : null;
+
+    return `
+      <div class="report-card" onclick="showDetail(${idx})">
+        <div class="report-head">
+          <div class="report-date">${d}</div>
+          <span class="report-shift ${shiftClass}">${shiftLabel}</span>
+        </div>
+        <div class="report-meta">
+          <span><strong>${r.manager_name || '—'}</strong></span>
+          ${r.revenue ? `<span>💰 ₪${new Intl.NumberFormat('he-IL').format(Number(r.revenue))}</span>` : ''}
+          ${r.covers ? `<span>👥 ${r.covers}${ppa ? ` (₪${ppa})` : ''}</span>` : ''}
+        </div>
+        ${flags.length ? `<div class="report-flags">${flags.map(f => `<span class="flag ${f.c}">${f.t}</span>`).join('')}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  // Store reports for detail view
+  window._renderedReports = reports;
+}
+
+// ============== DETAIL ==============
+function showDetail(idx) {
+  const r = window._renderedReports[idx];
+  if (!r) return;
+  const d = new Date(r.shift_date).toLocaleDateString('he-IL', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+  const shiftLabel = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[r.shift_type] || r.shift_type;
+
+  const sec = (title, val) => {
+    if (!val || (typeof val === 'string' && (val.trim() === '' || val.trim() === '0'))) return '';
+    return `<div class="detail-section"><h3>${title}</h3><p>${escapeHtml(val)}</p></div>`;
+  };
+
+  const dishes = (r.returned_dishes || []).filter(d => d.name);
+  let dishesHtml = '';
+  if (dishes.length) {
+    dishesHtml = `<div class="detail-section"><h3>↩️ מנות חוזרות (${dishes.length})</h3><ul>${
+      dishes.map(d => `<li>${escapeHtml(d.name)}${d.reason ? ` — ${escapeHtml(d.reason)}` : ''}</li>`).join('')
+    }</ul></div>`;
+  }
+
+  const fmt = (n) => n != null ? new Intl.NumberFormat('he-IL').format(n) : '—';
+
+  document.getElementById('detailContent').innerHTML = `
+    <h2 style="text-align:center;color:var(--accent-2);margin-bottom:4px;">${d}</h2>
+    <p style="text-align:center;color:var(--ink-dim);font-size:13px;margin-bottom:16px;">
+      ${shiftLabel} · ${escapeHtml(r.manager_name || '')}
+    </p>
+    <div class="kpi-grid" style="margin-bottom:16px;">
+      <div class="kpi"><div class="kpi-label">הכנסה</div><div class="kpi-value" style="font-size:18px;">₪${fmt(r.revenue ? Number(r.revenue) : null)}</div></div>
+      <div class="kpi"><div class="kpi-label">סועדים</div><div class="kpi-value" style="font-size:18px;">${fmt(r.covers)}</div></div>
+      <div class="kpi"><div class="kpi-label">משלוחים/TA</div><div class="kpi-value" style="font-size:18px;">${(r.deliveries||0)+(r.takeaway||0) || '—'}</div></div>
+      <div class="kpi"><div class="kpi-label">קופה</div><div class="kpi-value" style="font-size:18px;color:${r.cash_diff && Number(r.cash_diff) !== 0 ? 'var(--err)' : 'var(--ok)'}">${r.cash_diff != null ? '₪' + fmt(Number(r.cash_diff)) : '—'}</div></div>
+    </div>
+    ${sec('📝 מהלך המשמרת', r.shift_narrative)}
+    ${sec('🍽 פלור', r.floor_notes)}
+    ${sec('🔥 מטבח', r.kitchen_notes)}
+    ${dishesHtml}
+    ${sec('⚠️ בעיות משמעת', r.discipline_issues)}
+    ${sec('⏱ זמני המתנה', r.wait_times)}
+    ${sec('⏰ איחורים', r.late_arrivals)}
+    ${sec('🔧 תקלות טכניות', r.tech_issues)}
+    ${sec('📉 חוסרים', r.shortages)}
+    ${sec('🎁 זיכויים', r.credits)}
+    ${sec('✅ משימות יומיות', r.daily_tasks)}
+    <div style="text-align:center;margin-top:14px;">
+      <button onclick="copyDetail(${idx})" style="background:var(--bg-card);border:1px solid var(--line-strong);color:var(--ink);padding:10px 18px;border-radius:10px;font-family:inherit;cursor:pointer;">📋 העתק דוח מלא</button>
+    </div>
+  `;
+  document.getElementById('detailModal').classList.add('show');
+}
+function closeDetail() {
+  document.getElementById('detailModal').classList.remove('show');
+}
+
+async function copyDetail(idx) {
+  const r = window._renderedReports[idx];
+  const text = buildTextReport(r);
+  try {
+    await navigator.clipboard.writeText(text);
+    alert('הועתק ✓');
+  } catch (e) {
+    alert('ההעתקה נכשלה');
+  }
+}
+
+function buildTextReport(data) {
+  const lines = [];
+  const fmt = (n, suffix = '') => (n === null || n === undefined || n === '') ? '—' : `${n}${suffix}`;
+  const dateStr = data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '—';
+  const shiftType = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[data.shift_type] || data.shift_type;
+  lines.push(`📋 *סיכום משמרת — אומינו*`);
+  lines.push(`📅 ${dateStr} · ${shiftType}`);
+  lines.push(`👤 אחמ"ש: ${data.manager_name || '—'}`);
+  lines.push('');
+  lines.push(`💰 הכנסה: ${fmt(data.revenue, '₪')}`);
+  lines.push(`👥 סועדים: ${fmt(data.covers)}  |  🛵 משלוחים: ${fmt(data.deliveries)}  |  📦 TA: ${fmt(data.takeaway)}`);
+  if (data.shift_narrative) { lines.push(''); lines.push(`📝 *מהלך המשמרת:*`); lines.push(data.shift_narrative); }
+  if (data.floor_notes) { lines.push(''); lines.push(`🍽 *פלור:*`); lines.push(data.floor_notes); }
+  if (data.kitchen_notes) { lines.push(''); lines.push(`🔥 *מטבח:*`); lines.push(data.kitchen_notes); }
+  if ((data.returned_dishes || []).length) {
+    lines.push(''); lines.push(`↩️ *מנות חוזרות:*`);
+    data.returned_dishes.forEach(d => lines.push(`• ${d.name}${d.reason ? ` — ${d.reason}` : ''}`));
+  }
+  if (data.tech_issues && data.tech_issues !== '0') { lines.push(''); lines.push(`🔧 *תקלות:* ${data.tech_issues}`); }
+  if (data.shortages && data.shortages !== '0') { lines.push(''); lines.push(`📉 *חוסרים:* ${data.shortages}`); }
+  if (data.credits && data.credits !== '0') { lines.push(''); lines.push(`🎁 *זיכויים:* ${data.credits}`); }
+  if (data.daily_tasks) { lines.push(''); lines.push(`✅ *משימות יומיות:* ${data.daily_tasks}`); }
+  return lines.join('\n');
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+// Filter listeners
+['rangeFilter', 'managerFilter', 'searchFilter'].forEach(id => {
+  document.getElementById(id).addEventListener('input', render);
+  document.getElementById(id).addEventListener('change', render);
+});
+
+// Init
+checkAuth();
+</script>
+
+</body>
+</html>
