@@ -704,6 +704,51 @@ function getCfg() {
 }
 function setCfg(c) { localStorage.setItem(CFG_KEY, JSON.stringify(c)); }
 
+// ============== EDIT MODE ==============
+let editingRecordId = null;
+
+function checkEditMode() {
+  const params = new URLSearchParams(window.location.search);
+  const editId = params.get('edit');
+  if (!editId) return false;
+
+  const raw = sessionStorage.getItem('umino-edit-record');
+  if (!raw) return false;
+
+  try {
+    const record = JSON.parse(raw);
+    if (String(record.id) !== editId) return false;
+
+    editingRecordId = record.id;
+    sessionStorage.removeItem('umino-edit-record');
+
+    // Populate all fields from record
+    Object.entries(record).forEach(([k, v]) => {
+      const el = document.querySelector(`[name="${k}"]`);
+      if (el && v !== null && v !== undefined) {
+        el.value = v;
+      }
+    });
+
+    // Populate dish rows
+    if (Array.isArray(record.returned_dishes)) {
+      record.returned_dishes.forEach(d => addDishRow(d.name || '', d.reason || ''));
+    }
+
+    // Visual indicator that we're in edit mode
+    const headerH1 = document.querySelector('.header h1');
+    if (headerH1) headerH1.innerHTML = '✏️ עריכת דוח קיים';
+
+    const submitBtn = document.querySelector('.submit-bar .btn-primary');
+    if (submitBtn) submitBtn.textContent = 'עדכן ושמור';
+
+    return true;
+  } catch (e) {
+    console.error('Edit mode failed:', e);
+    return false;
+  }
+}
+
 // ============== INIT ==============
 document.addEventListener('DOMContentLoaded', () => {
   // Default date = today
@@ -713,7 +758,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const dd = String(today.getDate()).padStart(2, '0');
   document.getElementById('shift_date').value = `${yyyy}-${mm}-${dd}`;
 
-  loadDraft();
+  // Check edit mode FIRST — if in edit mode, skip draft loading
+  const isEditMode = checkEditMode();
+  if (!isEditMode) {
+    loadDraft();
+  }
   setupAutosave();
   updateConnStatus();
 });
@@ -752,7 +801,10 @@ function getFormData() {
     obj[k] = obj[k] ? Number(obj[k]) : null;
   });
   obj.returned_dishes = getDishes();
-  obj.submitted_at = new Date().toISOString();
+  // Only set submitted_at for NEW reports — never overwrite original timestamp on edit
+  if (!editingRecordId) {
+    obj.submitted_at = new Date().toISOString();
+  }
   obj.venue = 'umino';
   return obj;
 }
@@ -878,7 +930,7 @@ async function doSubmit() {
   const cfg = getCfg();
   const btn = document.getElementById('confirmSubmitBtn');
   btn.disabled = true;
-  btn.textContent = 'שומר...';
+  btn.textContent = editingRecordId ? 'מעדכן...' : 'שומר...';
 
   const data = getFormData();
   const textReport = buildTextReport(data);
@@ -886,11 +938,17 @@ async function doSubmit() {
   let supabaseOk = false;
   const errors = [];
 
-  // Save to Supabase
+  // Save to Supabase — PATCH if editing, POST if new
   if (cfg.supabase_url && cfg.supabase_key) {
     try {
-      const res = await fetch(`${cfg.supabase_url}/rest/v1/shift_reports`, {
-        method: 'POST',
+      const isEdit = !!editingRecordId;
+      const url = isEdit
+        ? `${cfg.supabase_url}/rest/v1/shift_reports?id=eq.${editingRecordId}`
+        : `${cfg.supabase_url}/rest/v1/shift_reports`;
+      const method = isEdit ? 'PATCH' : 'POST';
+
+      const res = await fetch(url, {
+        method: method,
         headers: {
           'apikey': cfg.supabase_key,
           'Authorization': `Bearer ${cfg.supabase_key}`,
@@ -909,21 +967,30 @@ async function doSubmit() {
   }
 
   btn.disabled = false;
-  btn.textContent = 'שמור ושלח';
+  btn.textContent = editingRecordId ? 'עדכן ושמור' : 'שמור ושלח';
 
   if (supabaseOk) {
     clearDraft();
-    // Store the text for share/copy actions
     window._lastReportText = textReport;
-    // Close review and show success
     closeReview();
-    document.getElementById('successModal').classList.add('show');
+
+    if (editingRecordId) {
+      // Edit mode: redirect back to dashboard
+      editingRecordId = null;
+      showToast('✓ הדוח עודכן בהצלחה', 'ok');
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+    } else {
+      // New report: show success modal with share options
+      document.getElementById('successModal').classList.add('show');
+    }
   } else {
-    // Save offline queue
-    const queue = JSON.parse(localStorage.getItem('umino-queue') || '[]');
-    queue.push(data);
-    localStorage.setItem('umino-queue', JSON.stringify(queue));
-    showToast('לא הצלחנו לשמור — הדוח נשמר במכשיר וננסה שוב מאוחר יותר. ' + errors.join('; '), 'err');
+    if (!editingRecordId) {
+      // Only queue NEW reports offline (not edits)
+      const queue = JSON.parse(localStorage.getItem('umino-queue') || '[]');
+      queue.push(data);
+      localStorage.setItem('umino-queue', JSON.stringify(queue));
+    }
+    showToast('לא הצלחנו לשמור — ' + errors.join('; '), 'err');
   }
 }
 
