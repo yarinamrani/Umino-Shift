@@ -3,609 +3,685 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#F5F1E8">
-<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#16110d">
+<meta name="color-scheme" content="dark">
 <title>היסטוריית משמרות — אומינו</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root {
-    color-scheme: light;
-    --cream: #F5F1E8;
-    --cream-warm: #FCFAF4;
-    --ink: #3D2817;
-    --ink-soft: #6B5A48;
-    --ink-faint: #9C8B76;
-    --gold: #B8924A;
-    --gold-soft: #D4B583;
-    --gold-pale: #F0E5C8;
-    --green: #5A6B4D;
-    --green-soft: #8FA77E;
-    --rust: #B85C3C;
-    --line: #E5DCC9;
-    --shadow: rgba(61, 40, 23, 0.06);
+    color-scheme: dark;
+    --bg-base: #16110d;
+    --bg-card: #1f1812;
+    --bg-elev: #2a2018;
+    --bg-input: #15100c;
+    --line: #3a2d23;
+    --line-soft: #2d231a;
+    --ink: #f4ebdd;
+    --ink-soft: #c4b29a;
+    --ink-dim: #8a7866;
+    --ink-faint: #5a4e42;
+    --gold: #d4a857;
+    --gold-soft: #b89046;
+    --gold-glow: rgba(212, 168, 87, 0.15);
+    --green: #7fb069;
+    --rust: #c45a4d;
+    --warn: #e0a458;
+    --font-display: 'Frank Ruhl Libre', serif;
+    --font-body: 'Heebo', system-ui, sans-serif;
+    --r-sm: 10px;
+    --r-md: 14px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  *:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
   html, body {
-    background: var(--cream); color: var(--ink);
-    font-family: 'Heebo', system-ui, sans-serif;
-    min-height: 100vh; overflow-x: hidden; max-width: 100vw;
-    -webkit-font-smoothing: antialiased;
+    background: var(--bg-base); color: var(--ink);
+    font-family: var(--font-body); min-height: 100vh;
+    overflow-x: hidden; max-width: 100vw; line-height: 1.5;
   }
-  body { padding-bottom: 40px; font-size: 15px; }
-
-.header {
-background: var(–cream-warm); border-bottom: 1px solid var(–line);
-padding: 16px 18px; position: sticky; top: 0; z-index: 100;
-backdrop-filter: blur(20px);
-}
-.header-inner {
-display: flex; align-items: center; justify-content: space-between;
-gap: 12px; max-width: 900px; margin: 0 auto;
-}
-.header-title { font-family: ‘Frank Ruhl Libre’, serif; font-size: 20px; font-weight: 500; color: var(–ink); }
-.header-sub { font-size: 11px; color: var(–ink-faint); letter-spacing: 3px; text-transform: uppercase; margin-top: 2px; }
-.back-link {
-color: var(–ink-soft); text-decoration: none; font-size: 13px;
-padding: 8px 14px; border: 1px solid var(–line);
-border-radius: 999px; background: var(–cream); font-weight: 500;
-}
-
-.container { max-width: 900px; margin: 0 auto; padding: 24px 16px 0; }
-
-.filter-bar {
-display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;
-}
-.filter-bar select, .filter-bar input {
-background: var(–cream-warm); border: 1px solid var(–line);
-color: var(–ink); padding: 10px 14px; border-radius: 10px;
-font-family: inherit; font-size: 14px;
--webkit-appearance: none; appearance: none;
-}
-.filter-bar input { flex: 1; min-width: 140px; }
-.filter-bar select {
-background-image: url(“data:image/svg+xml;charset=utf-8,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘12’ height=‘12’ viewBox=‘0 0 12 12’%3E%3Cpath fill=’%239C8B76’ d=‘M6 9L1 4h10z’/%3E%3C/svg%3E”);
-background-repeat: no-repeat; background-position: left 14px center;
-padding-left: 36px;
-}
-
-.kpi-grid {
-display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
-margin-bottom: 22px;
-}
-@media (min-width: 600px) { .kpi-grid { grid-template-columns: repeat(4, 1fr); } }
-.kpi {
-background: var(–cream-warm); border: 1px solid var(–line);
-border-radius: 14px; padding: 16px; text-align: center;
-box-shadow: 0 1px 2px var(–shadow);
-}
-.kpi-label {
-font-size: 10px; color: var(–ink-faint); letter-spacing: 2px;
-text-transform: uppercase; margin-bottom: 8px; font-weight: 600;
-}
-.kpi-value {
-font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 22px; font-weight: 600; color: var(–gold);
-}
-.kpi-sub { font-size: 11px; color: var(–ink-faint); margin-top: 2px; }
-
-.chart-card {
-background: var(–cream-warm); border: 1px solid var(–line);
-border-radius: 14px; padding: 18px; margin-bottom: 14px;
-box-shadow: 0 1px 2px var(–shadow);
-}
-.chart-title {
-font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 13px; letter-spacing: 3px;
-color: var(–gold); text-transform: uppercase;
-margin-bottom: 12px; font-weight: 500;
-}
-.chart-wrap { position: relative; height: 220px; }
-
-.section-label {
-font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 13px; font-weight: 500; color: var(–gold);
-letter-spacing: 4px; text-transform: uppercase;
-margin: 28px 0 14px; padding-right: 4px;
-display: flex; align-items: center; gap: 10px;
-}
-.section-label::after {
-content: “”; flex: 1; height: 1px;
-background: linear-gradient(to left, var(–line), transparent);
-}
-
-.report-card {
-background: var(–cream-warm); border: 1px solid var(–line);
-border-radius: 14px; padding: 16px; margin-bottom: 10px;
-cursor: pointer; transition: all 0.15s;
-box-shadow: 0 1px 2px var(–shadow);
-}
-.report-card:active { transform: scale(0.99); border-color: var(–gold-soft); }
-.report-head {
-display: flex; justify-content: space-between;
-align-items: center; gap: 8px; margin-bottom: 8px;
-}
-.report-date { font-family: ‘Frank Ruhl Libre’, serif; font-size: 16px; font-weight: 600; color: var(–ink); }
-.report-shift {
-font-size: 10px; padding: 4px 10px; border-radius: 999px;
-background: var(–gold-pale); color: var(–gold);
-border: 1px solid var(–gold-soft); font-weight: 600;
-letter-spacing: 1px;
-}
-.report-shift.morning { background: rgba(143, 167, 126, 0.2); color: var(–green); border-color: var(–green-soft); }
-.report-meta { font-size: 13px; color: var(–ink-soft); display: flex; gap: 14px; flex-wrap: wrap; }
-.report-meta strong { color: var(–ink); font-weight: 600; }
-.report-flags { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
-.flag {
-font-size: 11px; padding: 3px 8px; border-radius: 6px;
-background: var(–cream); color: var(–ink-soft); font-weight: 500;
-}
-.flag.warn { background: rgba(184, 146, 74, 0.12); color: var(–gold); }
-.flag.err { background: rgba(184, 92, 60, 0.12); color: var(–rust); }
-.flag.ok { background: rgba(90, 107, 77, 0.12); color: var(–green); }
-
-.modal-overlay {
-position: fixed; inset: 0; background: rgba(61, 40, 23, 0.4);
-backdrop-filter: blur(6px); z-index: 500; display: none; align-items: flex-end;
-}
-.modal-overlay.show { display: flex; }
-.modal {
-background: var(–cream-warm); width: 100%; max-height: 92vh;
-border-radius: 24px 24px 0 0; border-top: 1px solid var(–line);
-padding: 24px 18px calc(24px + env(safe-area-inset-bottom));
-overflow-y: auto; position: relative;
-}
-.modal-close {
-position: absolute; top: 16px; left: 18px;
-background: var(–cream); border: 1px solid var(–line);
-color: var(–ink-soft); font-size: 18px; cursor: pointer;
-width: 32px; height: 32px; border-radius: 50%;
-display: flex; align-items: center; justify-content: center;
-}
-.detail-section { margin-bottom: 16px; }
-.detail-section h3 {
-font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 11px; letter-spacing: 3px; color: var(–gold);
-text-transform: uppercase; margin-bottom: 6px; font-weight: 500;
-}
-.detail-section p, .detail-section li {
-font-size: 14px; color: var(–ink); line-height: 1.6; white-space: pre-wrap;
-}
-.detail-section ul { padding-right: 20px; }
-
-.empty {
-text-align: center; padding: 60px 20px;
-color: var(–ink-faint); font-size: 14px;
-font-family: ‘Frank Ruhl Libre’, serif;
-}
-.loading {
-text-align: center; padding: 60px;
-color: var(–ink-faint); font-family: ‘Frank Ruhl Libre’, serif;
-}
+  body {
+    background-image:
+      radial-gradient(at 80% -10%, rgba(212, 168, 87, 0.08) 0%, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(201, 120, 98, 0.06) 0%, transparent 50%);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 
 .pin-gate {
-position: fixed; inset: 0; background: var(–cream);
+position: fixed; inset: 0;
+background: var(–bg-base);
+background-image: radial-gradient(at 50% 30%, rgba(212, 168, 87, 0.12) 0%, transparent 60%);
+z-index: 1000;
 display: flex; align-items: center; justify-content: center;
-z-index: 9999; flex-direction: column; gap: 16px;
+padding: 20px;
 }
-.pin-gate.hidden { display: none; }
-.pin-brand {
-font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 13px; color: var(–gold);
-letter-spacing: 8px; text-transform: uppercase; font-weight: 500;
+.pin-card {
+width: 100%; max-width: 340px;
+background: var(–bg-card); border: 1px solid var(–line);
+border-radius: 18px; padding: 36px 26px 28px; text-align: center;
+box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
-.pin-gate h2 {
-font-family: ‘Frank Ruhl Libre’, serif;
-color: var(–ink); font-weight: 500; font-size: 22px;
-}
-.pin-gate p { color: var(–ink-faint); font-size: 13px; letter-spacing: 1px; }
+.pin-brand { font-family: var(–font-display); font-size: 13px; letter-spacing: 6px; color: var(–gold); text-transform: uppercase; margin-bottom: 8px; font-weight: 600; }
+.pin-title { font-family: var(–font-display); font-size: 22px; color: var(–ink); margin-bottom: 6px; font-weight: 500; }
+.pin-sub { font-size: 13px; color: var(–ink-dim); margin-bottom: 24px; }
 .pin-input {
-background: var(–cream-warm); border: 1px solid var(–line);
-color: var(–ink); padding: 14px 20px; border-radius: 12px;
-font-family: inherit; font-size: 24px; text-align: center;
-width: 200px; letter-spacing: 12px;
--webkit-appearance: none; appearance: none;
+width: 100%; background: var(–bg-input); border: 1px solid var(–line);
+border-radius: var(–r-sm); padding: 14px; color: var(–ink);
+font-family: inherit; font-size: 22px; text-align: center;
+letter-spacing: 12px; margin-bottom: 14px; outline: none;
+-webkit-appearance: none;
 }
-.pin-input:focus {
-border-color: var(–gold); outline: none;
-box-shadow: 0 0 0 3px rgba(184, 146, 74, 0.1);
-}
-.pin-error { color: var(–rust); font-size: 12px; height: 16px; }
+.pin-input:focus { border-color: var(–gold); box-shadow: 0 0 0 3px var(–gold-glow); }
+.pin-error { color: var(–rust); font-size: 12px; min-height: 16px; margin-bottom: 8px; }
 
-.btn-action {
-padding: 10px 16px; border-radius: 10px;
-font-family: ‘Heebo’, sans-serif;
-font-size: 13px; font-weight: 600; cursor: pointer;
-border: 1px solid var(–line); display: flex;
-align-items: center; gap: 6px;
+.header {
+background: linear-gradient(180deg, #1a1410 0%, #16110d 100%);
+border-bottom: 1px solid var(–line-soft);
+padding: calc(14px + env(safe-area-inset-top)) 18px 14px;
+position: sticky; top: 0; z-index: 50;
+backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
 }
-.btn-action.gold { background: var(–gold); color: var(–cream-warm); border-color: var(–gold); }
-.btn-action.green { background: var(–green); color: var(–cream-warm); border-color: var(–green); }
-.btn-action.outline { background: transparent; color: var(–ink-soft); }
-.btn-action.danger { background: rgba(184, 92, 60, 0.1); color: var(–rust); border-color: rgba(184, 92, 60, 0.3); }
-.btn-action:active { transform: scale(0.96); }
+.header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.header-title { font-family: var(–font-display); font-size: 19px; font-weight: 500; color: var(–ink); letter-spacing: 0.2px; }
+.header-subtitle { font-size: 10px; color: var(–gold-soft); letter-spacing: 2.5px; text-transform: uppercase; margin-top: 3px; font-weight: 600; }
+.back-btn {
+background: var(–bg-elev); border: 1px solid var(–line);
+color: var(–ink-soft); padding: 8px 14px; border-radius: 999px;
+font-family: inherit; font-size: 12px; font-weight: 500;
+cursor: pointer; text-decoration: none;
+display: inline-flex; align-items: center; gap: 6px;
+transition: all 0.15s;
+}
+.back-btn:active { transform: scale(0.96); background: var(–line); }
 
-.pdf-loading {
-position: fixed; inset: 0; background: rgba(61, 40, 23, 0.6);
-backdrop-filter: blur(8px); z-index: 2000;
-display: none; align-items: center; justify-content: center;
-flex-direction: column; gap: 14px;
+.content { padding: 20px 16px 32px; }
+
+.filters {
+display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+margin-bottom: 16px;
 }
-.pdf-loading.show { display: flex; }
-.pdf-spinner {
-width: 44px; height: 44px;
-border: 3px solid rgba(245, 241, 232, 0.2);
-border-top-color: var(–gold-soft); border-radius: 50%;
-animation: spin 0.8s linear infinite;
+.filters select, .filters input {
+width: 100%; background: var(–bg-card); border: 1px solid var(–line);
+border-radius: var(–r-sm); padding: 11px 12px; color: var(–ink);
+font-family: inherit; font-size: 14px;
+-webkit-appearance: none; appearance: none; direction: rtl;
+}
+.filters select {
+background-image: url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23d4a857' d='M5 6L0 0h10z'/></svg>”);
+background-repeat: no-repeat; background-position: left 12px center;
+padding-left: 30px; cursor: pointer;
+}
+.search-wrap { grid-column: 1 / -1; position: relative; }
+.search-wrap input { padding-right: 38px; }
+.search-wrap::before {
+content: ‘🔍’; position: absolute; right: 12px; top: 50%;
+transform: translateY(-50%); font-size: 13px; opacity: 0.5; pointer-events: none;
+}
+
+.kpis {
+display: grid; grid-template-columns: repeat(4, 1fr);
+gap: 6px; margin-bottom: 18px;
+}
+.kpi {
+background: var(–bg-card); border: 1px solid var(–line-soft);
+border-radius: var(–r-sm); padding: 12px 6px 10px; text-align: center;
+}
+.kpi-label { font-size: 9px; color: var(–ink-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 600; }
+.kpi-value { font-family: var(–font-display); font-size: 18px; font-weight: 700; color: var(–gold); line-height: 1.1; }
+.kpi-sub { font-size: 9px; color: var(–ink-faint); margin-top: 3px; }
+
+.chart-card {
+background: var(–bg-card); border: 1px solid var(–line-soft);
+border-radius: var(–r-md); padding: 14px; margin-bottom: 12px;
+}
+.chart-title { font-family: var(–font-display); font-size: 13px; color: var(–gold); margin-bottom: 10px; letter-spacing: 0.3px; }
+.chart-wrap { height: 160px; position: relative; }
+
+.section-head { display: flex; align-items: baseline; gap: 12px; margin: 24px 4px 12px; }
+.section-head::after { content: ‘’; flex: 1; height: 1px; background: linear-gradient(90deg, var(–line) 0%, transparent 100%); }
+.section-title { font-family: var(–font-display); font-size: 15px; font-weight: 500; color: var(–gold); letter-spacing: 0.3px; }
+.section-count { font-family: var(–font-display); font-size: 11px; color: var(–ink-faint); font-style: italic; }
+
+.report-list { display: flex; flex-direction: column; gap: 10px; }
+.report {
+background: var(–bg-card); border: 1px solid var(–line-soft);
+border-radius: var(–r-md); padding: 14px 14px 12px;
+cursor: pointer; transition: all 0.15s;
+}
+.report:active { transform: scale(0.99); border-color: var(–gold); }
+.report-row1 { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.report-date { font-family: var(–font-display); font-size: 14px; color: var(–ink); font-weight: 500; }
+.report-pill {
+font-size: 9px; text-transform: uppercase; letter-spacing: 1px;
+padding: 3px 9px; border-radius: 999px; font-weight: 600;
+}
+.report-pill.evening { background: rgba(212, 168, 87, 0.15); color: var(–gold); }
+.report-pill.morning { background: rgba(127, 176, 105, 0.15); color: var(–green); }
+.report-pill.full_day { background: rgba(196, 90, 77, 0.15); color: var(–rust); }
+.report-mgr { font-size: 12px; color: var(–ink-soft); margin-bottom: 10px; }
+.report-stats {
+display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+border-top: 1px solid var(–line-soft); padding-top: 10px;
+}
+.report-stat { text-align: center; }
+.report-stat-label { font-size: 9px; color: var(–ink-dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+.report-stat-value { font-family: var(–font-display); font-size: 14px; font-weight: 600; color: var(–ink); }
+.report-flags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.flag {
+font-size: 10px; padding: 3px 8px; border-radius: 6px;
+font-weight: 500; display: inline-flex; align-items: center; gap: 4px;
+}
+.flag.warn { background: rgba(224, 164, 88, 0.12); color: var(–warn); }
+.flag.err { background: rgba(196, 90, 77, 0.12); color: var(–rust); }
+.flag.ok { background: rgba(127, 176, 105, 0.12); color: var(–green); }
+
+.empty-state { text-align: center; padding: 40px 20px; color: var(–ink-dim); }
+.empty-state-icon { font-size: 36px; opacity: 0.4; margin-bottom: 12px; }
+.empty-state-text { font-size: 14px; }
+.loading { text-align: center; padding: 40px 20px; color: var(–ink-dim); font-size: 14px; }
+.spinner-mini {
+display: inline-block; width: 18px; height: 18px;
+border: 2px solid var(–line); border-top-color: var(–gold);
+border-radius: 50%; animation: spin 0.8s linear infinite;
+vertical-align: middle; margin-left: 8px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-.pdf-loading-text {
-color: var(–cream); font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 16px; letter-spacing: 2px;
+
+.modal-overlay {
+position: fixed; inset: 0;
+background: rgba(8, 5, 3, 0.75);
+backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+z-index: 100; display: none;
+align-items: flex-end; justify-content: center;
+animation: fadeIn 0.2s ease-out;
+}
+.modal-overlay.show { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+background: var(–bg-card); width: 100%; max-width: 500px; max-height: 92vh;
+border-radius: 22px 22px 0 0; border-top: 1px solid var(–line);
+padding: 16px 18px calc(22px + env(safe-area-inset-bottom));
+overflow-y: auto; box-shadow: 0 -16px 48px rgba(0,0,0,0.5);
+animation: slideUp 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-handle { width: 36px; height: 4px; background: var(–line); border-radius: 99px; margin: 0 auto 16px; }
+.modal-title { font-family: var(–font-display); font-size: 18px; color: var(–gold); text-align: center; margin-bottom: 4px; font-weight: 500; }
+.modal-meta { text-align: center; color: var(–ink-dim); font-size: 12px; margin-bottom: 18px; }
+
+.detail-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 18px; }
+.detail-kpi {
+text-align: center; background: var(–bg-elev);
+border: 1px solid var(–line-soft); border-radius: var(–r-sm);
+padding: 10px 6px;
+}
+.detail-kpi-label { font-size: 9px; color: var(–ink-dim); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 3px; font-weight: 600; }
+.detail-kpi-val { font-family: var(–font-display); font-size: 16px; color: var(–gold); font-weight: 700; }
+.detail-section { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(–line-soft); }
+.detail-section:last-of-type { border-bottom: none; margin-bottom: 8px; }
+.detail-section-title { font-family: var(–font-display); font-size: 11px; color: var(–gold); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-weight: 700; }
+.detail-section-text { font-size: 13px; color: var(–ink-soft); line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
+.detail-dish {
+background: var(–bg-elev); border-right: 3px solid var(–gold);
+padding: 7px 11px; margin-bottom: 5px;
+font-size: 12px; border-radius: 4px; color: var(–ink-soft);
 }
 
-/* PDF template (same as index) */
+.detail-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 16px; }
+.detail-actions .full { grid-column: 1 / -1; }
+.action-btn {
+padding: 12px; border-radius: var(–r-sm);
+font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+border: 1px solid transparent;
+display: flex; align-items: center; justify-content: center; gap: 6px;
+transition: transform 0.1s;
+}
+.action-btn:active { transform: scale(0.98); }
+.action-pdf {
+background: linear-gradient(180deg, var(–gold) 0%, var(–gold-soft) 100%);
+color: #1a1410; box-shadow: 0 4px 14px rgba(212, 168, 87, 0.25);
+}
+.action-wa { background: #1f3a2a; color: #7fd99c; border-color: rgba(127, 217, 156, 0.3); }
+.action-copy { background: var(–bg-elev); color: var(–ink-soft); border-color: var(–line); }
+.action-edit { background: var(–bg-elev); color: var(–gold); border-color: rgba(212, 168, 87, 0.3); }
+.action-del { background: rgba(196, 90, 77, 0.12); color: var(–rust); border-color: rgba(196, 90, 77, 0.3); }
+
+.toast {
+position: fixed; top: calc(20px + env(safe-area-inset-top));
+left: 50%; transform: translateX(-50%) translateY(-30px);
+background: var(–bg-elev); border: 1px solid var(–line);
+color: var(–ink); padding: 12px 20px; border-radius: 99px;
+z-index: 200; opacity: 0;
+transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+pointer-events: none; max-width: 88vw; text-align: center;
+font-size: 13px; font-weight: 500; box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.ok { color: var(–green); border-color: rgba(127, 176, 105, 0.3); }
+.toast.err { color: var(–rust); border-color: rgba(196, 90, 77, 0.3); }
+
 #pdfTemplate {
-position: fixed; left: -99999px; top: 0;
-width: 794px; background: #FCFAF4; color: #3D2817;
+position: fixed; left: -99999px; top: 0; width: 794px;
+background: #FBF7F0; color: #2C2419;
 font-family: ‘Heebo’, sans-serif; direction: rtl;
-padding: 56px 56px 48px; box-sizing: border-box;
+padding: 56px 50px;
 }
 #pdfTemplate * { box-sizing: border-box; }
-.pdf-header { text-align: center; padding-bottom: 28px; border-bottom: 1px solid #E5DCC9; margin-bottom: 32px; }
-.pdf-brand { font-family: ‘Frank Ruhl Libre’, serif; font-size: 14px; letter-spacing: 8px; color: #B8924A; text-transform: uppercase; margin-bottom: 16px; font-weight: 500; }
-.pdf-title { font-family: ‘Frank Ruhl Libre’, serif; font-size: 28px; font-weight: 500; color: #3D2817; margin-bottom: 6px; }
-.pdf-subtitle { font-size: 13px; color: #9C8B76; letter-spacing: 1px; }
-.pdf-meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; padding: 18px 20px; background: #F5F1E8; border-radius: 10px; }
-.pdf-meta-item { text-align: center; }
-.pdf-meta-label { font-size: 10px; color: #9C8B76; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
-.pdf-meta-value { font-family: ‘Frank Ruhl Libre’, serif; font-size: 17px; font-weight: 500; color: #3D2817; }
-.pdf-kpi-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 32px; }
-.pdf-kpi { text-align: center; padding: 16px 8px; background: #FCFAF4; border: 1px solid #E5DCC9; border-radius: 10px; }
-.pdf-kpi-label { font-size: 10px; color: #9C8B76; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-.pdf-kpi-value { font-family: ‘Frank Ruhl Libre’, serif; font-size: 20px; font-weight: 600; color: #B8924A; }
-.pdf-kpi-sub { font-size: 10px; color: #9C8B76; margin-top: 2px; }
-.pdf-section { margin-bottom: 22px; }
-.pdf-section-title { font-family: ‘Frank Ruhl Libre’, serif; font-size: 12px; letter-spacing: 3px; color: #B8924A; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #E5DCC9; }
-.pdf-section-content { font-size: 13px; line-height: 1.7; color: #3D2817; white-space: pre-wrap; word-wrap: break-word; }
-.pdf-sub-section { margin-bottom: 14px; }
-.pdf-sub-title { font-size: 11px; color: #5A6B4D; font-weight: 600; margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; }
-.pdf-dishes-list { list-style: none; padding: 0; }
-.pdf-dishes-list li { padding: 10px 14px; background: #F5F1E8; border-right: 3px solid #B8924A; margin-bottom: 6px; font-size: 13px; border-radius: 4px; }
-.pdf-dishes-list strong { color: #3D2817; }
-.pdf-dishes-list .reason { color: #9C8B76; margin-right: 4px; font-size: 12px; }
-.pdf-footer { margin-top: 36px; padding-top: 18px; border-top: 1px solid #E5DCC9; text-align: center; font-size: 10px; color: #9C8B76; letter-spacing: 2px; }
+.pdf-head { text-align: center; padding-bottom: 24px; border-bottom: 1px solid #d4c4a8; margin-bottom: 28px; }
+.pdf-brand { font-family: ‘Frank Ruhl Libre’, serif; font-size: 13px; letter-spacing: 8px; color: #8B6F47; text-transform: uppercase; margin-bottom: 16px; font-weight: 500; }
+.pdf-title-main { font-family: ‘Frank Ruhl Libre’, serif; font-size: 26px; font-weight: 500; color: #2C2419; margin-bottom: 6px; }
+.pdf-subtitle { font-size: 13px; color: #8B6F47; letter-spacing: 0.5px; }
+.pdf-meta-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; margin-bottom: 22px; background: #d4c4a8; border-radius: 8px; overflow: hidden; }
+.pdf-meta-cell { text-align: center; background: #FBF7F0; padding: 14px 10px; }
+.pdf-meta-label { font-size: 10px; color: #8B6F47; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
+.pdf-meta-value { font-size: 14px; font-weight: 600; color: #2C2419; }
+.pdf-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 28px; }
+.pdf-kpi { text-align: center; padding: 14px 8px; background: #fff; border: 1px solid #e8dcc4; border-radius: 8px; }
+.pdf-kpi-label { font-size: 9px; color: #8B6F47; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.pdf-kpi-value { font-family: ‘Frank Ruhl Libre’, serif; font-size: 20px; font-weight: 700; color: #C4924A; }
+.pdf-kpi-sub { font-size: 9px; color: #8B6F47; margin-top: 2px; }
+.pdf-section { margin-bottom: 20px; }
+.pdf-section-title { font-family: ‘Frank Ruhl Libre’, serif; font-size: 11px; letter-spacing: 2.5px; color: #C4924A; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #e8dcc4; }
+.pdf-section-text { font-size: 12.5px; line-height: 1.7; color: #2C2419; white-space: pre-wrap; word-wrap: break-word; }
+.pdf-sub-block { margin-bottom: 12px; }
+.pdf-sub-label { font-size: 11px; color: #6B5B3E; font-weight: 600; margin-bottom: 4px; }
+.pdf-dishes { list-style: none; padding: 0; }
+.pdf-dishes li { padding: 8px 12px; background: #fff; border-right: 3px solid #C4924A; margin-bottom: 6px; font-size: 12.5px; border-radius: 4px; }
+.pdf-foot { margin-top: 32px; padding-top: 16px; border-top: 1px solid #e8dcc4; text-align: center; font-size: 9.5px; color: #8B6F47; letter-spacing: 1.5px; }
+
+.loading-overlay {
+position: fixed; inset: 0;
+background: rgba(8, 5, 3, 0.85);
+backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+z-index: 250; display: none;
+align-items: center; justify-content: center;
+flex-direction: column; gap: 16px;
+}
+.loading-overlay.show { display: flex; }
+.spinner { width: 44px; height: 44px; border: 3px solid var(–line); border-top-color: var(–gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.loading-text { color: var(–gold); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; }
 </style>
 
 </head>
 <body>
 
 <div class="pin-gate" id="pinGate">
-  <div class="pin-brand">UMINO</div>
-  <h2>היסטוריית משמרות</h2>
-  <p>הזן קוד גישה</p>
-  <input type="password" inputmode="numeric" maxlength="4" class="pin-input" id="pinInput" autofocus>
-  <div class="pin-error" id="pinError"></div>
+  <div class="pin-card">
+    <div class="pin-brand">UMINO</div>
+    <div class="pin-title">היסטוריית משמרות</div>
+    <div class="pin-sub">הזיני קוד גישה</div>
+    <input type="number" inputmode="numeric" maxlength="4" class="pin-input" id="pinInput" autocomplete="off">
+    <div class="pin-error" id="pinError"></div>
+  </div>
 </div>
 
-<header class="header">
-  <div class="header-inner">
+<header class="header" style="display:none;" id="mainHeader">
+  <div class="header-row">
     <div>
       <div class="header-title">היסטוריית משמרות</div>
-      <div class="header-sub">UMINO</div>
+      <div class="header-subtitle">UMINO MODERN SUSHI</div>
     </div>
-    <a href="index.html" class="back-link">← חזרה</a>
+    <a href="index.html" class="back-btn">→ חזרה</a>
   </div>
 </header>
 
-<div class="container" id="mainContent" style="display:none;">
-  <div class="filter-bar">
+<main class="content" id="mainContent" style="display:none;">
+
+  <div class="filters">
     <select id="rangeFilter">
-      <option value="7">7 ימים</option>
-      <option value="30" selected>30 יום</option>
-      <option value="90">90 יום</option>
+      <option value="7">7 ימים אחרונים</option>
+      <option value="30" selected>30 ימים אחרונים</option>
+      <option value="90">90 ימים אחרונים</option>
       <option value="all">הכל</option>
     </select>
-    <select id="managerFilter">
-      <option value="">כל האחמ"שים</option>
-    </select>
-    <input type="text" id="searchFilter" placeholder="חיפוש בטקסט הדוחות...">
+    <select id="managerFilter"><option value="">כל האחמ"שיות</option></select>
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="חיפוש בטקסט הדוחות...">
+    </div>
   </div>
-  <div id="content"><div class="loading">טוען...</div></div>
-</div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">דוחות</div><div class="kpi-value" id="kpiCount">—</div></div>
+    <div class="kpi"><div class="kpi-label">הכנסה</div><div class="kpi-value" id="kpiRevenue">—</div></div>
+    <div class="kpi"><div class="kpi-label">סועדים</div><div class="kpi-value" id="kpiCovers">—</div><div class="kpi-sub" id="kpiPpa"></div></div>
+    <div class="kpi"><div class="kpi-label">החזרות</div><div class="kpi-value" id="kpiReturns">—</div></div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">הכנסה יומית</div>
+    <div class="chart-wrap"><canvas id="chartRevenue"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">PPA לאורך זמן</div>
+    <div class="chart-wrap"><canvas id="chartPpa"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">סועדים יומי</div>
+    <div class="chart-wrap"><canvas id="chartCovers"></canvas></div>
+  </div>
+
+  <div class="section-head">
+    <span class="section-title">דוחות</span>
+    <span class="section-count" id="sectionCount"></span>
+  </div>
+
+  <div id="reportList" class="report-list">
+    <div class="loading">טוען דוחות<span class="spinner-mini"></span></div>
+  </div>
+</main>
 
 <div class="modal-overlay" id="detailModal">
   <div class="modal">
-    <button class="modal-close" onclick="closeDetail()">×</button>
-    <div id="detailContent"></div>
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="detailTitle"></div>
+    <div class="modal-meta" id="detailMeta"></div>
+    <div id="detailBody"></div>
+    <div class="detail-actions">
+      <button class="action-btn action-pdf full" onclick="exportDetailPdf()">📄 שמור PDF</button>
+      <button class="action-btn action-wa" onclick="shareDetailWhatsApp()">💬 וואטסאפ</button>
+      <button class="action-btn action-copy" onclick="copyDetail()" id="copyDetailBtn">📋 העתק</button>
+      <button class="action-btn action-edit" onclick="editReport()">✏️ ערוך</button>
+      <button class="action-btn action-del" onclick="deleteReport()">🗑 מחק</button>
+    </div>
   </div>
 </div>
 
-<div class="pdf-loading" id="pdfLoading">
-  <div class="pdf-spinner"></div>
-  <div class="pdf-loading-text">מייצר PDF</div>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">מייצר PDF...</div>
 </div>
 
 <div id="pdfTemplate"></div>
+<div class="toast" id="toast"></div>
 
 <script>
+const PIN = '1234';
 const SUPABASE_URL = 'https://vzeowbriddhvhpishmhn.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6ZW93YnJpZGRodmhwaXNobWhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MTAyNDUsImV4cCI6MjA4ODM4NjI0NX0.PWvjFj41l0wB9awroZdDsMhCJ0yJXdrf1-k-45n0Rwk';
-const PIN = '1234';
-const PIN_KEY = 'umino-dash-auth';
 
 let allReports = [];
+let filteredReports = [];
+let currentDetail = null;
 let charts = {};
 
-function checkAuth() {
-  const auth = sessionStorage.getItem(PIN_KEY);
-  if (auth === 'ok') {
-    document.getElementById('pinGate').classList.add('hidden');
-    document.getElementById('mainContent').style.display = '';
-    loadReports();
-    return true;
+document.addEventListener('DOMContentLoaded', () => {
+  const pinInput = document.getElementById('pinInput');
+  const unlocked = sessionStorage.getItem('umino-dash-unlocked') === '1';
+  if (unlocked) {
+    enterApp();
+  } else {
+    setTimeout(() => pinInput.focus(), 200);
   }
-  return false;
+  pinInput.addEventListener('input', (e) => {
+    const v = e.target.value;
+    if (v.length === 4) {
+      if (v === PIN) {
+        sessionStorage.setItem('umino-dash-unlocked', '1');
+        enterApp();
+      } else {
+        document.getElementById('pinError').textContent = 'קוד שגוי';
+        e.target.value = '';
+        setTimeout(() => document.getElementById('pinError').textContent = '', 2000);
+      }
+    }
+  });
+});
+
+function enterApp() {
+  document.getElementById('pinGate').style.display = 'none';
+  document.getElementById('mainHeader').style.display = 'block';
+  document.getElementById('mainContent').style.display = 'block';
+  loadReports();
+  document.getElementById('rangeFilter').addEventListener('change', applyFilters);
+  document.getElementById('managerFilter').addEventListener('change', applyFilters);
+  document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 200));
+  document.getElementById('detailModal').addEventListener('click', (e) => {
+    if (e.target.id === 'detailModal') closeDetail();
+  });
 }
 
-document.getElementById('pinInput').addEventListener('input', (e) => {
-  const v = e.target.value;
-  const errEl = document.getElementById('pinError');
-  errEl.textContent = '';
-  if (v.length === 4) {
-    if (v === PIN) {
-      sessionStorage.setItem(PIN_KEY, 'ok');
-      checkAuth();
-    } else {
-      errEl.textContent = 'קוד שגוי';
-      e.target.value = '';
-    }
-  }
-});
+function debounce(fn, ms) {
+  let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); };
+}
 
 async function loadReports() {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/shift_reports?select=*&order=shift_date.desc,submitted_at.desc&limit=500`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/shift_reports?venue=eq.umino&order=shift_date.desc,id.desc&limit=500`, {
       headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+    if (!res.ok) throw new Error(`${res.status} ${await res.text()}`);
     allReports = await res.json();
     populateManagerFilter();
-    render();
+    applyFilters();
   } catch (e) {
-    document.getElementById('content').innerHTML = `<div class="empty">שגיאה בטעינה: ${e.message}</div>`;
+    console.error(e);
+    document.getElementById('reportList').innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">שגיאה בטעינה: ${escapeHtml(e.message)}</div></div>`;
   }
 }
 
 function populateManagerFilter() {
   const sel = document.getElementById('managerFilter');
-  const managers = [...new Set(allReports.map(r => r.manager_name).filter(Boolean))].sort();
-  managers.forEach(m => {
-    const opt = document.createElement('option');
-    opt.value = m; opt.textContent = m;
-    sel.appendChild(opt);
-  });
+  const names = [...new Set(allReports.map(r => r.manager_name).filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">כל האחמ"שיות</option>' + names.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
 }
 
-function getFiltered() {
+function applyFilters() {
   const range = document.getElementById('rangeFilter').value;
   const mgr = document.getElementById('managerFilter').value;
-  const search = document.getElementById('searchFilter').value.trim().toLowerCase();
-  let cutoff = null;
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  let f = [...allReports];
   if (range !== 'all') {
-    cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - parseInt(range));
-    cutoff = cutoff.toISOString().split('T')[0];
+    const days = parseInt(range);
+    const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - days);
+    f = f.filter(r => new Date(r.shift_date) >= cutoff);
   }
-  return allReports.filter(r => {
-    if (cutoff && r.shift_date < cutoff) return false;
-    if (mgr && r.manager_name !== mgr) return false;
-    if (search) {
-      const blob = [
-        r.manager_name, r.shift_narrative, r.floor_notes, r.kitchen_notes,
-        r.discipline_issues, r.tech_issues, r.shortages, r.credits, r.daily_tasks,
-        ...(r.returned_dishes || []).map(d => `${d.name} ${d.reason}`)
-      ].join(' ').toLowerCase();
-      if (!blob.includes(search)) return false;
-    }
-    if (!r.manager_name || r.manager_name.length < 2) return false;
-    return true;
-  });
+  if (mgr) f = f.filter(r => r.manager_name === mgr);
+  if (q) {
+    f = f.filter(r => {
+      const blob = [r.manager_name, r.shift_narrative, r.floor_notes, r.kitchen_notes, r.discipline_issues, r.wait_times, r.late_arrivals, r.tech_issues, r.shortages, r.credits, r.daily_tasks].filter(Boolean).join(' ').toLowerCase();
+      return blob.includes(q);
+    });
+  }
+  filteredReports = f;
+  renderKpis(f);
+  renderCharts(f);
+  renderList(f);
 }
 
-function render() {
-  const reports = getFiltered();
-  const content = document.getElementById('content');
-  if (reports.length === 0) {
-    content.innerHTML = '<div class="empty">אין דוחות בטווח הזה</div>';
-    return;
-  }
-  content.innerHTML = `
-    <div class="kpi-grid" id="kpiGrid"></div>
-    <div class="chart-card">
-      <div class="chart-title">הכנסה יומית</div>
-      <div class="chart-wrap"><canvas id="revenueChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">ש"ח לסועד (PPA)</div>
-      <div class="chart-wrap"><canvas id="ppaChart"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">סועדים יומי</div>
-      <div class="chart-wrap"><canvas id="coversChart"></canvas></div>
-    </div>
-    <div class="section-label">דוחות (<span id="reportCount">${reports.length}</span>)</div>
-    <div id="reportsList"></div>
-  `;
-  renderKPIs(reports);
-  renderCharts(reports);
-  renderList(reports);
-}
-
-function renderKPIs(reports) {
-  const totalRevenue = reports.reduce((s, r) => s + (Number(r.revenue) || 0), 0);
-  const totalCovers = reports.reduce((s, r) => s + (r.covers || 0), 0);
-  const ppa = totalCovers > 0 ? Math.round(totalRevenue / totalCovers) : 0;
-  const totalReturns = reports.reduce((s, r) => s + (r.returns_count || 0), 0);
-  const fmt = (n) => new Intl.NumberFormat('he-IL').format(n);
-  document.getElementById('kpiGrid').innerHTML = `
-    <div class="kpi"><div class="kpi-label">דוחות</div><div class="kpi-value">${reports.length}</div></div>
-    <div class="kpi"><div class="kpi-label">הכנסה</div><div class="kpi-value">₪${fmt(totalRevenue)}</div><div class="kpi-sub">סה"כ בטווח</div></div>
-    <div class="kpi"><div class="kpi-label">סועדים</div><div class="kpi-value">${fmt(totalCovers)}</div><div class="kpi-sub">PPA: ₪${ppa}</div></div>
-    <div class="kpi"><div class="kpi-label">החזרות</div><div class="kpi-value">${totalReturns}</div></div>
-  `;
+function renderKpis(reports) {
+  document.getElementById('kpiCount').textContent = reports.length;
+  const totalRev = reports.reduce((s, r) => s + (Number(r.revenue) || 0), 0);
+  const totalCovers = reports.reduce((s, r) => s + (Number(r.covers) || 0), 0);
+  const totalReturns = reports.reduce((s, r) => s + (Number(r.returns_count) || 0), 0);
+  document.getElementById('kpiRevenue').textContent = totalRev >= 1000 ? `₪${(totalRev/1000).toFixed(0)}K` : `₪${totalRev}`;
+  document.getElementById('kpiCovers').textContent = totalCovers.toLocaleString('he-IL');
+  document.getElementById('kpiPpa').textContent = totalCovers ? `₪${Math.round(totalRev/totalCovers)}/סועד` : '';
+  document.getElementById('kpiReturns').textContent = totalReturns;
+  document.getElementById('sectionCount').textContent = reports.length ? `${reports.length} דוחות` : '';
 }
 
 function renderCharts(reports) {
-  const sorted = [...reports].sort((a, b) => a.shift_date.localeCompare(b.shift_date));
-  const byDate = {};
-  sorted.forEach(r => {
-    const d = r.shift_date;
-    if (!byDate[d]) byDate[d] = { revenue: 0, covers: 0, count: 0 };
-    byDate[d].revenue += Number(r.revenue) || 0;
-    byDate[d].covers += r.covers || 0;
-    byDate[d].count += 1;
+  const sorted = [...reports].sort((a, b) => new Date(a.shift_date) - new Date(b.shift_date));
+  const labels = sorted.map(r => {
+    const d = new Date(r.shift_date);
+    return `${d.getDate()}/${d.getMonth()+1}`;
   });
-  const dates = Object.keys(byDate).sort();
-  const labels = dates.map(d => new Date(d).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' }));
-  const revenues = dates.map(d => byDate[d].revenue);
-  const covers = dates.map(d => byDate[d].covers);
-  const ppas = dates.map(d => byDate[d].covers > 0 ? Math.round(byDate[d].revenue / byDate[d].covers) : 0);
+  const revenue = sorted.map(r => Number(r.revenue) || 0);
+  const covers = sorted.map(r => Number(r.covers) || 0);
+  const ppa = sorted.map(r => (r.revenue && r.covers) ? Math.round(Number(r.revenue) / Number(r.covers)) : null);
 
-  Object.values(charts).forEach(c => c?.destroy());
-  charts = {};
   const baseOpts = {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#2a2018', titleColor: '#d4a857', bodyColor: '#f4ebdd',
+        borderColor: '#3a2d23', borderWidth: 1, padding: 10, displayColors: false
+      }
+    },
     scales: {
-      x: { ticks: { color: '#9C8B76', font: { size: 10 } }, grid: { color: '#E5DCC9' } },
-      y: { ticks: { color: '#9C8B76', font: { size: 10 } }, grid: { color: '#E5DCC9' }, beginAtZero: true }
+      x: { ticks: { color: '#8a7866', font: { size: 10 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 7 }, grid: { color: 'rgba(58, 45, 35, 0.4)' } },
+      y: { ticks: { color: '#8a7866', font: { size: 10 } }, grid: { color: 'rgba(58, 45, 35, 0.4)' } }
     }
   };
-  charts.revenue = new Chart(document.getElementById('revenueChart'), {
+
+  if (charts.revenue) charts.revenue.destroy();
+  charts.revenue = new Chart(document.getElementById('chartRevenue'), {
     type: 'bar',
-    data: { labels, datasets: [{ data: revenues, backgroundColor: '#B8924A', borderRadius: 4 }] },
+    data: { labels, datasets: [{ data: revenue, backgroundColor: '#d4a857', borderRadius: 4 }] },
     options: baseOpts
   });
-  charts.ppa = new Chart(document.getElementById('ppaChart'), {
+
+  if (charts.ppa) charts.ppa.destroy();
+  charts.ppa = new Chart(document.getElementById('chartPpa'), {
     type: 'line',
-    data: { labels, datasets: [{
-      data: ppas, borderColor: '#5A6B4D', backgroundColor: 'rgba(90, 107, 77, 0.1)',
-      fill: true, tension: 0.3, pointBackgroundColor: '#5A6B4D', pointRadius: 4
-    }] },
+    data: { labels, datasets: [{ data: ppa, borderColor: '#7fb069', backgroundColor: 'rgba(127, 176, 105, 0.1)', tension: 0.3, fill: true, pointBackgroundColor: '#7fb069', pointRadius: 3 }] },
     options: baseOpts
   });
-  charts.covers = new Chart(document.getElementById('coversChart'), {
+
+  if (charts.covers) charts.covers.destroy();
+  charts.covers = new Chart(document.getElementById('chartCovers'), {
     type: 'bar',
-    data: { labels, datasets: [{ data: covers, backgroundColor: '#8FA77E', borderRadius: 4 }] },
+    data: { labels, datasets: [{ data: covers, backgroundColor: '#b89046', borderRadius: 4 }] },
     options: baseOpts
   });
 }
 
 function renderList(reports) {
-  const list = document.getElementById('reportsList');
-  list.innerHTML = reports.map((r, idx) => {
-    const d = new Date(r.shift_date).toLocaleDateString('he-IL', { weekday: 'short', day: '2-digit', month: '2-digit', year: '2-digit' });
-    const shiftLabel = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[r.shift_type] || r.shift_type;
-    const shiftClass = r.shift_type === 'morning' ? 'morning' : '';
-    const flags = [];
-    if (r.tech_issues && r.tech_issues.trim() && r.tech_issues !== '0') flags.push({ t: 'תקלות', c: 'warn' });
-    if (r.shortages && r.shortages.trim() && r.shortages !== '0') flags.push({ t: 'חוסרים', c: 'warn' });
-    if (r.returns_count > 0) flags.push({ t: `${r.returns_count} החזרות`, c: 'warn' });
-    if (r.discipline_issues && r.discipline_issues.trim() && r.discipline_issues !== '0' && !r.discipline_issues.match(/^(אין|לא|לא היה|0)/)) flags.push({ t: 'משמעת', c: 'err' });
-    if (r.cash_diff && Number(r.cash_diff) !== 0) flags.push({ t: `קופה ${r.cash_diff > 0 ? 'חוסר' : 'עודף'}`, c: 'err' });
-    if (flags.length === 0 && r.shift_narrative) flags.push({ t: '✓ ללא חריגים', c: 'ok' });
-    const ppa = r.covers > 0 && r.revenue ? Math.round(Number(r.revenue) / r.covers) : null;
+  const wrap = document.getElementById('reportList');
+  if (!reports.length) {
+    wrap.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-text">אין דוחות בטווח הנבחר</div></div>`;
+    return;
+  }
+  wrap.innerHTML = reports.map(r => {
+    const d = new Date(r.shift_date);
+    const dateStr = d.toLocaleDateString('he-IL', { weekday: 'short', day: '2-digit', month: '2-digit' });
+    const ppa = (r.revenue && r.covers) ? Math.round(r.revenue / r.covers) : null;
+    const flags = computeFlags(r);
     return `
-      <div class="report-card" onclick="showDetail(${idx})">
-        <div class="report-head">
-          <div class="report-date">${d}</div>
-          <span class="report-shift ${shiftClass}">${shiftLabel}</span>
+      <div class="report" onclick="openDetail(${r.id})">
+        <div class="report-row1">
+          <div class="report-date">${dateStr}</div>
+          <span class="report-pill ${r.shift_type}">${shiftLabel(r.shift_type)}</span>
         </div>
-        <div class="report-meta">
-          <span><strong>${r.manager_name || '—'}</strong></span>
-          ${r.revenue ? `<span>₪${new Intl.NumberFormat('he-IL').format(Number(r.revenue))}</span>` : ''}
-          ${r.covers ? `<span>${r.covers} סועדים${ppa ? ` · ₪${ppa}` : ''}</span>` : ''}
+        <div class="report-mgr">${escapeHtml(r.manager_name || '—')}</div>
+        <div class="report-stats">
+          <div class="report-stat"><div class="report-stat-label">הכנסה</div><div class="report-stat-value">${r.revenue ? '₪' + Number(r.revenue).toLocaleString('he-IL') : '—'}</div></div>
+          <div class="report-stat"><div class="report-stat-label">סועדים</div><div class="report-stat-value">${r.covers || '—'}</div></div>
+          <div class="report-stat"><div class="report-stat-label">PPA</div><div class="report-stat-value">${ppa ? '₪' + ppa : '—'}</div></div>
+          <div class="report-stat"><div class="report-stat-label">החזרות</div><div class="report-stat-value">${r.returns_count || '0'}</div></div>
         </div>
-        ${flags.length ? `<div class="report-flags">${flags.map(f => `<span class="flag ${f.c}">${f.t}</span>`).join('')}</div>` : ''}
+        ${flags.length ? `<div class="report-flags">${flags.map(f => `<span class="flag ${f.type}">${f.label}</span>`).join('')}</div>` : ''}
       </div>
     `;
   }).join('');
-  window._renderedReports = reports;
 }
 
-function showDetail(idx) {
-  const r = window._renderedReports[idx];
-  if (!r) return;
-  const d = new Date(r.shift_date).toLocaleDateString('he-IL', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
-  const shiftLabel = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[r.shift_type] || r.shift_type;
-  const sec = (title, val) => {
-    if (!val || (typeof val === 'string' && (val.trim() === '' || val.trim() === '0'))) return '';
-    return `<div class="detail-section"><h3>${title}</h3><p>${escapeHtml(val)}</p></div>`;
-  };
-  const dishes = (r.returned_dishes || []).filter(d => d.name);
-  let dishesHtml = '';
-  if (dishes.length) {
-    dishesHtml = `<div class="detail-section"><h3>מנות חוזרות (${dishes.length})</h3><ul>${
-      dishes.map(d => `<li>${escapeHtml(d.name)}${d.reason ? ` — ${escapeHtml(d.reason)}` : ''}</li>`).join('')
-    }</ul></div>`;
+function computeFlags(r) {
+  const flags = [];
+  if (r.cash_diff && Math.abs(Number(r.cash_diff)) >= 50) {
+    flags.push({ type: 'err', label: `קופה ${Number(r.cash_diff) > 0 ? 'חוסר' : 'עודף'} ₪${Math.abs(r.cash_diff)}` });
   }
-  const fmt = (n) => n != null ? new Intl.NumberFormat('he-IL').format(n) : '—';
-  document.getElementById('detailContent').innerHTML = `
-    <h2 style="font-family:'Frank Ruhl Libre',serif;text-align:center;color:var(--ink);margin-bottom:4px;font-weight:500;font-size:22px;">${d}</h2>
-    <p style="text-align:center;color:var(--ink-faint);font-size:12px;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;">${shiftLabel} · ${escapeHtml(r.manager_name || '')}</p>
-    <div class="kpi-grid" style="margin-bottom:20px;">
-      <div class="kpi"><div class="kpi-label">הכנסה</div><div class="kpi-value" style="font-size:18px;">₪${fmt(r.revenue ? Number(r.revenue) : null)}</div></div>
-      <div class="kpi"><div class="kpi-label">סועדים</div><div class="kpi-value" style="font-size:18px;">${fmt(r.covers)}</div></div>
-      <div class="kpi"><div class="kpi-label">משלוחים/TA</div><div class="kpi-value" style="font-size:18px;">${(r.deliveries||0)+(r.takeaway||0) || '—'}</div></div>
-      <div class="kpi"><div class="kpi-label">קופה</div><div class="kpi-value" style="font-size:18px;color:${r.cash_diff && Number(r.cash_diff) !== 0 ? 'var(--rust)' : 'var(--green)'}">${r.cash_diff != null ? '₪' + fmt(Number(r.cash_diff)) : '—'}</div></div>
-    </div>
-    ${sec('מהלך המשמרת', r.shift_narrative)}
-    ${sec('פלור', r.floor_notes)}
-    ${sec('מטבח', r.kitchen_notes)}
-    ${dishesHtml}
-    ${sec('בעיות משמעת', r.discipline_issues)}
-    ${sec('זמני המתנה', r.wait_times)}
-    ${sec('איחורים', r.late_arrivals)}
-    ${sec('תקלות טכניות', r.tech_issues)}
-    ${sec('חוסרים', r.shortages)}
-    ${sec('זיכויים', r.credits)}
-    ${sec('משימות יומיות', r.daily_tasks)}
-    <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
-      <button class="btn-action gold" onclick="downloadDetailPDF(${idx})">📄 PDF</button>
-      <button class="btn-action green" onclick="shareDetailWhatsApp(${idx})">💬 וואטסאפ</button>
-      <button class="btn-action outline" onclick="copyDetail(${idx})">📋 העתק</button>
-      <button class="btn-action outline" onclick="editReport(${idx})">✏️ ערוך</button>
-      <button class="btn-action danger" onclick="deleteReport(${idx})">🗑 מחק</button>
-    </div>
-  `;
+  if (r.returns_count && Number(r.returns_count) >= 3) flags.push({ type: 'warn', label: `${r.returns_count} החזרות` });
+  if (r.tech_issues && r.tech_issues.trim() && r.tech_issues !== '0') flags.push({ type: 'warn', label: 'תקלה טכנית' });
+  if (r.discipline_issues && r.discipline_issues.trim() && r.discipline_issues !== '0') flags.push({ type: 'err', label: 'משמעת' });
+  if (r.shortages && r.shortages.trim() && r.shortages !== '0') flags.push({ type: 'warn', label: 'חוסרים' });
+  if (!flags.length && r.revenue && Number(r.revenue) > 0) flags.push({ type: 'ok', label: '✓ תקין' });
+  return flags;
+}
+
+function shiftLabel(t) { return ({ evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[t] || t); }
+
+function openDetail(id) {
+  const r = allReports.find(x => x.id === id);
+  if (!r) return;
+  currentDetail = r;
+  const d = new Date(r.shift_date);
+  const dateStr = d.toLocaleDateString('he-IL', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+  document.getElementById('detailTitle').textContent = r.manager_name || '—';
+  document.getElementById('detailMeta').textContent = `${dateStr} · ${shiftLabel(r.shift_type)}`;
+  const ppa = (r.revenue && r.covers) ? Math.round(r.revenue / r.covers) : null;
+
+  let html = `<div class="detail-kpis">
+    <div class="detail-kpi"><div class="detail-kpi-label">הכנסה</div><div class="detail-kpi-val">${r.revenue ? '₪' + Number(r.revenue).toLocaleString('he-IL') : '—'}</div></div>
+    <div class="detail-kpi"><div class="detail-kpi-label">סועדים</div><div class="detail-kpi-val">${r.covers || '—'}</div></div>
+    <div class="detail-kpi"><div class="detail-kpi-label">PPA</div><div class="detail-kpi-val">${ppa ? '₪' + ppa : '—'}</div></div>
+    <div class="detail-kpi"><div class="detail-kpi-label">קופה</div><div class="detail-kpi-val" style="color:${r.cash_diff && Number(r.cash_diff) !== 0 ? '#c45a4d' : '#7fb069'}">${r.cash_diff != null ? '₪' + r.cash_diff : '—'}</div></div>
+  </div>`;
+
+  const sec = (title, content) => {
+    if (!content || (typeof content === 'string' && (content.trim() === '' || content.trim() === '0'))) return '';
+    return `<div class="detail-section"><div class="detail-section-title">${title}</div><div class="detail-section-text">${escapeHtml(content)}</div></div>`;
+  };
+  html += sec('מהלך המשמרת', r.shift_narrative);
+  html += sec('פלור', r.floor_notes);
+  html += sec('מטבח', r.kitchen_notes);
+
+  const dishes = (r.returned_dishes || []).filter(d => d && d.name);
+  if (dishes.length) {
+    html += `<div class="detail-section"><div class="detail-section-title">מנות חוזרות (${dishes.length})</div>`;
+    dishes.forEach(d => html += `<div class="detail-dish"><strong>${escapeHtml(d.name)}</strong>${d.reason ? ` — ${escapeHtml(d.reason)}` : ''}</div>`);
+    html += `</div>`;
+  }
+  html += sec('משמעת', r.discipline_issues);
+  html += sec('זמני המתנה', r.wait_times);
+  html += sec('איחורים', r.late_arrivals);
+  html += sec('תקלות טכניות', r.tech_issues);
+  html += sec('חוסרים', r.shortages);
+  html += sec('זיכויים', r.credits);
+  html += sec('משימות יומיות', r.daily_tasks);
+
+  document.getElementById('detailBody').innerHTML = html;
   document.getElementById('detailModal').classList.add('show');
 }
+
 function closeDetail() {
   document.getElementById('detailModal').classList.remove('show');
+  currentDetail = null;
 }
 
-async function copyDetail(idx) {
-  const r = window._renderedReports[idx];
-  const text = buildTextReport(r);
-  try {
-    await navigator.clipboard.writeText(text);
-    alert('הועתק ✓');
-  } catch (e) { alert('ההעתקה נכשלה'); }
+function buildTextReport(data) {
+  const lines = [];
+  const fmt = (n, suffix = '') => (n === null || n === undefined || n === '') ? '—' : `${n}${suffix}`;
+  const dateStr = data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '—';
+  lines.push(`*סיכום משמרת — אומינו*`);
+  lines.push(`${dateStr} · ${shiftLabel(data.shift_type)}`);
+  lines.push(`אחמ"ש: ${data.manager_name || '—'}`);
+  lines.push('');
+  lines.push(`הכנסה: ${fmt(data.revenue, '₪')}`);
+  lines.push(`סועדים: ${fmt(data.covers)}  |  משלוחים: ${fmt(data.deliveries)}  |  TA: ${fmt(data.takeaway)}`);
+  if (data.taxis) lines.push(`מוניות: ${data.taxis}`);
+  if (data.cash_diff != null && data.cash_diff !== 0) {
+    lines.push(`קופה: ${data.cash_diff > 0 ? 'חוסר' : 'עודף'} ${Math.abs(data.cash_diff)}₪`);
+  }
+  if (data.shift_narrative) { lines.push(''); lines.push(`*מהלך המשמרת:*`); lines.push(data.shift_narrative); }
+  if (data.floor_notes) { lines.push(''); lines.push(`*פלור:*`); lines.push(data.floor_notes); }
+  if (data.kitchen_notes) { lines.push(''); lines.push(`*מטבח:*`); lines.push(data.kitchen_notes); }
+  const dishes = (data.returned_dishes || []).filter(d => d && d.name);
+  if (dishes.length) {
+    lines.push(''); lines.push(`*מנות חוזרות:*`);
+    dishes.forEach(d => lines.push(`• ${d.name}${d.reason ? ` — ${d.reason}` : ''}`));
+  }
+  if (data.discipline_issues && data.discipline_issues !== '0') { lines.push(''); lines.push(`*משמעת:* ${data.discipline_issues}`); }
+  if (data.wait_times && data.wait_times !== '0') { lines.push(''); lines.push(`*זמני המתנה:* ${data.wait_times}`); }
+  if (data.late_arrivals && data.late_arrivals !== '0') { lines.push(''); lines.push(`*איחורים:* ${data.late_arrivals}`); }
+  if (data.tech_issues && data.tech_issues !== '0') { lines.push(''); lines.push(`*תקלות:* ${data.tech_issues}`); }
+  if (data.shortages && data.shortages !== '0') { lines.push(''); lines.push(`*חוסרים:* ${data.shortages}`); }
+  if (data.credits && data.credits !== '0') { lines.push(''); lines.push(`*זיכויים:* ${data.credits}`); }
+  if (data.daily_tasks) { lines.push(''); lines.push(`*משימות יומיות:* ${data.daily_tasks}`); }
+  return lines.join('\n');
 }
 
-async function shareDetailWhatsApp(idx) {
-  const r = window._renderedReports[idx];
-  const text = buildTextReport(r);
+async function shareDetailWhatsApp() {
+  if (!currentDetail) return;
+  const text = buildTextReport(currentDetail);
   if (navigator.share) {
-    try {
-      await navigator.share({ title: 'סיכום משמרת — אומינו', text: text });
-      return;
-    } catch (e) { if (e.name === 'AbortError') return; }
+    try { await navigator.share({ title: 'סיכום משמרת — אומינו', text }); return; }
+    catch (e) { if (e.name === 'AbortError') return; }
   }
   window.location.href = `whatsapp://send?text=${encodeURIComponent(text)}`;
   setTimeout(() => {
@@ -614,109 +690,119 @@ async function shareDetailWhatsApp(idx) {
   }, 500);
 }
 
-function editReport(idx) {
-  const r = window._renderedReports[idx];
-  if (!r) return;
-  sessionStorage.setItem('umino-edit-record', JSON.stringify(r));
-  window.location.href = 'index.html?edit=' + r.id;
-}
-
-async function deleteReport(idx) {
-  const r = window._renderedReports[idx];
-  if (!r) return;
-  const dateStr = new Date(r.shift_date).toLocaleDateString('he-IL');
-  if (!confirm(`למחוק את הדוח של ${r.manager_name || '—'} מתאריך ${dateStr}?\n\nפעולה זו אינה ניתנת לביטול.`)) return;
+async function copyDetail() {
+  if (!currentDetail) return;
+  const text = buildTextReport(currentDetail);
+  let success = false;
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/shift_reports?id=eq.${r.id}`, {
-      method: 'DELETE',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Prefer': 'return=minimal'
-      }
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    allReports = allReports.filter(x => x.id !== r.id);
-    closeDetail();
-    render();
-  } catch (e) { alert('המחיקה נכשלה: ' + e.message); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      success = true;
+    }
+  } catch (e) {}
+  if (!success) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { success = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  const btn = document.getElementById('copyDetailBtn');
+  if (success) {
+    btn.textContent = '✓ הועתק';
+    setTimeout(() => { btn.innerHTML = '📋 העתק'; }, 2000);
+  } else { showToast('ההעתקה נכשלה', 'err'); }
 }
 
-function escapePdfText(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function editReport() {
+  if (!currentDetail) return;
+  sessionStorage.setItem('umino-edit-record', JSON.stringify(currentDetail));
+  window.location.href = `index.html?edit=${currentDetail.id}`;
+}
+
+async function deleteReport() {
+  if (!currentDetail) return;
+  if (!confirm(`למחוק את הדוח של ${currentDetail.manager_name} מ-${new Date(currentDetail.shift_date).toLocaleDateString('he-IL')}?`)) return;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/shift_reports?id=eq.${currentDetail.id}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    if (!res.ok) throw new Error(`${res.status}`);
+    showToast('הדוח נמחק', 'ok');
+    closeDetail();
+    loadReports();
+  } catch (e) {
+    showToast('שגיאה במחיקה: ' + e.message, 'err');
+  }
 }
 
 function buildPdfTemplate(data) {
   const fmt = (n) => (n === null || n === undefined || n === '') ? '—' : new Intl.NumberFormat('he-IL').format(n);
   const dateStr = data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
-  const shiftType = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[data.shift_type] || '';
+  const sType = shiftLabel(data.shift_type);
   const ppa = (data.covers && data.revenue) ? Math.round(Number(data.revenue) / Number(data.covers)) : null;
   const sec = (title, content) => {
     if (!content || (typeof content === 'string' && (content.trim() === '' || content.trim() === '0'))) return '';
-    return `<div class="pdf-section"><div class="pdf-section-title">${title}</div><div class="pdf-section-content">${escapePdfText(content)}</div></div>`;
+    return `<div class="pdf-section"><div class="pdf-section-title">${title}</div><div class="pdf-section-text">${escapeHtml(content)}</div></div>`;
   };
-  const dishes = (data.returned_dishes || []).filter(d => d.name);
+  const dishes = (data.returned_dishes || []).filter(d => d && d.name);
   let dishesHtml = '';
   if (dishes.length) {
-    dishesHtml = `<div class="pdf-section"><div class="pdf-section-title">מנות חוזרות (${dishes.length})</div><ul class="pdf-dishes-list">${dishes.map(d => `<li><strong>${escapePdfText(d.name)}</strong>${d.reason ? `<span class="reason"> — ${escapePdfText(d.reason)}</span>` : ''}</li>`).join('')}</ul></div>`;
+    dishesHtml = `<div class="pdf-section"><div class="pdf-section-title">מנות חוזרות (${dishes.length})</div><ul class="pdf-dishes">${dishes.map(d => `<li><strong>${escapeHtml(d.name)}</strong>${d.reason ? ` — ${escapeHtml(d.reason)}` : ''}</li>`).join('')}</ul></div>`;
   }
-  let exceptionsHtml = '';
-  const hasExceptions = (data.discipline_issues && data.discipline_issues !== '0') || (data.wait_times && data.wait_times !== '0') || (data.late_arrivals && data.late_arrivals !== '0');
-  if (hasExceptions) {
-    exceptionsHtml = `<div class="pdf-section"><div class="pdf-section-title">חריגים</div>`;
-    if (data.discipline_issues && data.discipline_issues !== '0')
-      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">בעיות משמעת</div><div class="pdf-section-content">${escapePdfText(data.discipline_issues)}</div></div>`;
-    if (data.wait_times && data.wait_times !== '0')
-      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">זמני המתנה</div><div class="pdf-section-content">${escapePdfText(data.wait_times)}</div></div>`;
-    if (data.late_arrivals && data.late_arrivals !== '0')
-      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">איחורים</div><div class="pdf-section-content">${escapePdfText(data.late_arrivals)}</div></div>`;
-    exceptionsHtml += `</div>`;
+  let exHtml = '';
+  const hasEx = (data.discipline_issues && data.discipline_issues !== '0') || (data.wait_times && data.wait_times !== '0') || (data.late_arrivals && data.late_arrivals !== '0');
+  if (hasEx) {
+    exHtml = `<div class="pdf-section"><div class="pdf-section-title">חריגים</div>`;
+    if (data.discipline_issues && data.discipline_issues !== '0') exHtml += `<div class="pdf-sub-block"><div class="pdf-sub-label">בעיות משמעת</div><div class="pdf-section-text">${escapeHtml(data.discipline_issues)}</div></div>`;
+    if (data.wait_times && data.wait_times !== '0') exHtml += `<div class="pdf-sub-block"><div class="pdf-sub-label">זמני המתנה</div><div class="pdf-section-text">${escapeHtml(data.wait_times)}</div></div>`;
+    if (data.late_arrivals && data.late_arrivals !== '0') exHtml += `<div class="pdf-sub-block"><div class="pdf-sub-label">איחורים</div><div class="pdf-section-text">${escapeHtml(data.late_arrivals)}</div></div>`;
+    exHtml += `</div>`;
   }
   return `
-    <div class="pdf-header">
+    <div class="pdf-head">
       <div class="pdf-brand">UMINO MODERN SUSHI</div>
-      <div class="pdf-title">סיכום משמרת</div>
-      <div class="pdf-subtitle">${dateStr} · ${shiftType}</div>
+      <div class="pdf-title-main">סיכום משמרת</div>
+      <div class="pdf-subtitle">${dateStr} · ${sType}</div>
     </div>
-    <div class="pdf-meta">
-      <div class="pdf-meta-item"><div class="pdf-meta-label">אחמ"ש</div><div class="pdf-meta-value">${escapePdfText(data.manager_name || '—')}</div></div>
-      <div class="pdf-meta-item"><div class="pdf-meta-label">תאריך</div><div class="pdf-meta-value">${data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '—'}</div></div>
-      <div class="pdf-meta-item"><div class="pdf-meta-label">משמרת</div><div class="pdf-meta-value">${shiftType}</div></div>
+    <div class="pdf-meta-strip">
+      <div class="pdf-meta-cell"><div class="pdf-meta-label">אחמ"ש</div><div class="pdf-meta-value">${escapeHtml(data.manager_name || '—')}</div></div>
+      <div class="pdf-meta-cell"><div class="pdf-meta-label">תאריך</div><div class="pdf-meta-value">${data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '—'}</div></div>
+      <div class="pdf-meta-cell"><div class="pdf-meta-label">משמרת</div><div class="pdf-meta-value">${sType}</div></div>
     </div>
-    <div class="pdf-kpi-strip">
+    <div class="pdf-kpis">
       <div class="pdf-kpi"><div class="pdf-kpi-label">הכנסה</div><div class="pdf-kpi-value">₪${fmt(data.revenue)}</div>${ppa ? `<div class="pdf-kpi-sub">₪${ppa} לסועד</div>` : ''}</div>
       <div class="pdf-kpi"><div class="pdf-kpi-label">סועדים</div><div class="pdf-kpi-value">${fmt(data.covers)}</div></div>
-      <div class="pdf-kpi"><div class="pdf-kpi-label">משלוחים / TA</div><div class="pdf-kpi-value">${(data.deliveries || 0) + (data.takeaway || 0) || '—'}</div></div>
-      <div class="pdf-kpi"><div class="pdf-kpi-label">קופה</div><div class="pdf-kpi-value" style="color:${data.cash_diff && Number(data.cash_diff) !== 0 ? '#B85C3C' : '#5A6B4D'}">${data.cash_diff != null ? '₪' + fmt(Number(data.cash_diff)) : '—'}</div></div>
+      <div class="pdf-kpi"><div class="pdf-kpi-label">משלוחים/TA</div><div class="pdf-kpi-value">${(data.deliveries || 0) + (data.takeaway || 0) || '—'}</div></div>
+      <div class="pdf-kpi"><div class="pdf-kpi-label">קופה</div><div class="pdf-kpi-value" style="color:${data.cash_diff && Number(data.cash_diff) !== 0 ? '#C45A4D' : '#7FB069'}">${data.cash_diff != null ? '₪' + fmt(Number(data.cash_diff)) : '—'}</div></div>
     </div>
     ${sec('מהלך המשמרת', data.shift_narrative)}
     ${sec('פלור', data.floor_notes)}
     ${sec('מטבח', data.kitchen_notes)}
     ${dishesHtml}
-    ${exceptionsHtml}
+    ${exHtml}
     ${sec('תקלות טכניות', data.tech_issues)}
     ${sec('חוסרים', data.shortages)}
     ${sec('זיכויים', data.credits)}
     ${sec('משימות יומיות', data.daily_tasks)}
-    <div class="pdf-footer">UMINO MODERN SUSHI · נוצר ב-${new Date().toLocaleString('he-IL')}</div>
+    <div class="pdf-foot">UMINO MODERN SUSHI · נוצר ב-${new Date().toLocaleString('he-IL')}</div>
   `;
 }
 
-async function downloadDetailPDF(idx) {
-  const data = window._renderedReports[idx];
-  if (!data) return;
+async function exportDetailPdf() {
+  if (!currentDetail) return;
+  const data = currentDetail;
   if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
-    alert('ספריות PDF נטענות, נסה שוב');
-    return;
+    showToast('הספריות עדיין נטענות', 'err'); return;
   }
-  const loading = document.getElementById('pdfLoading');
-  loading.classList.add('show');
+  document.getElementById('loadingOverlay').classList.add('show');
   try {
     const tpl = document.getElementById('pdfTemplate');
     tpl.innerHTML = buildPdfTemplate(data);
-    if (document.fonts?.ready) await document.fonts.ready;
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
     await new Promise(r => setTimeout(r, 100));
-    const canvas = await html2canvas(tpl, { scale: 2, useCORS: true, backgroundColor: '#FCFAF4', logging: false });
+    const canvas = await html2canvas(tpl, { scale: 2, useCORS: true, backgroundColor: '#FBF7F0', logging: false });
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const pdfWidth = 210, pdfHeight = 297;
@@ -736,53 +822,25 @@ async function downloadDetailPDF(idx) {
         remaining -= pdfHeight;
       }
     }
-    const dateStr = data.shift_date ? data.shift_date.replace(/-/g, '_') : 'unknown';
-    const mgrStr = (data.manager_name || 'umino').replace(/[^\w\u0590-\u05FF]/g, '_');
-    pdf.save(`umino_shift_${dateStr}_${mgrStr}.pdf`);
+    const dStr = data.shift_date ? data.shift_date.replace(/-/g, '_') : 'unknown';
+    const mgr = (data.manager_name || 'umino').replace(/[^\w\u0590-\u05FF]/g, '_');
+    pdf.save(`umino_${dStr}_${mgr}.pdf`);
     tpl.innerHTML = '';
   } catch (e) {
-    console.error('PDF error:', e);
-    alert('יצירת PDF נכשלה: ' + e.message);
+    console.error(e);
+    showToast('יצירת PDF נכשלה: ' + e.message, 'err');
   } finally {
-    loading.classList.remove('show');
+    document.getElementById('loadingOverlay').classList.remove('show');
   }
 }
 
-function buildTextReport(data) {
-  const lines = [];
-  const fmt = (n, suffix = '') => (n === null || n === undefined || n === '') ? '—' : `${n}${suffix}`;
-  const dateStr = data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '—';
-  const shiftType = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[data.shift_type] || data.shift_type;
-  lines.push(`📋 *סיכום משמרת — אומינו*`);
-  lines.push(`📅 ${dateStr} · ${shiftType}`);
-  lines.push(`👤 אחמ"ש: ${data.manager_name || '—'}`);
-  lines.push('');
-  lines.push(`💰 הכנסה: ${fmt(data.revenue, '₪')}`);
-  lines.push(`👥 סועדים: ${fmt(data.covers)}  |  משלוחים: ${fmt(data.deliveries)}  |  TA: ${fmt(data.takeaway)}`);
-  if (data.shift_narrative) { lines.push(''); lines.push(`📝 *מהלך המשמרת:*`); lines.push(data.shift_narrative); }
-  if (data.floor_notes) { lines.push(''); lines.push(`🍽 *פלור:*`); lines.push(data.floor_notes); }
-  if (data.kitchen_notes) { lines.push(''); lines.push(`🔥 *מטבח:*`); lines.push(data.kitchen_notes); }
-  if ((data.returned_dishes || []).length) {
-    lines.push(''); lines.push(`↩️ *מנות חוזרות:*`);
-    data.returned_dishes.forEach(d => lines.push(`• ${d.name}${d.reason ? ` — ${d.reason}` : ''}`));
-  }
-  if (data.tech_issues && data.tech_issues !== '0') { lines.push(''); lines.push(`🔧 *תקלות:* ${data.tech_issues}`); }
-  if (data.shortages && data.shortages !== '0') { lines.push(''); lines.push(`📉 *חוסרים:* ${data.shortages}`); }
-  if (data.credits && data.credits !== '0') { lines.push(''); lines.push(`🎁 *זיכויים:* ${data.credits}`); }
-  if (data.daily_tasks) { lines.push(''); lines.push(`✅ *משימות יומיות:* ${data.daily_tasks}`); }
-  return lines.join('\n');
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), type === 'err' ? 4500 : 2500);
 }
-
-function escapeHtml(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-
-['rangeFilter', 'managerFilter', 'searchFilter'].forEach(id => {
-  document.getElementById(id).addEventListener('input', render);
-  document.getElementById(id).addEventListener('change', render);
-});
-
-checkAuth();
 </script>
 
 </body>
