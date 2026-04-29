@@ -10,6 +10,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root {
     --bg: #0a0a0a;
@@ -393,16 +395,201 @@ padding: 4px 8px;
 }
 
 /* Settings modal specific */
-.settings-field { margin-bottom: 14px; }
-.settings-field code {
-display: block;
-background: var(–bg-card);
-padding: 8px;
-border-radius: 6px;
+/* ============== PDF PRINT TEMPLATE ============== */
+/* Hidden off-screen template that gets rendered to canvas, then to PDF */
+#pdfTemplate {
+position: fixed;
+left: -99999px;
+top: 0;
+width: 794px; /* A4 width at 96dpi */
+background: #FDFBF7;
+color: #2C2C2C;
+font-family: ‘Heebo’, sans-serif;
+direction: rtl;
+padding: 60px 56px 60px;
+box-sizing: border-box;
+-webkit-font-smoothing: antialiased;
+}
+#pdfTemplate * { box-sizing: border-box; }
+
+.pdf-header {
+text-align: center;
+padding-bottom: 28px;
+border-bottom: 1px solid #E5DED2;
+margin-bottom: 32px;
+position: relative;
+}
+.pdf-logo-jp {
+font-family: ‘Noto Serif JP’, serif;
+font-size: 56px;
+color: #C0392B;
+line-height: 1;
+margin-bottom: 6px;
+font-weight: 700;
+}
+.pdf-logo-en {
+font-size: 12px;
+letter-spacing: 8px;
+color: #8B8578;
+text-transform: uppercase;
+margin-bottom: 18px;
+}
+.pdf-title {
+font-size: 22px;
+font-weight: 700;
+color: #2C2C2C;
+margin-bottom: 4px;
+}
+.pdf-subtitle {
+font-size: 13px;
+color: #8B8578;
+}
+
+.pdf-meta {
+display: grid;
+grid-template-columns: 1fr 1fr 1fr;
+gap: 16px;
+margin-bottom: 28px;
+padding: 18px 20px;
+background: #F5F0E8;
+border-radius: 8px;
+}
+.pdf-meta-item {
+text-align: center;
+}
+.pdf-meta-label {
+font-size: 10px;
+color: #8B8578;
+letter-spacing: 1.5px;
+text-transform: uppercase;
+margin-bottom: 4px;
+font-weight: 600;
+}
+.pdf-meta-value {
+font-size: 16px;
+font-weight: 600;
+color: #2C2C2C;
+}
+
+.pdf-kpi-strip {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 10px;
+margin-bottom: 28px;
+}
+.pdf-kpi {
+text-align: center;
+padding: 14px 8px;
+background: #fff;
+border: 1px solid #E5DED2;
+border-radius: 8px;
+}
+.pdf-kpi-label {
+font-size: 10px;
+color: #8B8578;
+letter-spacing: 1px;
+text-transform: uppercase;
+margin-bottom: 4px;
+}
+.pdf-kpi-value {
+font-size: 18px;
+font-weight: 700;
+color: #C4A265;
+}
+.pdf-kpi-sub {
+font-size: 10px;
+color: #8B8578;
+margin-top: 2px;
+}
+
+.pdf-section {
+margin-bottom: 22px;
+}
+.pdf-section-title {
 font-size: 11px;
+letter-spacing: 2.5px;
+color: #C0392B;
+text-transform: uppercase;
+font-weight: 700;
+margin-bottom: 8px;
+padding-bottom: 4px;
+border-bottom: 1px solid #E5DED2;
+}
+.pdf-section-content {
+font-size: 13px;
+line-height: 1.7;
+color: #2C2C2C;
+white-space: pre-wrap;
+word-wrap: break-word;
+}
+.pdf-sub-section {
+margin-bottom: 14px;
+}
+.pdf-sub-title {
+font-size: 12px;
+color: #6B5B4E;
+font-weight: 600;
+margin-bottom: 4px;
+}
+
+.pdf-dishes-list {
+list-style: none;
+padding: 0;
+}
+.pdf-dishes-list li {
+padding: 8px 12px;
+background: #fff;
+border-right: 3px solid #C0392B;
+margin-bottom: 6px;
+font-size: 13px;
+border-radius: 4px;
+}
+.pdf-dishes-list strong {
+color: #2C2C2C;
+}
+.pdf-dishes-list .reason {
+color: #8B8578;
+margin-right: 4px;
+}
+
+.pdf-footer {
+margin-top: 36px;
+padding-top: 18px;
+border-top: 1px solid #E5DED2;
+text-align: center;
+font-size: 10px;
+color: #8B8578;
+letter-spacing: 1px;
+}
+
+/* Loading overlay */
+.pdf-loading {
+position: fixed; inset: 0;
+background: rgba(0,0,0,0.85);
+backdrop-filter: blur(6px);
+z-index: 2000;
+display: none;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+gap: 14px;
+}
+.pdf-loading.show { display: flex; }
+.pdf-loading-spinner {
+width: 48px;
+height: 48px;
+border: 3px solid var(–line-strong);
+border-top-color: var(–accent-2);
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+.pdf-loading-text {
 color: var(–accent-2);
-margin-top: 4px;
-word-break: break-all;
+font-size: 14px;
+letter-spacing: 1px;
 }
 </style>
 
@@ -632,28 +819,20 @@ word-break: break-all;
       <div style="font-size:48px;margin-bottom:8px;">✓</div>
       <h2 style="color:var(--ok);">הדוח נשמר בהצלחה</h2>
       <p style="color:var(--ink-dim);font-size:13px;margin-top:4px;">
-        הדוח נשמר במערכת ויגיע אל המנהלים.<br>
-        כעת בחרי איך לשתף את הסיכום:
+        בחרי איך לשתף את הסיכום:
       </p>
     </div>
 
 ```
-<div class="share-grid">
-  <button type="button" class="share-btn whatsapp" onclick="shareWhatsApp()">
-    <span class="share-icon">💬</span>
-    <span class="share-label">WhatsApp</span>
+<div style="display:flex;flex-direction:column;gap:10px;">
+  <button type="button" onclick="downloadPDF()" style="background:#C4A265;color:#2C2C2C;border:none;padding:16px;border-radius:12px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 16px rgba(196,162,101,0.3);">
+    📄 שמור PDF
   </button>
-  <button type="button" class="share-btn share" onclick="shareNative()">
-    <span class="share-icon">📤</span>
-    <span class="share-label">שתף...</span>
+  <button type="button" onclick="shareWhatsApp()" style="background:#25D366;color:#fff;border:none;padding:16px;border-radius:12px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 16px rgba(37,211,102,0.3);">
+    💬 שלח בוואטסאפ
   </button>
-  <button type="button" class="share-btn copy" onclick="copyReport()">
-    <span class="share-icon">📋</span>
-    <span class="share-label" id="copyLabel">העתק</span>
-  </button>
-  <button type="button" class="share-btn email" onclick="shareEmail()">
-    <span class="share-icon">✉️</span>
-    <span class="share-label">מייל</span>
+  <button type="button" onclick="copyReport()" style="background:transparent;color:var(--ink-dim);border:1px solid var(--line-strong);padding:12px;border-radius:10px;font-family:inherit;font-size:13px;cursor:pointer;" id="copyBtnSecondary">
+    <span id="copyLabel">📋 העתק טקסט</span>
   </button>
 </div>
 
@@ -662,6 +841,17 @@ word-break: break-all;
 
   </div>
 </div>
+
+<!-- PDF loading overlay -->
+
+<div class="pdf-loading" id="pdfLoading">
+  <div class="pdf-loading-spinner"></div>
+  <div class="pdf-loading-text">מייצר PDF...</div>
+</div>
+
+<!-- Hidden PDF template (rendered to canvas, then to PDF) -->
+
+<div id="pdfTemplate"></div>
 
 <!-- Settings modal -->
 
@@ -972,6 +1162,7 @@ async function doSubmit() {
   if (supabaseOk) {
     clearDraft();
     window._lastReportText = textReport;
+    window._lastReportData = data;
     closeReview();
 
     if (editingRecordId) {
@@ -998,6 +1189,9 @@ async function doSubmit() {
 function getReportText() {
   return window._lastReportText || '';
 }
+function getLastReportData() {
+  return window._lastReportData || null;
+}
 
 function shareWhatsApp() {
   const text = getReportText();
@@ -1005,27 +1199,6 @@ function shareWhatsApp() {
   // Open WhatsApp picker with pre-filled text — user picks recipient/group
   const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
   window.open(url, '_blank');
-}
-
-async function shareNative() {
-  const text = getReportText();
-  if (!text) return;
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'סיכום משמרת — אומינו',
-        text: text
-      });
-    } catch (e) {
-      // User cancelled or error — fall back to copy
-      if (e.name !== 'AbortError') {
-        copyReport();
-      }
-    }
-  } else {
-    showToast('המכשיר לא תומך בשיתוף — מעתיק ללוח', '');
-    copyReport();
-  }
 }
 
 async function copyReport() {
@@ -1039,7 +1212,6 @@ async function copyReport() {
     }
   } catch (e) { /* fallback below */ }
   if (!success) {
-    // Legacy fallback
     const ta = document.createElement('textarea');
     ta.value = text;
     ta.style.position = 'fixed';
@@ -1050,30 +1222,205 @@ async function copyReport() {
     document.body.removeChild(ta);
   }
   if (success) {
-    const btn = document.querySelector('.share-btn.copy');
     const lbl = document.getElementById('copyLabel');
-    if (btn && lbl) {
-      btn.classList.add('copied');
-      lbl.textContent = '✓ הועתק';
-      setTimeout(() => {
-        btn.classList.remove('copied');
-        lbl.textContent = 'העתק';
-      }, 2500);
+    if (lbl) {
+      lbl.textContent = '✓ הועתק ללוח';
+      setTimeout(() => { lbl.textContent = '📋 העתק טקסט'; }, 2500);
     }
   } else {
     showToast('ההעתקה נכשלה', 'err');
   }
 }
 
-function shareEmail() {
-  const text = getReportText();
-  if (!text) return;
-  const data = JSON.parse(localStorage.getItem(DRAFT_KEY) || '{}');
-  const dateStr = data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '';
-  const subject = `סיכום משמרת אומינו — ${dateStr}`;
-  // mailto: pre-fills the manager's email; she can change recipient
-  const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
-  window.location.href = url;
+// ============== PDF GENERATION ==============
+function escapePdfText(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function buildPdfTemplate(data) {
+  const fmt = (n) => (n === null || n === undefined || n === '') ? '—' : new Intl.NumberFormat('he-IL').format(n);
+  const dateStr = data.shift_date
+    ? new Date(data.shift_date).toLocaleDateString('he-IL', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })
+    : '—';
+  const shiftType = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[data.shift_type] || '';
+  const ppa = (data.covers && data.revenue) ? Math.round(Number(data.revenue) / Number(data.covers)) : null;
+
+  const sec = (title, content) => {
+    if (!content || (typeof content === 'string' && (content.trim() === '' || content.trim() === '0'))) return '';
+    return `
+      <div class="pdf-section">
+        <div class="pdf-section-title">${title}</div>
+        <div class="pdf-section-content">${escapePdfText(content)}</div>
+      </div>
+    `;
+  };
+
+  const dishes = (data.returned_dishes || []).filter(d => d.name);
+  let dishesHtml = '';
+  if (dishes.length) {
+    dishesHtml = `
+      <div class="pdf-section">
+        <div class="pdf-section-title">↩ מנות חוזרות (${dishes.length})</div>
+        <ul class="pdf-dishes-list">
+          ${dishes.map(d => `<li><strong>${escapePdfText(d.name)}</strong>${d.reason ? `<span class="reason"> — ${escapePdfText(d.reason)}</span>` : ''}</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  }
+
+  // Group exceptions if any exist
+  let exceptionsHtml = '';
+  const hasExceptions = (data.discipline_issues && data.discipline_issues !== '0') ||
+                        (data.wait_times && data.wait_times !== '0') ||
+                        (data.late_arrivals && data.late_arrivals !== '0');
+  if (hasExceptions) {
+    exceptionsHtml = `<div class="pdf-section"><div class="pdf-section-title">חריגים</div>`;
+    if (data.discipline_issues && data.discipline_issues !== '0') {
+      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">בעיות משמעת</div><div class="pdf-section-content">${escapePdfText(data.discipline_issues)}</div></div>`;
+    }
+    if (data.wait_times && data.wait_times !== '0') {
+      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">זמני המתנה</div><div class="pdf-section-content">${escapePdfText(data.wait_times)}</div></div>`;
+    }
+    if (data.late_arrivals && data.late_arrivals !== '0') {
+      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">איחורים</div><div class="pdf-section-content">${escapePdfText(data.late_arrivals)}</div></div>`;
+    }
+    exceptionsHtml += `</div>`;
+  }
+
+  return `
+    <div class="pdf-header">
+      <div class="pdf-logo-jp">海味</div>
+      <div class="pdf-logo-en">UMINO</div>
+      <div class="pdf-title">סיכום משמרת</div>
+      <div class="pdf-subtitle">${dateStr} · ${shiftType}</div>
+    </div>
+
+    <div class="pdf-meta">
+      <div class="pdf-meta-item">
+        <div class="pdf-meta-label">אחמ"ש</div>
+        <div class="pdf-meta-value">${escapePdfText(data.manager_name || '—')}</div>
+      </div>
+      <div class="pdf-meta-item">
+        <div class="pdf-meta-label">תאריך</div>
+        <div class="pdf-meta-value">${data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '—'}</div>
+      </div>
+      <div class="pdf-meta-item">
+        <div class="pdf-meta-label">משמרת</div>
+        <div class="pdf-meta-value">${shiftType}</div>
+      </div>
+    </div>
+
+    <div class="pdf-kpi-strip">
+      <div class="pdf-kpi">
+        <div class="pdf-kpi-label">הכנסה</div>
+        <div class="pdf-kpi-value">₪${fmt(data.revenue)}</div>
+        ${ppa ? `<div class="pdf-kpi-sub">₪${ppa} לסועד</div>` : ''}
+      </div>
+      <div class="pdf-kpi">
+        <div class="pdf-kpi-label">סועדים</div>
+        <div class="pdf-kpi-value">${fmt(data.covers)}</div>
+      </div>
+      <div class="pdf-kpi">
+        <div class="pdf-kpi-label">משלוחים / TA</div>
+        <div class="pdf-kpi-value">${(data.deliveries || 0) + (data.takeaway || 0) || '—'}</div>
+      </div>
+      <div class="pdf-kpi">
+        <div class="pdf-kpi-label">קופה</div>
+        <div class="pdf-kpi-value" style="color:${data.cash_diff && Number(data.cash_diff) !== 0 ? '#C0392B' : '#5B7A5E'}">
+          ${data.cash_diff != null ? '₪' + fmt(Number(data.cash_diff)) : '—'}
+        </div>
+      </div>
+    </div>
+
+    ${sec('מהלך המשמרת', data.shift_narrative)}
+    ${sec('פלור', data.floor_notes)}
+    ${sec('מטבח', data.kitchen_notes)}
+    ${dishesHtml}
+    ${exceptionsHtml}
+    ${sec('תקלות טכניות', data.tech_issues)}
+    ${sec('חוסרים', data.shortages)}
+    ${sec('זיכויים', data.credits)}
+    ${sec('משימות יומיות', data.daily_tasks)}
+
+    <div class="pdf-footer">
+      海味 UMINO · נוצר ב-${new Date().toLocaleString('he-IL')}
+    </div>
+  `;
+}
+
+async function downloadPDF() {
+  const data = getLastReportData();
+  if (!data) {
+    showToast('לא נמצא דוח לייצוא', 'err');
+    return;
+  }
+  // Check libraries loaded
+  if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+    showToast('ספריות PDF עדיין נטענות, נסה שוב בעוד שנייה', 'err');
+    return;
+  }
+
+  const loading = document.getElementById('pdfLoading');
+  loading.classList.add('show');
+
+  try {
+    const tpl = document.getElementById('pdfTemplate');
+    tpl.innerHTML = buildPdfTemplate(data);
+
+    // Wait for fonts to be ready
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+    // Small delay to ensure full layout
+    await new Promise(r => setTimeout(r, 100));
+
+    const canvas = await html2canvas(tpl, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#FDFBF7',
+      logging: false
+    });
+
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+    const pdfWidth = 210; // A4 width in mm
+    const pdfHeight = 297; // A4 height in mm
+    const imgWidth = pdfWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    if (imgHeight <= pdfHeight) {
+      // Fits on one page
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, imgWidth, imgHeight);
+    } else {
+      // Multi-page: slice the canvas
+      let position = 0;
+      let remaining = imgHeight;
+      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+      remaining -= pdfHeight;
+
+      while (remaining > 0) {
+        position -= pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        remaining -= pdfHeight;
+      }
+    }
+
+    const dateStr = data.shift_date ? data.shift_date.replace(/-/g, '_') : 'unknown';
+    const mgrStr = (data.manager_name || 'umino').replace(/[^\w\u0590-\u05FF]/g, '_');
+    pdf.save(`umino_shift_${dateStr}_${mgrStr}.pdf`);
+
+    // Cleanup template
+    tpl.innerHTML = '';
+  } catch (e) {
+    console.error('PDF error:', e);
+    showToast('יצירת PDF נכשלה: ' + e.message, 'err');
+  } finally {
+    loading.classList.remove('show');
+  }
 }
 
 function closeSuccess() {
@@ -1084,6 +1431,7 @@ function closeSuccess() {
   const today = new Date();
   document.getElementById('shift_date').value = today.toISOString().split('T')[0];
   window._lastReportText = null;
+  window._lastReportData = null;
 }
 
 // ============== UTIL ==============
