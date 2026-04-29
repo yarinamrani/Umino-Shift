@@ -317,7 +317,33 @@
   </div>
 
   <div class="section">
-    <div class="section-head"><span class="section-title">מהלך המשמרת</span><span class="section-num">iii</span></div>
+    <div class="section-head"><span class="section-title">ציוד וספירות</span><span class="section-num">iii</span></div>
+    <div class="card">
+      <div class="row-2">
+        <div class="field">
+          <label class="field-label">מטענים</label>
+          <input type="number" name="chargers_count" inputmode="numeric" placeholder="0" min="0">
+        </div>
+        <div class="field">
+          <label class="field-label">סולקים</label>
+          <input type="number" name="sulkim_count" inputmode="numeric" placeholder="0" min="0">
+        </div>
+      </div>
+      <div class="row-2" style="margin-top:12px;">
+        <div class="field">
+          <label class="field-label">טאבלטים</label>
+          <input type="number" name="tablets_count" inputmode="numeric" placeholder="0" min="0">
+        </div>
+        <div class="field">
+          <label class="field-label">תפריטים</label>
+          <input type="number" name="menus_count" inputmode="numeric" placeholder="0" min="0">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><span class="section-title">מהלך המשמרת</span><span class="section-num">iv</span></div>
     <div class="card">
       <div class="field"><label class="field-label">תיאור כללי</label><textarea name="shift_narrative" class="large" placeholder="עומס, אווירה, אירועים מיוחדים..."></textarea></div>
       <div class="group"><div class="group-label">פלור</div><textarea name="floor_notes" placeholder="בר, אקספו, קופה, מפנות, הוסטסיות"></textarea></div>
@@ -326,7 +352,7 @@
   </div>
 
   <div class="section">
-    <div class="section-head"><span class="section-title">מנות חוזרות</span><span class="section-num">iv</span></div>
+    <div class="section-head"><span class="section-title">מנות חוזרות</span><span class="section-num">v</span></div>
     <div class="card">
       <div class="field"><label class="field-label">כמות מנות חוזרות</label><input type="number" name="returns_count" id="returns_count" inputmode="numeric" placeholder="0"></div>
       <div id="dishesContainer" style="margin-top:12px;"></div>
@@ -335,7 +361,7 @@
   </div>
 
   <div class="section">
-    <div class="section-head"><span class="section-title">חריגים</span><span class="section-num">v</span></div>
+    <div class="section-head"><span class="section-title">חריגים</span><span class="section-num">vi</span></div>
     <div class="card">
       <div class="group" style="margin-top:0;"><div class="group-label">בעיות משמעת</div><textarea name="discipline_issues" placeholder="איחורים, לבוש, התנהגות"></textarea></div>
       <div class="group"><div class="group-label">זמני המתנה</div><textarea name="wait_times" placeholder="לדוגמה: 25 דק׳ בשיא"></textarea></div>
@@ -344,22 +370,22 @@
   </div>
 
   <div class="section">
-    <div class="section-head"><span class="section-title">תקלות טכניות</span><span class="section-num">vi</span></div>
+    <div class="section-head"><span class="section-title">תקלות טכניות</span><span class="section-num">vii</span></div>
     <div class="card"><div class="field"><textarea name="tech_issues" placeholder="POS, מקפיא, מזגן, ציוד מטבח, אינטרנט"></textarea></div></div>
   </div>
 
   <div class="section">
-    <div class="section-head"><span class="section-title">חוסרים</span><span class="section-num">vii</span></div>
+    <div class="section-head"><span class="section-title">חוסרים</span><span class="section-num">viii</span></div>
     <div class="card"><div class="field"><label class="field-label">מצרכים חסרים <span class="hint">הפרידו בפסיק</span></label><textarea name="shortages" placeholder="לדוגמה: אדממה, סלמון, אורז סושי"></textarea></div></div>
   </div>
 
   <div class="section">
-    <div class="section-head"><span class="section-title">זיכויים</span><span class="section-num">viii</span></div>
+    <div class="section-head"><span class="section-title">זיכויים</span><span class="section-num">ix</span></div>
     <div class="card"><div class="field"><textarea name="credits" placeholder="סכום + סיבה + שולחן/לקוח"></textarea></div></div>
   </div>
 
   <div class="section">
-    <div class="section-head"><span class="section-title">משימות יומיות שבוצעו</span><span class="section-num">ix</span></div>
+    <div class="section-head"><span class="section-title">משימות יומיות שבוצעו</span><span class="section-num">x</span></div>
     <div class="card"><div class="field"><textarea name="daily_tasks" placeholder="הכנות, ניקיונות, ספירות מלאי"></textarea></div></div>
   </div>
 
@@ -494,7 +520,7 @@ function getFormData() {
   const fd = new FormData(document.getElementById('shiftForm'));
   const obj = {};
   for (const pair of fd.entries()) obj[pair[0]] = pair[1].toString().trim();
-  ['revenue','covers','deliveries','takeaway','taxis','cash_diff','returns_count'].forEach(function(k) {
+  ['revenue','covers','deliveries','takeaway','taxis','cash_diff','returns_count','chargers_count','sulkim_count','tablets_count','menus_count'].forEach(function(k) {
     obj[k] = obj[k] ? Number(obj[k]) : null;
   });
   obj.returned_dishes = getDishes();
@@ -543,6 +569,12 @@ function buildTextReport(data) {
   if (data.cash_diff !== null && data.cash_diff !== 0) {
     lines.push('קופה: ' + (data.cash_diff > 0 ? 'חוסר' : 'עודף') + ' ' + Math.abs(data.cash_diff) + '₪');
   }
+  const eqParts = [];
+  if (data.chargers_count != null) eqParts.push('מטענים: ' + data.chargers_count);
+  if (data.sulkim_count != null) eqParts.push('סולקים: ' + data.sulkim_count);
+  if (data.tablets_count != null) eqParts.push('טאבלטים: ' + data.tablets_count);
+  if (data.menus_count != null) eqParts.push('תפריטים: ' + data.menus_count);
+  if (eqParts.length) { lines.push(''); lines.push('*ציוד:* ' + eqParts.join(' · ')); }
   if (data.shift_narrative) { lines.push(''); lines.push('*מהלך המשמרת:*'); lines.push(data.shift_narrative); }
   if (data.floor_notes) { lines.push(''); lines.push('*פלור:*'); lines.push(data.floor_notes); }
   if (data.kitchen_notes) { lines.push(''); lines.push('*מטבח:*'); lines.push(data.kitchen_notes); }
@@ -702,6 +734,24 @@ function buildPdfTemplate(data) {
     if (data.late_arrivals && data.late_arrivals !== '0') exHtml += '<div class="pdf-sub-block"><div class="pdf-sub-label">איחורים</div><div class="pdf-section-text">' + escapeHtml(data.late_arrivals) + '</div></div>';
     exHtml += '</div>';
   }
+  let eqHtml = '';
+  const eqItems = [
+    { label: 'מטענים', val: data.chargers_count },
+    { label: 'סולקים', val: data.sulkim_count },
+    { label: 'טאבלטים', val: data.tablets_count },
+    { label: 'תפריטים', val: data.menus_count }
+  ].filter(function(x) { return x.val != null; });
+  if (eqItems.length) {
+    eqHtml = '<div class="pdf-section"><div class="pdf-section-title">ציוד וספירות</div>' +
+      '<div style="display:grid; grid-template-columns: repeat(' + eqItems.length + ', 1fr); gap:8px;">' +
+      eqItems.map(function(it) {
+        return '<div style="text-align:center; padding:10px 6px; background:#fff; border:1px solid #e8dcc4; border-radius:6px;">' +
+          '<div style="font-size:9px; color:#8B6F47; letter-spacing:1px; text-transform:uppercase; margin-bottom:3px; font-weight:600;">' + it.label + '</div>' +
+          '<div style="font-family:\'Frank Ruhl Libre\',serif; font-size:18px; font-weight:700; color:#C4924A;">' + it.val + '</div>' +
+        '</div>';
+      }).join('') +
+      '</div></div>';
+  }
   return '' +
     '<div class="pdf-head">' +
       '<div class="pdf-brand">UMINO MODERN SUSHI</div>' +
@@ -719,6 +769,7 @@ function buildPdfTemplate(data) {
       '<div class="pdf-kpi"><div class="pdf-kpi-label">משלוחים/TA</div><div class="pdf-kpi-value">' + ((data.deliveries || 0) + (data.takeaway || 0) || '—') + '</div></div>' +
       '<div class="pdf-kpi"><div class="pdf-kpi-label">קופה</div><div class="pdf-kpi-value" style="color:' + (data.cash_diff && Number(data.cash_diff) !== 0 ? '#C45A4D' : '#7FB069') + '">' + (data.cash_diff != null ? '₪' + fmt(Number(data.cash_diff)) : '—') + '</div></div>' +
     '</div>' +
+    eqHtml +
     sec('מהלך המשמרת', data.shift_narrative) +
     sec('פלור', data.floor_notes) +
     sec('מטבח', data.kitchen_notes) +
