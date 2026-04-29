@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -46,29 +46,29 @@
 .header {
 background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
 border-bottom: 1px solid var(–line);
-padding: 18px 16px 14px;
+padding: 18px 16px;
 position: sticky;
 top: 0;
 z-index: 100;
 backdrop-filter: blur(10px);
 }
 .brand-row {
-display: flex; align-items: center; justify-content: space-between; gap: 10px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
 }
-.brand {
-display: flex; align-items: center; gap: 8px;
+.page-title {
+font-size: 17px;
+font-weight: 600;
+color: var(–ink);
+letter-spacing: 0.3px;
+margin: 0;
 }
-.brand-logo {
-height: 38px;
-width: auto;
-display: block;
-}
-.header h1 {
-font-size: 13px;
-font-weight: 500;
-color: var(–ink-dim);
-margin-top: 6px;
-letter-spacing: 0.5px;
+.header-actions {
+display: flex;
+align-items: center;
+gap: 10px;
 }
 .status-pill {
 font-size: 10px;
@@ -95,13 +95,6 @@ display: flex; align-items: center; gap: 8px;
 }
 .section-title::before {
 content: “”; width: 16px; height: 1px; background: var(–accent);
-}
-.section-num {
-display: inline-block;
-color: var(–accent-2);
-font-family: ‘Noto Serif JP’, serif;
-font-size: 13px;
-margin-left: 4px;
 }
 
 /* Cards & inputs */
@@ -408,11 +401,13 @@ border-bottom: 1px solid #E5DED2;
 margin-bottom: 32px;
 position: relative;
 }
-.pdf-brand-logo {
-height: 60px;
-width: auto;
-display: block;
-margin: 0 auto 18px;
+.pdf-brand {
+font-size: 13px;
+letter-spacing: 6px;
+color: #8B8578;
+text-transform: uppercase;
+margin-bottom: 18px;
+font-weight: 600;
 }
 .pdf-title {
 font-size: 22px;
@@ -578,16 +573,12 @@ letter-spacing: 1px;
 
 <header class="header">
   <div class="brand-row">
-    <div class="brand">
-      <img src="logo-white.png" alt="UMINO" class="brand-logo">
-    </div>
-    <div style="display:flex;align-items:center;gap:8px;">
+    <h1 class="page-title">דוח סיכום משמרת</h1>
+    <div class="header-actions">
       <span class="status-pill" id="connStatus">מחובר</span>
-      <a href="dashboard.html" class="settings-link" title="היסטוריה" style="text-decoration:none;">📊</a>
-      <button class="settings-link" onclick="openSettings()">⚙</button>
+      <button class="settings-link" onclick="openSettings()" aria-label="הגדרות">⚙</button>
     </div>
   </div>
-  <h1>דוח סיכום משמרת</h1>
 </header>
 
 <form id="shiftForm" autocomplete="off">
@@ -595,7 +586,7 @@ letter-spacing: 1px;
   <!-- 1. Date & basic data -->
 
   <div class="section">
-    <div class="section-title">פרטי משמרת <span class="section-num">一</span></div>
+    <div class="section-title">פרטי משמרת</div>
     <div class="card">
       <div class="row">
         <div class="field">
@@ -621,7 +612,7 @@ letter-spacing: 1px;
   <!-- 2. Numbers -->
 
   <div class="section">
-    <div class="section-title">מספרים <span class="section-num">二</span></div>
+    <div class="section-title">מספרים</div>
     <div class="card">
       <div class="row">
         <div class="field">
@@ -663,7 +654,7 @@ letter-spacing: 1px;
   <!-- 3. Shift narrative -->
 
   <div class="section">
-    <div class="section-title">מהלך המשמרת <span class="section-num">三</span></div>
+    <div class="section-title">מהלך המשמרת</div>
     <div class="card">
       <div class="field">
         <label>תיאור כללי</label>
@@ -688,7 +679,7 @@ letter-spacing: 1px;
   <!-- 4. Returned dishes -->
 
   <div class="section">
-    <div class="section-title">מנות חוזרות <span class="section-num">四</span></div>
+    <div class="section-title">מנות חוזרות</div>
     <div class="card">
       <div class="field">
         <label>כמות מנות חוזרות</label>
@@ -702,7 +693,7 @@ letter-spacing: 1px;
   <!-- 5. Exceptions -->
 
   <div class="section">
-    <div class="section-title">חריגים <span class="section-num">五</span></div>
+    <div class="section-title">חריגים</div>
     <div class="card">
       <div class="sub-card">
         <div class="sub-card-title">בעיות משמעת</div>
@@ -722,7 +713,7 @@ letter-spacing: 1px;
   <!-- 6. Tech issues -->
 
   <div class="section">
-    <div class="section-title">תקלות טכניות <span class="section-num">六</span></div>
+    <div class="section-title">תקלות טכניות</div>
     <div class="card">
       <div class="field">
         <textarea name="tech_issues" placeholder="POS, מקפיא, מזגן, ציוד מטבח, אינטרנט — סטטוס תיקון"></textarea>
@@ -733,7 +724,7 @@ letter-spacing: 1px;
   <!-- 7. Shortages -->
 
   <div class="section">
-    <div class="section-title">חוסרים <span class="section-num">七</span></div>
+    <div class="section-title">חוסרים</div>
     <div class="card">
       <div class="field">
         <label>מצרכים חסרים <span class="hint">(הפרידו בפסיק)</span></label>
@@ -745,7 +736,7 @@ letter-spacing: 1px;
   <!-- 8. Credits -->
 
   <div class="section">
-    <div class="section-title">זיכויים <span class="section-num">八</span></div>
+    <div class="section-title">זיכויים</div>
     <div class="card">
       <div class="field">
         <label>זיכויים / על חשבון הבית</label>
@@ -757,7 +748,7 @@ letter-spacing: 1px;
   <!-- 9. Daily tasks -->
 
   <div class="section">
-    <div class="section-title">משימות יומיות שבוצעו <span class="section-num">九</span></div>
+    <div class="section-title">משימות יומיות שבוצעו</div>
     <div class="card">
       <div class="field">
         <textarea name="daily_tasks" placeholder="הכנות, ניקיונות, ספירות מלאי..."></textarea>
@@ -1289,7 +1280,7 @@ function buildPdfTemplate(data) {
 
   return `
     <div class="pdf-header">
-      <img src="logo-dark.png" alt="UMINO" class="pdf-brand-logo">
+      <div class="pdf-brand">UMINO MODERN SUSHI</div>
       <div class="pdf-title">סיכום משמרת</div>
       <div class="pdf-subtitle">${dateStr} · ${shiftType}</div>
     </div>
