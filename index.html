@@ -4,344 +4,291 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#F5F1E8">
-<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#16110d">
+<meta name="color-scheme" content="dark">
 <title>סיכום משמרת — אומינו</title>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root {
-    color-scheme: light;
-    --cream: #F5F1E8;
-    --cream-warm: #FCFAF4;
-    --ink: #3D2817;
-    --ink-soft: #6B5A48;
-    --ink-faint: #9C8B76;
-    --gold: #B8924A;
-    --gold-soft: #D4B583;
-    --gold-pale: #F0E5C8;
-    --green: #5A6B4D;
-    --green-soft: #8FA77E;
-    --rust: #B85C3C;
-    --line: #E5DCC9;
-    --shadow: rgba(61, 40, 23, 0.06);
+    color-scheme: dark;
+    --bg-base: #16110d;
+    --bg-card: #1f1812;
+    --bg-elev: #2a2018;
+    --bg-input: #15100c;
+    --line: #3a2d23;
+    --line-soft: #2d231a;
+    --ink: #f4ebdd;
+    --ink-soft: #c4b29a;
+    --ink-dim: #8a7866;
+    --ink-faint: #5a4e42;
+    --gold: #d4a857;
+    --gold-soft: #b89046;
+    --gold-glow: rgba(212, 168, 87, 0.15);
+    --ok: #7fb069;
+    --err: #c45a4d;
+    --font-display: 'Frank Ruhl Libre', serif;
+    --font-body: 'Heebo', system-ui, sans-serif;
+    --r-sm: 10px;
+    --r-md: 14px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  *:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
   html, body {
-    background: var(--cream); color: var(--ink);
-    font-family: 'Heebo', -apple-system, system-ui, sans-serif;
-    min-height: 100vh; overflow-x: hidden; max-width: 100vw;
-    -webkit-font-smoothing: antialiased;
+    background: var(--bg-base);
+    color: var(--ink);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+    max-width: 100vw;
+    overscroll-behavior-y: contain;
+    line-height: 1.5;
   }
-  body { padding: 0 0 140px 0; font-size: 15px; line-height: 1.5; }
-
-.header {
-background: var(–cream-warm); border-bottom: 1px solid var(–line);
-padding: 16px 18px; position: sticky; top: 0; z-index: 100;
-backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-}
-.header-inner {
-display: flex; align-items: center; justify-content: space-between;
-gap: 12px; max-width: 600px; margin: 0 auto;
-}
-.header-title {
-font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 20px; font-weight: 500; color: var(–ink); letter-spacing: 0.2px;
-}
-.header-sub {
-font-size: 11px; color: var(–ink-faint);
-letter-spacing: 3px; text-transform: uppercase; margin-top: 2px;
-}
-.header-actions { display: flex; align-items: center; gap: 8px; }
-.pill {
-font-size: 10px; padding: 4px 10px; border-radius: 999px;
-background: rgba(90, 107, 77, 0.1); color: var(–green);
-font-weight: 600; letter-spacing: 1px;
-}
-.pill.offline { background: rgba(184, 92, 60, 0.1); color: var(–rust); }
-.icon-btn {
-width: 36px; height: 36px; border-radius: 50%;
-background: var(–cream); border: 1px solid var(–line);
-color: var(–ink-soft); font-size: 16px; cursor: pointer;
-display: flex; align-items: center; justify-content: center;
-transition: all 0.15s;
-}
-.icon-btn:active { transform: scale(0.94); }
-
-.container { max-width: 600px; margin: 0 auto; padding: 24px 16px 0; }
-.section { margin-bottom: 28px; }
-.section-label {
-font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 13px; font-weight: 500; color: var(–gold);
-letter-spacing: 4px; text-transform: uppercase;
-margin-bottom: 12px; padding-right: 4px;
-display: flex; align-items: center; gap: 10px;
-}
-.section-label::after {
-content: “”; flex: 1; height: 1px;
-background: linear-gradient(to left, var(–line), transparent);
-}
-
-.card {
-background: var(–cream-warm); border: 1px solid var(–line);
-border-radius: 14px; padding: 18px;
-box-shadow: 0 1px 2px var(–shadow);
-}
-.card + .card { margin-top: 10px; }
-
-.field { margin-bottom: 16px; }
-.field:last-child { margin-bottom: 0; }
-label {
-display: block; font-size: 13px; color: var(–ink-soft);
-margin-bottom: 6px; font-weight: 500; letter-spacing: 0.2px;
-}
-label .hint {
-color: var(–ink-faint); font-size: 11px; font-weight: 400; margin-right: 4px;
-}
-
-input[type=“text”], input[type=“number”], input[type=“date”], textarea, select {
-width: 100%;
-background: var(–cream); border: 1px solid var(–line); border-radius: 10px;
-padding: 12px 14px; color: var(–ink);
-font-family: inherit; font-size: 16px;
-outline: none; transition: all 0.15s;
--webkit-appearance: none; appearance: none; line-height: 1.4;
-}
-input::placeholder, textarea::placeholder { color: var(–ink-faint); opacity: 1; }
-input:focus, textarea:focus, select:focus {
-border-color: var(–gold); background: var(–cream-warm);
-box-shadow: 0 0 0 3px rgba(184, 146, 74, 0.1);
-}
-input[type=“date”] { text-align: right; min-height: 46px; }
-textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
-textarea.large { min-height: 120px; }
-
-select {
-background-image: url(“data:image/svg+xml;charset=utf-8,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘12’ height=‘12’ viewBox=‘0 0 12 12’%3E%3Cpath fill=’%239C8B76’ d=‘M6 9L1 4h10z’/%3E%3C/svg%3E”);
-background-repeat: no-repeat; background-position: left 14px center;
-padding-left: 36px;
-}
-
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-.grid-3 .field input { text-align: center; padding: 12px 6px; font-size: 16px; }
-.grid-3 .field label { font-size: 12px; text-align: center; }
-
-.currency-input { position: relative; }
-.currency-input::before {
-content: “₪”; position: absolute; left: 14px; top: 50%;
-transform: translateY(-50%); color: var(–ink-faint);
-font-size: 14px; font-weight: 500; pointer-events: none; z-index: 2;
-}
-.currency-input input { padding-left: 32px; }
-
-.sub-section {
-background: rgba(245, 241, 232, 0.6); border: 1px solid var(–line);
-border-radius: 10px; padding: 14px; margin-bottom: 10px;
-}
-.sub-section:last-child { margin-bottom: 0; }
-.sub-label {
-font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 12px; color: var(–green);
-letter-spacing: 2px; text-transform: uppercase;
-margin-bottom: 8px; font-weight: 500;
-}
-
-.dish-row {
-display: grid; grid-template-columns: 1fr 1fr 36px;
-gap: 8px; margin-bottom: 8px; align-items: center;
-}
-.dish-row input { font-size: 14px; padding: 10px 12px; }
-.remove-btn {
-background: transparent; border: 1px solid var(–line);
-color: var(–rust); width: 36px; height: 36px;
-border-radius: 8px; font-size: 16px; cursor: pointer;
-display: flex; align-items: center; justify-content: center;
-}
-.add-btn {
-width: 100%; background: transparent;
-border: 1px dashed var(–gold-soft); color: var(–gold);
-padding: 10px; border-radius: 8px;
-font-family: inherit; font-size: 13px; cursor: pointer;
-margin-top: 6px; font-weight: 500; transition: all 0.15s;
-}
-.add-btn:active { transform: scale(0.98); background: var(–gold-pale); }
-
-.submit-bar {
-position: fixed; bottom: 0; left: 0; right: 0;
-background: linear-gradient(180deg, rgba(245,241,232,0) 0%, var(–cream) 40%);
-padding: 24px 16px calc(20px + env(safe-area-inset-bottom));
-z-index: 200;
-}
-.submit-bar-inner { max-width: 600px; margin: 0 auto; }
-.btn-primary {
-width: 100%; background: var(–ink); color: var(–cream-warm);
-border: none; padding: 16px; border-radius: 12px;
-font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 16px; font-weight: 500; cursor: pointer;
-letter-spacing: 1px; transition: all 0.15s;
-box-shadow: 0 4px 16px rgba(61, 40, 23, 0.2);
-}
-.btn-primary:active { transform: scale(0.99); }
-.btn-primary:disabled { background: var(–ink-faint); cursor: not-allowed; box-shadow: none; }
-.btn-secondary {
-background: transparent; color: var(–ink-soft);
-border: 1px solid var(–line); padding: 12px 18px;
-border-radius: 10px; font-family: inherit;
-font-size: 13px; cursor: pointer; font-weight: 500;
-}
-
-.last-saved {
-text-align: center; color: var(–ink-faint);
-font-size: 11px; padding: 12px; letter-spacing: 0.5px;
-}
-
-.modal-overlay {
-position: fixed; inset: 0; background: rgba(61, 40, 23, 0.4);
-backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-z-index: 500; display: none; align-items: flex-end;
-}
-.modal-overlay.show { display: flex; }
-.modal {
-background: var(–cream-warm); width: 100%; max-height: 88vh;
-border-radius: 24px 24px 0 0; border-top: 1px solid var(–line);
-padding: 24px 18px calc(24px + env(safe-area-inset-bottom));
-overflow-y: auto; box-shadow: 0 -8px 32px rgba(0,0,0,0.15);
-}
-.modal h2 {
-font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 22px; font-weight: 500; color: var(–ink);
-text-align: center; margin-bottom: 6px;
-}
-.modal-sub {
-text-align: center; color: var(–ink-faint);
-font-size: 12px; letter-spacing: 1.5px;
-text-transform: uppercase; margin-bottom: 20px;
-}
-.preview-text {
-background: var(–cream); border: 1px solid var(–line);
-border-radius: 10px; padding: 16px;
-font-size: 13px; line-height: 1.7; white-space: pre-wrap;
-color: var(–ink); max-height: 50vh;
-overflow-y: auto; margin-bottom: 16px;
-}
-.modal-actions { display: flex; gap: 10px; }
-.modal-actions .btn-primary { flex: 1; }
-.modal-actions .btn-secondary { flex: 0 0 auto; }
-
-.success-icon { text-align: center; margin-bottom: 8px; font-size: 40px; color: var(–green); }
-.share-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-.share-btn {
-padding: 16px 18px; border-radius: 12px;
-font-family: ‘Heebo’, sans-serif;
-font-size: 15px; font-weight: 600; cursor: pointer;
-border: none; display: flex; align-items: center;
-justify-content: center; gap: 10px;
-letter-spacing: 0.3px; transition: all 0.15s;
-}
-.share-btn:active { transform: scale(0.99); }
-.share-btn.gold { background: var(–gold); color: var(–cream-warm); box-shadow: 0 3px 12px rgba(184, 146, 74, 0.3); }
-.share-btn.green { background: var(–green); color: var(–cream-warm); box-shadow: 0 3px 12px rgba(90, 107, 77, 0.25); }
-.share-btn.outline { background: transparent; border: 1px solid var(–line); color: var(–ink-soft); font-weight: 500; font-size: 13px; }
-
-.toast {
-position: fixed; top: 80px; left: 50%;
-transform: translateX(-50%) translateY(-20px);
-background: var(–ink); color: var(–cream-warm);
-padding: 12px 20px; border-radius: 10px; z-index: 1000;
-opacity: 0; transition: all 0.3s; pointer-events: none;
-max-width: 90vw; text-align: center; font-size: 14px;
-box-shadow: 0 8px 24px rgba(61, 40, 23, 0.2);
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast.ok { background: var(–green); }
-.toast.err { background: var(–rust); }
-
-.settings-field { margin-bottom: 14px; }
-
-.pdf-loading {
-position: fixed; inset: 0; background: rgba(61, 40, 23, 0.6);
-backdrop-filter: blur(8px); z-index: 2000;
-display: none; align-items: center; justify-content: center;
-flex-direction: column; gap: 14px;
-}
-.pdf-loading.show { display: flex; }
-.pdf-spinner {
-width: 44px; height: 44px;
-border: 3px solid rgba(245, 241, 232, 0.2);
-border-top-color: var(–gold-soft); border-radius: 50%;
-animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.pdf-loading-text {
-color: var(–cream); font-family: ‘Frank Ruhl Libre’, serif;
-font-size: 16px; letter-spacing: 2px;
-}
-
-#pdfTemplate {
-position: fixed; left: -99999px; top: 0;
-width: 794px; background: #FCFAF4; color: #3D2817;
-font-family: ‘Heebo’, sans-serif; direction: rtl;
-padding: 56px 56px 48px; box-sizing: border-box;
-}
-#pdfTemplate * { box-sizing: border-box; }
-.pdf-header { text-align: center; padding-bottom: 28px; border-bottom: 1px solid #E5DCC9; margin-bottom: 32px; }
-.pdf-brand { font-family: ‘Frank Ruhl Libre’, serif; font-size: 14px; letter-spacing: 8px; color: #B8924A; text-transform: uppercase; margin-bottom: 16px; font-weight: 500; }
-.pdf-title { font-family: ‘Frank Ruhl Libre’, serif; font-size: 28px; font-weight: 500; color: #3D2817; margin-bottom: 6px; }
-.pdf-subtitle { font-size: 13px; color: #9C8B76; letter-spacing: 1px; }
-.pdf-meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; padding: 18px 20px; background: #F5F1E8; border-radius: 10px; }
-.pdf-meta-item { text-align: center; }
-.pdf-meta-label { font-size: 10px; color: #9C8B76; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
-.pdf-meta-value { font-family: ‘Frank Ruhl Libre’, serif; font-size: 17px; font-weight: 500; color: #3D2817; }
-.pdf-kpi-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 32px; }
-.pdf-kpi { text-align: center; padding: 16px 8px; background: #FCFAF4; border: 1px solid #E5DCC9; border-radius: 10px; }
-.pdf-kpi-label { font-size: 10px; color: #9C8B76; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-.pdf-kpi-value { font-family: ‘Frank Ruhl Libre’, serif; font-size: 20px; font-weight: 600; color: #B8924A; }
-.pdf-kpi-sub { font-size: 10px; color: #9C8B76; margin-top: 2px; }
-.pdf-section { margin-bottom: 22px; }
-.pdf-section-title { font-family: ‘Frank Ruhl Libre’, serif; font-size: 12px; letter-spacing: 3px; color: #B8924A; text-transform: uppercase; font-weight: 500; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #E5DCC9; }
-.pdf-section-content { font-size: 13px; line-height: 1.7; color: #3D2817; white-space: pre-wrap; word-wrap: break-word; }
-.pdf-sub-section { margin-bottom: 14px; }
-.pdf-sub-title { font-size: 11px; color: #5A6B4D; font-weight: 600; margin-bottom: 4px; letter-spacing: 1px; text-transform: uppercase; }
-.pdf-dishes-list { list-style: none; padding: 0; }
-.pdf-dishes-list li { padding: 10px 14px; background: #F5F1E8; border-right: 3px solid #B8924A; margin-bottom: 6px; font-size: 13px; border-radius: 4px; }
-.pdf-dishes-list strong { color: #3D2817; }
-.pdf-dishes-list .reason { color: #9C8B76; margin-right: 4px; font-size: 12px; }
-.pdf-footer { margin-top: 36px; padding-top: 18px; border-top: 1px solid #E5DCC9; text-align: center; font-size: 10px; color: #9C8B76; letter-spacing: 2px; }
+  body {
+    background-image:
+      radial-gradient(at 80% -10%, rgba(212, 168, 87, 0.08) 0%, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(201, 120, 98, 0.06) 0%, transparent 50%);
+    padding: 0 0 calc(110px + env(safe-area-inset-bottom)) 0;
+  }
+  .header {
+    background: linear-gradient(180deg, #1a1410 0%, #16110d 100%);
+    border-bottom: 1px solid var(--line-soft);
+    padding: calc(14px + env(safe-area-inset-top)) 18px 14px;
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  }
+  .header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .header-title { font-family: var(--font-display); font-size: 19px; font-weight: 500; color: var(--ink); letter-spacing: 0.2px; }
+  .header-subtitle { font-size: 10px; color: var(--gold-soft); letter-spacing: 2.5px; text-transform: uppercase; margin-top: 3px; font-weight: 600; }
+  .header-actions { display: flex; align-items: center; gap: 8px; }
+  .status-dot {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; color: var(--ok); letter-spacing: 1px; text-transform: uppercase;
+    padding: 5px 10px 5px 8px; background: rgba(127, 176, 105, 0.1);
+    border: 1px solid rgba(127, 176, 105, 0.25); border-radius: 999px; font-weight: 500;
+  }
+  .status-dot::before { content: ''; width: 6px; height: 6px; background: var(--ok); border-radius: 50%; box-shadow: 0 0 6px rgba(127, 176, 105, 0.6); }
+  .status-dot.offline { background: rgba(196, 90, 77, 0.1); border-color: rgba(196, 90, 77, 0.25); color: var(--err); }
+  .status-dot.offline::before { background: var(--err); box-shadow: 0 0 6px rgba(196, 90, 77, 0.6); }
+  .icon-btn {
+    background: transparent; border: 1px solid var(--line); color: var(--ink-soft);
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; transition: all 0.15s;
+  }
+  .icon-btn:active { background: var(--bg-elev); transform: scale(0.96); }
+  .content { padding: 24px 16px 0; }
+  .section { margin-bottom: 22px; }
+  .section-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; padding: 0 4px; }
+  .section-head::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line) 0%, transparent 100%); }
+  .section-title { font-family: var(--font-display); font-size: 15px; font-weight: 500; color: var(--gold); letter-spacing: 0.3px; }
+  .section-num { font-family: var(--font-display); font-size: 11px; color: var(--ink-faint); font-weight: 400; font-style: italic; }
+  .card {
+    background: var(--bg-card); border: 1px solid var(--line-soft);
+    border-radius: var(--r-md); padding: 18px 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .field { margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+  .field-label { display: block; font-size: 12px; color: var(--ink-soft); margin-bottom: 7px; font-weight: 500; letter-spacing: 0.2px; }
+  .field-label .hint { color: var(--ink-faint); font-weight: 400; font-size: 11px; margin-right: 6px; }
+  input[type="text"], input[type="number"], input[type="date"], textarea, select {
+    width: 100%; background: var(--bg-input); border: 1px solid var(--line);
+    border-radius: var(--r-sm); padding: 13px 14px; color: var(--ink);
+    font-family: inherit; font-size: 16px; line-height: 1.5;
+    outline: none; transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none; appearance: none; text-align: right; direction: rtl;
+  }
+  input::placeholder, textarea::placeholder { color: var(--ink-faint); opacity: 1; }
+  input:focus, textarea:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); background: #1a140f; }
+  textarea { resize: vertical; min-height: 96px; line-height: 1.65; }
+  textarea.large { min-height: 120px; }
+  input[type="date"] { min-height: 48px; color-scheme: dark; }
+  input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7) sepia(0.3) saturate(1.5) hue-rotate(15deg); cursor: pointer; opacity: 0.7; }
+  select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23d4a857' d='M5 6L0 0h10z'/></svg>");
+    background-repeat: no-repeat; background-position: left 16px center;
+    padding-left: 36px; cursor: pointer;
+  }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .row-3 .field-label { font-size: 11px; text-align: center; }
+  .row-3 input { text-align: center; padding: 13px 6px; font-size: 15px; }
+  .input-currency { position: relative; display: block; }
+  .input-currency input { padding-left: 38px; }
+  .input-currency::before { content: '₪'; position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--ink-faint); font-size: 14px; font-weight: 500; pointer-events: none; z-index: 2; }
+  .group { background: var(--bg-elev); border: 1px solid var(--line-soft); border-radius: var(--r-sm); padding: 14px; margin-top: 12px; }
+  .group-label { font-size: 11px; color: var(--gold-soft); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 600; }
+  .group textarea { background: var(--bg-input); margin: 0; }
+  .dish-row { display: grid; grid-template-columns: 1fr 1fr 36px; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .dish-row input { padding: 11px 12px; font-size: 14px; }
+  .dish-remove {
+    background: rgba(196, 90, 77, 0.1); border: 1px solid rgba(196, 90, 77, 0.25);
+    color: var(--err); width: 36px; height: 42px; border-radius: var(--r-sm);
+    font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .dish-remove:active { transform: scale(0.95); }
+  .dish-add {
+    width: 100%; background: transparent; border: 1px dashed var(--line);
+    color: var(--ink-dim); padding: 11px; border-radius: var(--r-sm);
+    font-family: inherit; font-size: 13px; cursor: pointer; margin-top: 8px;
+    font-weight: 500; transition: all 0.15s;
+  }
+  .dish-add:hover, .dish-add:active { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+  .submit-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+    z-index: 60;
+    background: linear-gradient(180deg, transparent 0%, rgba(22, 17, 13, 0.95) 30%, var(--bg-base) 80%);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  }
+  .btn-primary {
+    width: 100%; background: linear-gradient(180deg, var(--gold) 0%, var(--gold-soft) 100%);
+    color: #1a1410; border: none; padding: 16px;
+    border-radius: var(--r-md); font-family: inherit;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    letter-spacing: 0.5px; transition: transform 0.1s;
+    box-shadow: 0 8px 28px rgba(212, 168, 87, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-secondary {
+    background: var(--bg-elev); color: var(--ink-soft);
+    border: 1px solid var(--line); padding: 12px 18px;
+    border-radius: var(--r-sm); font-family: inherit;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+  }
+  .save-status { text-align: center; color: var(--ink-faint); font-size: 11px; padding: 12px 0 4px; letter-spacing: 0.3px; }
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(8, 5, 3, 0.75);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    z-index: 100; display: none; align-items: flex-end; justify-content: center;
+    animation: fadeIn 0.2s ease-out;
+  }
+  .modal-overlay.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--bg-card); width: 100%; max-width: 500px; max-height: 88vh;
+    border-radius: 22px 22px 0 0; border-top: 1px solid var(--line);
+    padding: 20px 18px calc(22px + env(safe-area-inset-bottom));
+    overflow-y: auto; box-shadow: 0 -16px 48px rgba(0,0,0,0.5);
+    animation: slideUp 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-handle { width: 36px; height: 4px; background: var(--line); border-radius: 99px; margin: -8px auto 16px; }
+  .modal-title { font-family: var(--font-display); font-size: 18px; font-weight: 500; color: var(--gold); text-align: center; margin-bottom: 4px; }
+  .modal-subtitle { text-align: center; color: var(--ink-dim); font-size: 13px; margin-bottom: 18px; }
+  .preview-text {
+    background: var(--bg-input); border: 1px solid var(--line-soft);
+    border-radius: var(--r-sm); padding: 14px;
+    font-size: 13px; line-height: 1.7; white-space: pre-wrap;
+    color: var(--ink-soft); max-height: 50vh; overflow-y: auto;
+    margin-bottom: 16px; word-wrap: break-word;
+  }
+  .modal-actions { display: flex; gap: 10px; }
+  .modal-actions .btn-primary { flex: 1; }
+  .modal-actions .btn-secondary { flex: 0 0 auto; }
+  .success-icon {
+    width: 56px; height: 56px; margin: 4px auto 12px; border-radius: 50%;
+    background: rgba(127, 176, 105, 0.12); border: 2px solid rgba(127, 176, 105, 0.4);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ok); font-size: 28px;
+  }
+  .share-actions { display: flex; flex-direction: column; gap: 10px; }
+  .share-btn {
+    width: 100%; padding: 15px 18px; border-radius: var(--r-md);
+    font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    border: 1px solid transparent; transition: transform 0.1s;
+  }
+  .share-btn:active { transform: scale(0.98); }
+  .share-btn-pdf { background: linear-gradient(180deg, var(--gold) 0%, var(--gold-soft) 100%); color: #1a1410; box-shadow: 0 6px 20px rgba(212, 168, 87, 0.25); }
+  .share-btn-wa { background: #1f3a2a; color: #7fd99c; border-color: rgba(127, 217, 156, 0.3); }
+  .share-btn-copy { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+  .toast {
+    position: fixed; top: calc(20px + env(safe-area-inset-top)); left: 50%;
+    transform: translateX(-50%) translateY(-30px);
+    background: var(--bg-elev); border: 1px solid var(--line);
+    color: var(--ink); padding: 12px 20px; border-radius: 99px;
+    z-index: 200; opacity: 0; transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
+    pointer-events: none; max-width: 88vw; text-align: center;
+    font-size: 13px; font-weight: 500; box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.ok { color: var(--ok); border-color: rgba(127, 176, 105, 0.3); }
+  .toast.err { color: var(--err); border-color: rgba(196, 90, 77, 0.3); }
+  .settings-row { margin-bottom: 14px; }
+  .settings-row label { display: block; font-size: 12px; color: var(--ink-soft); margin-bottom: 6px; font-weight: 500; }
+  .settings-row input { font-size: 13px; padding: 10px 12px; }
+  #pdfTemplate {
+    position: fixed; left: -99999px; top: 0; width: 794px;
+    background: #FBF7F0; color: #2C2419;
+    font-family: 'Heebo', sans-serif; direction: rtl;
+    padding: 56px 50px; box-sizing: border-box;
+  }
+  #pdfTemplate * { box-sizing: border-box; }
+  .pdf-head { text-align: center; padding-bottom: 24px; border-bottom: 1px solid #d4c4a8; margin-bottom: 28px; }
+  .pdf-brand { font-family: 'Frank Ruhl Libre', serif; font-size: 13px; letter-spacing: 8px; color: #8B6F47; text-transform: uppercase; margin-bottom: 16px; font-weight: 500; }
+  .pdf-title-main { font-family: 'Frank Ruhl Libre', serif; font-size: 26px; font-weight: 500; color: #2C2419; margin-bottom: 6px; }
+  .pdf-subtitle { font-size: 13px; color: #8B6F47; letter-spacing: 0.5px; }
+  .pdf-meta-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; margin-bottom: 22px; background: #d4c4a8; border-radius: 8px; overflow: hidden; }
+  .pdf-meta-cell { text-align: center; background: #FBF7F0; padding: 14px 10px; }
+  .pdf-meta-label { font-size: 10px; color: #8B6F47; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
+  .pdf-meta-value { font-size: 14px; font-weight: 600; color: #2C2419; }
+  .pdf-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 28px; }
+  .pdf-kpi { text-align: center; padding: 14px 8px; background: #fff; border: 1px solid #e8dcc4; border-radius: 8px; }
+  .pdf-kpi-label { font-size: 9px; color: #8B6F47; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .pdf-kpi-value { font-family: 'Frank Ruhl Libre', serif; font-size: 20px; font-weight: 700; color: #C4924A; }
+  .pdf-kpi-sub { font-size: 9px; color: #8B6F47; margin-top: 2px; }
+  .pdf-section { margin-bottom: 20px; }
+  .pdf-section-title { font-family: 'Frank Ruhl Libre', serif; font-size: 11px; letter-spacing: 2.5px; color: #C4924A; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #e8dcc4; }
+  .pdf-section-text { font-size: 12.5px; line-height: 1.7; color: #2C2419; white-space: pre-wrap; word-wrap: break-word; }
+  .pdf-sub-block { margin-bottom: 12px; }
+  .pdf-sub-label { font-size: 11px; color: #6B5B3E; font-weight: 600; margin-bottom: 4px; }
+  .pdf-dishes { list-style: none; padding: 0; }
+  .pdf-dishes li { padding: 8px 12px; background: #fff; border-right: 3px solid #C4924A; margin-bottom: 6px; font-size: 12.5px; border-radius: 4px; }
+  .pdf-foot { margin-top: 32px; padding-top: 16px; border-top: 1px solid #e8dcc4; text-align: center; font-size: 9.5px; color: #8B6F47; letter-spacing: 1.5px; }
+  .loading-overlay {
+    position: fixed; inset: 0; background: rgba(8, 5, 3, 0.85);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    z-index: 250; display: none;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+  }
+  .loading-overlay.show { display: flex; }
+  .spinner { width: 44px; height: 44px; border: 3px solid var(--line); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: var(--gold); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; }
 </style>
-
 </head>
 <body>
 
 <header class="header">
-  <div class="header-inner">
+  <div class="header-row">
     <div>
       <div class="header-title">דוח סיכום משמרת</div>
-      <div class="header-sub">UMINO</div>
+      <div class="header-subtitle">UMINO MODERN SUSHI</div>
     </div>
     <div class="header-actions">
-      <span class="pill" id="connStatus">מחובר</span>
+      <span class="status-dot" id="connStatus">מחובר</span>
       <button class="icon-btn" onclick="openSettings()" aria-label="הגדרות">⚙</button>
     </div>
   </div>
 </header>
 
-<form id="shiftForm" autocomplete="off" class="container">
+<form id="shiftForm" autocomplete="off" class="content">
 
   <div class="section">
-    <div class="section-label">פרטי משמרת</div>
+    <div class="section-head"><span class="section-title">פרטי משמרת</span><span class="section-num">i</span></div>
     <div class="card">
-      <div class="grid-2">
-        <div class="field">
-          <label>תאריך</label>
-          <input type="date" name="shift_date" id="shift_date" required>
-        </div>
-        <div class="field">
-          <label>סוג משמרת</label>
+      <div class="row-2">
+        <div class="field"><label class="field-label">תאריך</label><input type="date" name="shift_date" id="shift_date" required></div>
+        <div class="field"><label class="field-label">סוג משמרת</label>
           <select name="shift_type" required>
             <option value="evening">ערב</option>
             <option value="morning">בוקר</option>
@@ -349,143 +296,88 @@ padding: 56px 56px 48px; box-sizing: border-box;
           </select>
         </div>
       </div>
-      <div class="field">
-        <label>שם אחמ"ש</label>
-        <input type="text" name="manager_name" placeholder="שם מלא" required>
-      </div>
+      <div class="field" style="margin-top:12px;"><label class="field-label">שם אחמ"ש</label><input type="text" name="manager_name" placeholder="שם מלא" required></div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-label">מספרים</div>
+    <div class="section-head"><span class="section-title">מספרים</span><span class="section-num">ii</span></div>
     <div class="card">
-      <div class="grid-2">
-        <div class="field">
-          <label>הכנסה</label>
-          <div class="currency-input">
-            <input type="number" name="revenue" inputmode="numeric" placeholder="0">
-          </div>
-        </div>
-        <div class="field">
-          <label>מס׳ סועדים</label>
-          <input type="number" name="covers" inputmode="numeric" placeholder="0">
-        </div>
+      <div class="row-2">
+        <div class="field"><label class="field-label">הכנסה</label><div class="input-currency"><input type="number" name="revenue" inputmode="numeric" placeholder="0"></div></div>
+        <div class="field"><label class="field-label">סועדים</label><input type="number" name="covers" inputmode="numeric" placeholder="0"></div>
       </div>
-      <div class="grid-3">
-        <div class="field">
-          <label>משלוחים</label>
-          <input type="number" name="deliveries" inputmode="numeric" placeholder="0">
-        </div>
-        <div class="field">
-          <label>TA</label>
-          <input type="number" name="takeaway" inputmode="numeric" placeholder="0">
-        </div>
-        <div class="field">
-          <label>מוניות</label>
-          <input type="number" name="taxis" inputmode="numeric" placeholder="0">
-        </div>
+      <div class="row-3" style="margin-top:12px;">
+        <div class="field"><label class="field-label">משלוחים</label><input type="number" name="deliveries" inputmode="numeric" placeholder="0"></div>
+        <div class="field"><label class="field-label">TA</label><input type="number" name="takeaway" inputmode="numeric" placeholder="0"></div>
+        <div class="field"><label class="field-label">מוניות</label><input type="number" name="taxis" inputmode="numeric" placeholder="0"></div>
       </div>
-      <div class="field">
-        <label>חוסרים בקופה <span class="hint">(שלילי = עודף)</span></label>
-        <div class="currency-input">
-          <input type="number" name="cash_diff" inputmode="numeric" placeholder="0">
-        </div>
-      </div>
+      <div class="field" style="margin-top:12px;"><label class="field-label">חוסרים בקופה <span class="hint">שלילי = עודף</span></label><div class="input-currency"><input type="number" name="cash_diff" inputmode="numeric" placeholder="0"></div></div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-label">מהלך המשמרת</div>
+    <div class="section-head"><span class="section-title">מהלך המשמרת</span><span class="section-num">iii</span></div>
     <div class="card">
-      <div class="field">
-        <textarea name="shift_narrative" class="large" placeholder="עומס, אווירה, אירועים מיוחדים..."></textarea>
-      </div>
-      <div class="sub-section">
-        <div class="sub-label">פלור</div>
-        <textarea name="floor_notes" placeholder="בר, אקספו, קופה, מפנות, הוסטסיות"></textarea>
-      </div>
-      <div class="sub-section">
-        <div class="sub-label">מטבח</div>
-        <textarea name="kitchen_notes" placeholder="פס חם, סושי, בקר, פסים"></textarea>
-      </div>
+      <div class="field"><label class="field-label">תיאור כללי</label><textarea name="shift_narrative" class="large" placeholder="עומס, אווירה, אירועים מיוחדים..."></textarea></div>
+      <div class="group"><div class="group-label">פלור</div><textarea name="floor_notes" placeholder="בר, אקספו, קופה, מפנות, הוסטסיות"></textarea></div>
+      <div class="group"><div class="group-label">מטבח</div><textarea name="kitchen_notes" placeholder="פס חם, סושי, בקר, פסים"></textarea></div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-label">מנות חוזרות</div>
+    <div class="section-head"><span class="section-title">מנות חוזרות</span><span class="section-num">iv</span></div>
     <div class="card">
-      <div class="field">
-        <label>כמות</label>
-        <input type="number" name="returns_count" inputmode="numeric" placeholder="0">
-      </div>
-      <div id="dishesContainer"></div>
-      <button type="button" class="add-btn" onclick="addDishRow()">+ הוסף מנה חוזרת</button>
+      <div class="field"><label class="field-label">כמות מנות חוזרות</label><input type="number" name="returns_count" id="returns_count" inputmode="numeric" placeholder="0"></div>
+      <div id="dishesContainer" style="margin-top:12px;"></div>
+      <button type="button" class="dish-add" onclick="addDishRow()">+ הוסף מנה חוזרת</button>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-label">חריגים</div>
+    <div class="section-head"><span class="section-title">חריגים</span><span class="section-num">v</span></div>
     <div class="card">
-      <div class="sub-section">
-        <div class="sub-label">בעיות משמעת</div>
-        <textarea name="discipline_issues" placeholder="איחורים, לבוש, התנהגות"></textarea>
-      </div>
-      <div class="sub-section">
-        <div class="sub-label">זמני המתנה</div>
-        <textarea name="wait_times" placeholder="לדוג': 25 דק מקסימום בשיא"></textarea>
-      </div>
-      <div class="sub-section">
-        <div class="sub-label">איחורים</div>
-        <textarea name="late_arrivals" placeholder="שמות + זמן איחור"></textarea>
-      </div>
+      <div class="group" style="margin-top:0;"><div class="group-label">בעיות משמעת</div><textarea name="discipline_issues" placeholder="איחורים, לבוש, התנהגות"></textarea></div>
+      <div class="group"><div class="group-label">זמני המתנה</div><textarea name="wait_times" placeholder="לדוגמה: 25 דק׳ בשיא"></textarea></div>
+      <div class="group"><div class="group-label">איחורים</div><textarea name="late_arrivals" placeholder="שמות וזמן איחור"></textarea></div>
     </div>
   </div>
 
   <div class="section">
-    <div class="section-label">תקלות טכניות</div>
-    <div class="card">
-      <textarea name="tech_issues" placeholder="POS, מקפיא, מזגן, ציוד מטבח, אינטרנט"></textarea>
-    </div>
+    <div class="section-head"><span class="section-title">תקלות טכניות</span><span class="section-num">vi</span></div>
+    <div class="card"><div class="field"><textarea name="tech_issues" placeholder="POS, מקפיא, מזגן, ציוד מטבח, אינטרנט"></textarea></div></div>
   </div>
 
   <div class="section">
-    <div class="section-label">חוסרים</div>
-    <div class="card">
-      <textarea name="shortages" placeholder="לדוג': אדממה, סלמון, אורז סושי..."></textarea>
-    </div>
+    <div class="section-head"><span class="section-title">חוסרים</span><span class="section-num">vii</span></div>
+    <div class="card"><div class="field"><label class="field-label">מצרכים חסרים <span class="hint">הפרידו בפסיק</span></label><textarea name="shortages" placeholder="לדוגמה: אדממה, סלמון, אורז סושי"></textarea></div></div>
   </div>
 
   <div class="section">
-    <div class="section-label">זיכויים</div>
-    <div class="card">
-      <textarea name="credits" placeholder="סכום + סיבה + שולחן/לקוח"></textarea>
-    </div>
+    <div class="section-head"><span class="section-title">זיכויים</span><span class="section-num">viii</span></div>
+    <div class="card"><div class="field"><textarea name="credits" placeholder="סכום + סיבה + שולחן/לקוח"></textarea></div></div>
   </div>
 
   <div class="section">
-    <div class="section-label">משימות יומיות שבוצעו</div>
-    <div class="card">
-      <textarea name="daily_tasks" placeholder="הכנות, ניקיונות, ספירות מלאי..."></textarea>
-    </div>
+    <div class="section-head"><span class="section-title">משימות יומיות שבוצעו</span><span class="section-num">ix</span></div>
+    <div class="card"><div class="field"><textarea name="daily_tasks" placeholder="הכנות, ניקיונות, ספירות מלאי"></textarea></div></div>
   </div>
 
-  <div class="last-saved" id="lastSaved"></div>
-
+  <div class="save-status" id="lastSaved"></div>
 </form>
 
 <div class="submit-bar">
-  <div class="submit-bar-inner">
-    <button type="button" class="btn-primary" onclick="reviewAndSubmit()">תצוגה מקדימה ושליחה</button>
-  </div>
+  <button type="button" class="btn-primary" onclick="reviewAndSubmit()">תצוגה מקדימה ושליחה</button>
 </div>
 
 <div class="modal-overlay" id="reviewModal">
   <div class="modal">
-    <h2>תצוגה מקדימה</h2>
-    <div class="modal-sub">לפני שליחה</div>
+    <div class="modal-handle"></div>
+    <div class="modal-title">תצוגה מקדימה</div>
+    <div class="modal-subtitle">בדקי שהכל נכון לפני שליחה</div>
     <div class="preview-text" id="previewText"></div>
     <div class="modal-actions">
-      <button type="button" class="btn-secondary" onclick="closeReview()">ערוך</button>
+      <button type="button" class="btn-secondary" onclick="closeReview()">חזרה לעריכה</button>
       <button type="button" class="btn-primary" id="confirmSubmitBtn" onclick="doSubmit()">שמור ושלח</button>
     </div>
   </div>
@@ -493,36 +385,26 @@ padding: 56px 56px 48px; box-sizing: border-box;
 
 <div class="modal-overlay" id="successModal">
   <div class="modal">
+    <div class="modal-handle"></div>
     <div class="success-icon">✓</div>
-    <h2>הדוח נשמר</h2>
-    <div class="modal-sub">בחרי איך לשתף</div>
-    <div class="share-stack">
-      <button type="button" class="share-btn gold" onclick="downloadPDF()">
-        <span>📄</span><span>שמור PDF</span>
-      </button>
-      <button type="button" class="share-btn green" onclick="shareWhatsApp()">
-        <span>💬</span><span>שלח בוואטסאפ</span>
-      </button>
-      <button type="button" class="share-btn outline" onclick="copyReport()">
-        <span id="copyLabel">📋 העתק טקסט</span>
-      </button>
+    <div class="modal-title">הדוח נשמר</div>
+    <div class="modal-subtitle">בחרי איך לשתף את הסיכום</div>
+    <div class="share-actions">
+      <button type="button" class="share-btn share-btn-pdf" onclick="downloadPDF()"><span>📄</span><span>שמור PDF</span></button>
+      <button type="button" class="share-btn share-btn-wa" onclick="shareWhatsApp()"><span>💬</span><span>שלח בוואטסאפ</span></button>
+      <button type="button" class="share-btn share-btn-copy" onclick="copyReport()" id="copyBtn"><span>📋</span><span id="copyLabel">העתק טקסט</span></button>
     </div>
-    <button type="button" class="btn-secondary" style="width:100%;margin-top:18px;" onclick="closeSuccess()">סיום</button>
+    <button type="button" class="btn-secondary" style="width:100%; margin-top:14px;" onclick="closeSuccess()">סיום</button>
   </div>
 </div>
 
 <div class="modal-overlay" id="settingsModal">
   <div class="modal">
-    <h2>הגדרות</h2>
-    <div class="modal-sub">מוגדר מראש — אין צורך לשנות</div>
-    <div class="settings-field">
-      <label>Supabase URL</label>
-      <input type="text" id="cfg_supabase_url" placeholder="https://xxx.supabase.co">
-    </div>
-    <div class="settings-field">
-      <label>Supabase anon key</label>
-      <input type="text" id="cfg_supabase_key" placeholder="eyJ...">
-    </div>
+    <div class="modal-handle"></div>
+    <div class="modal-title">הגדרות</div>
+    <div class="modal-subtitle">אין צורך לשנות — מוגדר מראש</div>
+    <div class="settings-row"><label>Supabase URL</label><input type="text" id="cfg_supabase_url"></div>
+    <div class="settings-row"><label>Supabase anon key</label><input type="text" id="cfg_supabase_key"></div>
     <div class="modal-actions">
       <button type="button" class="btn-secondary" onclick="closeSettings()">סגור</button>
       <button type="button" class="btn-primary" onclick="saveSettings()">שמור</button>
@@ -530,31 +412,26 @@ padding: 56px 56px 48px; box-sizing: border-box;
   </div>
 </div>
 
-<div class="pdf-loading" id="pdfLoading">
-  <div class="pdf-spinner"></div>
-  <div class="pdf-loading-text">מייצר PDF</div>
+<div class="loading-overlay" id="pdfLoading">
+  <div class="spinner"></div>
+  <div class="loading-text">מייצר PDF...</div>
 </div>
 
 <div id="pdfTemplate"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const CFG_KEY = 'umino-shift-cfg-v1';
-const DRAFT_KEY = 'umino-shift-draft-v1';
-
+const CFG_KEY = 'umino-shift-cfg-v2';
+const DRAFT_KEY = 'umino-shift-draft-v2';
+const QUEUE_KEY = 'umino-shift-queue-v2';
 const DEFAULT_CFG = {
   supabase_url: 'https://vzeowbriddhvhpishmhn.supabase.co',
   supabase_key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ6ZW93YnJpZGRodmhwaXNobWhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MTAyNDUsImV4cCI6MjA4ODM4NjI0NX0.PWvjFj41l0wB9awroZdDsMhCJ0yJXdrf1-k-45n0Rwk'
 };
-
-function getCfg() {
-  try { return { ...DEFAULT_CFG, ...JSON.parse(localStorage.getItem(CFG_KEY) || '{}') }; }
-  catch { return { ...DEFAULT_CFG }; }
-}
+function getCfg() { try { return Object.assign({}, DEFAULT_CFG, JSON.parse(localStorage.getItem(CFG_KEY) || '{}')); } catch (e) { return Object.assign({}, DEFAULT_CFG); } }
 function setCfg(c) { localStorage.setItem(CFG_KEY, JSON.stringify(c)); }
 
 let editingRecordId = null;
-
 function checkEditMode() {
   const params = new URLSearchParams(window.location.search);
   const editId = params.get('edit');
@@ -566,59 +443,58 @@ function checkEditMode() {
     if (String(record.id) !== editId) return false;
     editingRecordId = record.id;
     sessionStorage.removeItem('umino-edit-record');
-    Object.entries(record).forEach(([k, v]) => {
-      const el = document.querySelector(`[name="${k}"]`);
+    Object.entries(record).forEach(function(entry) {
+      const k = entry[0], v = entry[1];
+      const el = document.querySelector('[name="' + k + '"]');
       if (el && v !== null && v !== undefined) el.value = v;
     });
     if (Array.isArray(record.returned_dishes)) {
-      record.returned_dishes.forEach(d => addDishRow(d.name || '', d.reason || ''));
+      record.returned_dishes.forEach(function(d) { addDishRow(d.name || '', d.reason || ''); });
     }
-    const headerTitle = document.querySelector('.header-title');
-    if (headerTitle) headerTitle.textContent = 'עריכת דוח קיים';
-    const submitBtn = document.querySelector('.submit-bar .btn-primary');
-    if (submitBtn) submitBtn.textContent = 'עדכן ושמור';
+    document.querySelector('.header-title').textContent = '✏️ עריכת דוח';
+    document.querySelector('.submit-bar .btn-primary').textContent = 'עדכן ושמור';
     return true;
-  } catch (e) { return false; }
+  } catch (e) { console.error(e); return false; }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
   const today = new Date();
   const yyyy = today.getFullYear();
   const mm = String(today.getMonth() + 1).padStart(2, '0');
   const dd = String(today.getDate()).padStart(2, '0');
-  document.getElementById('shift_date').value = `${yyyy}-${mm}-${dd}`;
-  const isEditMode = checkEditMode();
-  if (!isEditMode) loadDraft();
+  document.getElementById('shift_date').value = yyyy + '-' + mm + '-' + dd;
+  const isEdit = checkEditMode();
+  if (!isEdit) loadDraft();
   setupAutosave();
   updateConnStatus();
 });
 
-function addDishRow(name = '', reason = '') {
+function addDishRow(name, reason) {
+  name = name || ''; reason = reason || '';
   const container = document.getElementById('dishesContainer');
   const div = document.createElement('div');
   div.className = 'dish-row';
-  div.innerHTML = `
-    <input type="text" placeholder="שם המנה" value="${escapeHtml(name)}" data-dish="name">
-    <input type="text" placeholder="סיבה" value="${escapeHtml(reason)}" data-dish="reason">
-    <button type="button" class="remove-btn" onclick="this.parentElement.remove(); saveDraft();" aria-label="הסר">×</button>
-  `;
+  div.innerHTML =
+    '<input type="text" placeholder="שם המנה" value="' + escapeHtml(name) + '" data-dish="name">' +
+    '<input type="text" placeholder="סיבה" value="' + escapeHtml(reason) + '" data-dish="reason">' +
+    '<button type="button" class="dish-remove" onclick="this.parentElement.remove(); saveDraft();" aria-label="הסר">×</button>';
   container.appendChild(div);
-  div.querySelectorAll('input').forEach(i => i.addEventListener('input', saveDraft));
+  div.querySelectorAll('input').forEach(function(i) { i.addEventListener('input', saveDraft); });
 }
-
 function getDishes() {
-  const rows = document.querySelectorAll('.dish-row');
-  return Array.from(rows).map(r => ({
-    name: r.querySelector('[data-dish="name"]').value.trim(),
-    reason: r.querySelector('[data-dish="reason"]').value.trim()
-  })).filter(d => d.name || d.reason);
+  return Array.prototype.slice.call(document.querySelectorAll('.dish-row')).map(function(r) {
+    return {
+      name: r.querySelector('[data-dish="name"]').value.trim(),
+      reason: r.querySelector('[data-dish="reason"]').value.trim()
+    };
+  }).filter(function(d) { return d.name || d.reason; });
 }
 
 function getFormData() {
   const fd = new FormData(document.getElementById('shiftForm'));
   const obj = {};
-  for (const [k, v] of fd.entries()) obj[k] = v.toString().trim();
-  ['revenue','covers','deliveries','takeaway','taxis','cash_diff','returns_count'].forEach(k => {
+  for (const pair of fd.entries()) obj[pair[0]] = pair[1].toString().trim();
+  ['revenue','covers','deliveries','takeaway','taxis','cash_diff','returns_count'].forEach(function(k) {
     obj[k] = obj[k] ? Number(obj[k]) : null;
   });
   obj.returned_dishes = getDishes();
@@ -627,13 +503,11 @@ function getFormData() {
   return obj;
 }
 
-function setupAutosave() {
-  document.getElementById('shiftForm').addEventListener('input', saveDraft);
-}
+function setupAutosave() { document.getElementById('shiftForm').addEventListener('input', saveDraft); }
 function saveDraft() {
   const data = getFormData();
   localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
-  document.getElementById('lastSaved').textContent = `נשמר אוטומטית · ${new Date().toLocaleTimeString('he-IL', {hour:'2-digit', minute:'2-digit'})}`;
+  document.getElementById('lastSaved').textContent = 'נשמר אוטומטית · ' + new Date().toLocaleTimeString('he-IL').substring(0, 5);
 }
 function loadDraft() {
   try {
@@ -644,53 +518,49 @@ function loadDraft() {
       const age = Date.now() - new Date(data.submitted_at).getTime();
       if (age > 24 * 3600 * 1000) { localStorage.removeItem(DRAFT_KEY); return; }
     }
-    Object.entries(data).forEach(([k, v]) => {
-      const el = document.querySelector(`[name="${k}"]`);
+    Object.entries(data).forEach(function(entry) {
+      const k = entry[0], v = entry[1];
+      const el = document.querySelector('[name="' + k + '"]');
       if (el && v !== null && v !== undefined) el.value = v;
     });
-    if (Array.isArray(data.returned_dishes)) {
-      data.returned_dishes.forEach(d => addDishRow(d.name, d.reason));
-    }
-  } catch (e) {}
+    if (Array.isArray(data.returned_dishes)) data.returned_dishes.forEach(function(d) { addDishRow(d.name, d.reason); });
+  } catch (e) { console.error(e); }
 }
 function clearDraft() { localStorage.removeItem(DRAFT_KEY); }
 
 function buildTextReport(data) {
   const lines = [];
-  const fmt = (n, suffix = '') => (n === null || n === undefined || n === '') ? '—' : `${n}${suffix}`;
+  const fmt = function(n, suffix) { suffix = suffix || ''; return (n === null || n === undefined || n === '') ? '—' : n + suffix; };
   const dateStr = data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '—';
-  const shiftType = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[data.shift_type] || data.shift_type;
-  lines.push(`📋 *סיכום משמרת — אומינו*`);
-  lines.push(`📅 ${dateStr} · ${shiftType}`);
-  lines.push(`👤 אחמ"ש: ${data.manager_name || '—'}`);
+  const shiftType = ({ evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' })[data.shift_type] || data.shift_type;
+  lines.push('*סיכום משמרת — אומינו*');
+  lines.push(dateStr + ' · ' + shiftType);
+  lines.push('אחמ"ש: ' + (data.manager_name || '—'));
   lines.push('');
-  lines.push(`💰 הכנסה: ${fmt(data.revenue, '₪')}`);
-  lines.push(`👥 סועדים: ${fmt(data.covers)}  |  משלוחים: ${fmt(data.deliveries)}  |  TA: ${fmt(data.takeaway)}`);
-  if (data.taxis) lines.push(`🚖 מוניות: ${data.taxis}`);
+  lines.push('הכנסה: ' + fmt(data.revenue, '₪'));
+  lines.push('סועדים: ' + fmt(data.covers) + '  |  משלוחים: ' + fmt(data.deliveries) + '  |  TA: ' + fmt(data.takeaway));
+  if (data.taxis) lines.push('מוניות: ' + data.taxis);
   if (data.cash_diff !== null && data.cash_diff !== 0) {
-    const cashLabel = data.cash_diff > 0 ? 'חוסר' : 'עודף';
-    lines.push(`💵 קופה: ${cashLabel} ${Math.abs(data.cash_diff)}₪`);
+    lines.push('קופה: ' + (data.cash_diff > 0 ? 'חוסר' : 'עודף') + ' ' + Math.abs(data.cash_diff) + '₪');
   }
-  if (data.shift_narrative) { lines.push(''); lines.push(`📝 *מהלך המשמרת:*`); lines.push(data.shift_narrative); }
-  if (data.floor_notes) { lines.push(''); lines.push(`🍽 *פלור:*`); lines.push(data.floor_notes); }
-  if (data.kitchen_notes) { lines.push(''); lines.push(`🔥 *מטבח:*`); lines.push(data.kitchen_notes); }
-  if (data.returns_count || (data.returned_dishes && data.returned_dishes.length)) {
+  if (data.shift_narrative) { lines.push(''); lines.push('*מהלך המשמרת:*'); lines.push(data.shift_narrative); }
+  if (data.floor_notes) { lines.push(''); lines.push('*פלור:*'); lines.push(data.floor_notes); }
+  if (data.kitchen_notes) { lines.push(''); lines.push('*מטבח:*'); lines.push(data.kitchen_notes); }
+  if ((data.returned_dishes || []).length) {
+    lines.push(''); lines.push('*מנות חוזרות:*');
+    data.returned_dishes.forEach(function(d) { lines.push('• ' + d.name + (d.reason ? ' — ' + d.reason : '')); });
+  }
+  const exceptions = [data.discipline_issues, data.wait_times, data.late_arrivals].some(function(x) { return x && x !== '0'; });
+  if (exceptions) {
     lines.push('');
-    lines.push(`↩️ *מנות חוזרות (${data.returns_count || data.returned_dishes.length}):*`);
-    (data.returned_dishes || []).forEach(d => {
-      lines.push(`• ${d.name}${d.reason ? ` — ${d.reason}` : ''}`);
-    });
+    if (data.discipline_issues && data.discipline_issues !== '0') lines.push('*משמעת:* ' + data.discipline_issues);
+    if (data.wait_times && data.wait_times !== '0') lines.push('*זמני המתנה:* ' + data.wait_times);
+    if (data.late_arrivals && data.late_arrivals !== '0') lines.push('*איחורים:* ' + data.late_arrivals);
   }
-  if (data.discipline_issues || data.wait_times || data.late_arrivals) {
-    lines.push('');
-    if (data.discipline_issues) lines.push(`⚠️ *משמעת:* ${data.discipline_issues}`);
-    if (data.wait_times) lines.push(`⏱ *זמני המתנה:* ${data.wait_times}`);
-    if (data.late_arrivals) lines.push(`⏰ *איחורים:* ${data.late_arrivals}`);
-  }
-  if (data.tech_issues) { lines.push(''); lines.push(`🔧 *תקלות:* ${data.tech_issues}`); }
-  if (data.shortages) { lines.push(''); lines.push(`📉 *חוסרים:* ${data.shortages}`); }
-  if (data.credits) { lines.push(''); lines.push(`🎁 *זיכויים:* ${data.credits}`); }
-  if (data.daily_tasks) { lines.push(''); lines.push(`✅ *משימות יומיות:* ${data.daily_tasks}`); }
+  if (data.tech_issues && data.tech_issues !== '0') { lines.push(''); lines.push('*תקלות:* ' + data.tech_issues); }
+  if (data.shortages && data.shortages !== '0') { lines.push(''); lines.push('*חוסרים:* ' + data.shortages); }
+  if (data.credits && data.credits !== '0') { lines.push(''); lines.push('*זיכויים:* ' + data.credits); }
+  if (data.daily_tasks) { lines.push(''); lines.push('*משימות יומיות:* ' + data.daily_tasks); }
   return lines.join('\n');
 }
 
@@ -710,167 +580,162 @@ async function doSubmit() {
   btn.textContent = editingRecordId ? 'מעדכן...' : 'שומר...';
   const data = getFormData();
   const textReport = buildTextReport(data);
-  let supabaseOk = false;
+  let ok = false;
   const errors = [];
   if (cfg.supabase_url && cfg.supabase_key) {
     try {
       const isEdit = !!editingRecordId;
       const url = isEdit
-        ? `${cfg.supabase_url}/rest/v1/shift_reports?id=eq.${editingRecordId}`
-        : `${cfg.supabase_url}/rest/v1/shift_reports`;
+        ? cfg.supabase_url + '/rest/v1/shift_reports?id=eq.' + editingRecordId
+        : cfg.supabase_url + '/rest/v1/shift_reports';
+      const method = isEdit ? 'PATCH' : 'POST';
       const res = await fetch(url, {
-        method: isEdit ? 'PATCH' : 'POST',
+        method: method,
         headers: {
           'apikey': cfg.supabase_key,
-          'Authorization': `Bearer ${cfg.supabase_key}`,
+          'Authorization': 'Bearer ' + cfg.supabase_key,
           'Content-Type': 'application/json',
           'Prefer': 'return=minimal'
         },
         body: JSON.stringify(data)
       });
-      if (res.ok) supabaseOk = true;
-      else errors.push(`DB: ${res.status} ${await res.text()}`);
-    } catch (e) { errors.push(`DB: ${e.message}`); }
-  } else errors.push('חסרה הגדרת Supabase');
+      if (res.ok) ok = true;
+      else errors.push(res.status + ' ' + (await res.text()));
+    } catch (e) { errors.push(e.message); }
+  } else { errors.push('חסרה הגדרת DB'); }
   btn.disabled = false;
   btn.textContent = editingRecordId ? 'עדכן ושמור' : 'שמור ושלח';
-  if (supabaseOk) {
+  if (ok) {
     clearDraft();
     window._lastReportText = textReport;
     window._lastReportData = data;
     closeReview();
     if (editingRecordId) {
       editingRecordId = null;
-      showToast('הדוח עודכן בהצלחה', 'ok');
-      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1200);
+      showToast('הדוח עודכן', 'ok');
+      setTimeout(function() { window.location.href = 'dashboard.html'; }, 1200);
     } else {
       document.getElementById('successModal').classList.add('show');
     }
   } else {
     if (!editingRecordId) {
-      const queue = JSON.parse(localStorage.getItem('umino-queue') || '[]');
+      const queue = JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]');
       queue.push(data);
-      localStorage.setItem('umino-queue', JSON.stringify(queue));
+      localStorage.setItem(QUEUE_KEY, JSON.stringify(queue));
     }
-    showToast('שגיאה: ' + errors.join('; '), 'err');
+    showToast('שגיאת שמירה: ' + errors.join('; '), 'err');
   }
 }
 
-function getReportText() { return window._lastReportText || ''; }
-function getLastReportData() { return window._lastReportData || null; }
+function closeSuccess() {
+  document.getElementById('successModal').classList.remove('show');
+  document.getElementById('shiftForm').reset();
+  document.getElementById('dishesContainer').innerHTML = '';
+  const today = new Date();
+  document.getElementById('shift_date').value = today.toISOString().split('T')[0];
+  window._lastReportText = null;
+  window._lastReportData = null;
+}
 
 async function shareWhatsApp() {
-  const text = getReportText();
+  const text = window._lastReportText;
   if (!text) return;
   if (navigator.share) {
-    try {
-      await navigator.share({ title: 'סיכום משמרת — אומינו', text: text });
-      return;
-    } catch (e) { if (e.name === 'AbortError') return; }
+    try { await navigator.share({ title: 'סיכום משמרת — אומינו', text: text }); return; }
+    catch (e) { if (e.name === 'AbortError') return; }
   }
-  window.location.href = `whatsapp://send?text=${encodeURIComponent(text)}`;
-  setTimeout(() => {
+  window.location.href = 'whatsapp://send?text=' + encodeURIComponent(text);
+  setTimeout(function() {
     if (document.hidden) return;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
   }, 500);
 }
 
 async function copyReport() {
-  const text = getReportText();
+  const text = window._lastReportText;
   if (!text) return;
   let success = false;
   try {
-    if (navigator.clipboard?.writeText) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(text);
       success = true;
     }
   } catch (e) {}
   if (!success) {
     const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
     try { success = document.execCommand('copy'); } catch (e) {}
     document.body.removeChild(ta);
   }
   if (success) {
     const lbl = document.getElementById('copyLabel');
     if (lbl) {
-      lbl.textContent = '✓ הועתק';
-      setTimeout(() => { lbl.textContent = '📋 העתק טקסט'; }, 2500);
+      lbl.textContent = '✓ הועתק ללוח';
+      setTimeout(function() { lbl.textContent = 'העתק טקסט'; }, 2500);
     }
-  } else showToast('ההעתקה נכשלה', 'err');
-}
-
-function escapePdfText(s) {
-  return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  } else { showToast('ההעתקה נכשלה', 'err'); }
 }
 
 function buildPdfTemplate(data) {
-  const fmt = (n) => (n === null || n === undefined || n === '') ? '—' : new Intl.NumberFormat('he-IL').format(n);
-  const dateStr = data.shift_date
-    ? new Date(data.shift_date).toLocaleDateString('he-IL', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })
-    : '—';
-  const shiftType = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[data.shift_type] || '';
+  const fmt = function(n) { return (n === null || n === undefined || n === '') ? '—' : new Intl.NumberFormat('he-IL').format(n); };
+  const dateStr = data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) : '—';
+  const shiftType = ({ evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' })[data.shift_type] || '';
   const ppa = (data.covers && data.revenue) ? Math.round(Number(data.revenue) / Number(data.covers)) : null;
-  const sec = (title, content) => {
+  const sec = function(title, content) {
     if (!content || (typeof content === 'string' && (content.trim() === '' || content.trim() === '0'))) return '';
-    return `<div class="pdf-section"><div class="pdf-section-title">${title}</div><div class="pdf-section-content">${escapePdfText(content)}</div></div>`;
+    return '<div class="pdf-section"><div class="pdf-section-title">' + title + '</div><div class="pdf-section-text">' + escapeHtml(content) + '</div></div>';
   };
-  const dishes = (data.returned_dishes || []).filter(d => d.name);
+  const dishes = (data.returned_dishes || []).filter(function(d) { return d.name; });
   let dishesHtml = '';
   if (dishes.length) {
-    dishesHtml = `<div class="pdf-section"><div class="pdf-section-title">מנות חוזרות (${dishes.length})</div><ul class="pdf-dishes-list">${dishes.map(d => `<li><strong>${escapePdfText(d.name)}</strong>${d.reason ? `<span class="reason"> — ${escapePdfText(d.reason)}</span>` : ''}</li>`).join('')}</ul></div>`;
+    dishesHtml = '<div class="pdf-section"><div class="pdf-section-title">מנות חוזרות (' + dishes.length + ')</div><ul class="pdf-dishes">' +
+      dishes.map(function(d) { return '<li><strong>' + escapeHtml(d.name) + '</strong>' + (d.reason ? ' — ' + escapeHtml(d.reason) : '') + '</li>'; }).join('') +
+      '</ul></div>';
   }
-  let exceptionsHtml = '';
-  const hasExceptions = (data.discipline_issues && data.discipline_issues !== '0') || (data.wait_times && data.wait_times !== '0') || (data.late_arrivals && data.late_arrivals !== '0');
-  if (hasExceptions) {
-    exceptionsHtml = `<div class="pdf-section"><div class="pdf-section-title">חריגים</div>`;
-    if (data.discipline_issues && data.discipline_issues !== '0')
-      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">בעיות משמעת</div><div class="pdf-section-content">${escapePdfText(data.discipline_issues)}</div></div>`;
-    if (data.wait_times && data.wait_times !== '0')
-      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">זמני המתנה</div><div class="pdf-section-content">${escapePdfText(data.wait_times)}</div></div>`;
-    if (data.late_arrivals && data.late_arrivals !== '0')
-      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">איחורים</div><div class="pdf-section-content">${escapePdfText(data.late_arrivals)}</div></div>`;
-    exceptionsHtml += `</div>`;
+  let exHtml = '';
+  const hasEx = (data.discipline_issues && data.discipline_issues !== '0') || (data.wait_times && data.wait_times !== '0') || (data.late_arrivals && data.late_arrivals !== '0');
+  if (hasEx) {
+    exHtml = '<div class="pdf-section"><div class="pdf-section-title">חריגים</div>';
+    if (data.discipline_issues && data.discipline_issues !== '0') exHtml += '<div class="pdf-sub-block"><div class="pdf-sub-label">בעיות משמעת</div><div class="pdf-section-text">' + escapeHtml(data.discipline_issues) + '</div></div>';
+    if (data.wait_times && data.wait_times !== '0') exHtml += '<div class="pdf-sub-block"><div class="pdf-sub-label">זמני המתנה</div><div class="pdf-section-text">' + escapeHtml(data.wait_times) + '</div></div>';
+    if (data.late_arrivals && data.late_arrivals !== '0') exHtml += '<div class="pdf-sub-block"><div class="pdf-sub-label">איחורים</div><div class="pdf-section-text">' + escapeHtml(data.late_arrivals) + '</div></div>';
+    exHtml += '</div>';
   }
-  return `
-    <div class="pdf-header">
-      <div class="pdf-brand">UMINO MODERN SUSHI</div>
-      <div class="pdf-title">סיכום משמרת</div>
-      <div class="pdf-subtitle">${dateStr} · ${shiftType}</div>
-    </div>
-    <div class="pdf-meta">
-      <div class="pdf-meta-item"><div class="pdf-meta-label">אחמ"ש</div><div class="pdf-meta-value">${escapePdfText(data.manager_name || '—')}</div></div>
-      <div class="pdf-meta-item"><div class="pdf-meta-label">תאריך</div><div class="pdf-meta-value">${data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '—'}</div></div>
-      <div class="pdf-meta-item"><div class="pdf-meta-label">משמרת</div><div class="pdf-meta-value">${shiftType}</div></div>
-    </div>
-    <div class="pdf-kpi-strip">
-      <div class="pdf-kpi"><div class="pdf-kpi-label">הכנסה</div><div class="pdf-kpi-value">₪${fmt(data.revenue)}</div>${ppa ? `<div class="pdf-kpi-sub">₪${ppa} לסועד</div>` : ''}</div>
-      <div class="pdf-kpi"><div class="pdf-kpi-label">סועדים</div><div class="pdf-kpi-value">${fmt(data.covers)}</div></div>
-      <div class="pdf-kpi"><div class="pdf-kpi-label">משלוחים / TA</div><div class="pdf-kpi-value">${(data.deliveries || 0) + (data.takeaway || 0) || '—'}</div></div>
-      <div class="pdf-kpi"><div class="pdf-kpi-label">קופה</div><div class="pdf-kpi-value" style="color:${data.cash_diff && Number(data.cash_diff) !== 0 ? '#B85C3C' : '#5A6B4D'}">${data.cash_diff != null ? '₪' + fmt(Number(data.cash_diff)) : '—'}</div></div>
-    </div>
-    ${sec('מהלך המשמרת', data.shift_narrative)}
-    ${sec('פלור', data.floor_notes)}
-    ${sec('מטבח', data.kitchen_notes)}
-    ${dishesHtml}
-    ${exceptionsHtml}
-    ${sec('תקלות טכניות', data.tech_issues)}
-    ${sec('חוסרים', data.shortages)}
-    ${sec('זיכויים', data.credits)}
-    ${sec('משימות יומיות', data.daily_tasks)}
-    <div class="pdf-footer">UMINO MODERN SUSHI · נוצר ב-${new Date().toLocaleString('he-IL')}</div>
-  `;
+  return '' +
+    '<div class="pdf-head">' +
+      '<div class="pdf-brand">UMINO MODERN SUSHI</div>' +
+      '<div class="pdf-title-main">סיכום משמרת</div>' +
+      '<div class="pdf-subtitle">' + dateStr + ' · ' + shiftType + '</div>' +
+    '</div>' +
+    '<div class="pdf-meta-strip">' +
+      '<div class="pdf-meta-cell"><div class="pdf-meta-label">אחמ"ש</div><div class="pdf-meta-value">' + escapeHtml(data.manager_name || '—') + '</div></div>' +
+      '<div class="pdf-meta-cell"><div class="pdf-meta-label">תאריך</div><div class="pdf-meta-value">' + (data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '—') + '</div></div>' +
+      '<div class="pdf-meta-cell"><div class="pdf-meta-label">משמרת</div><div class="pdf-meta-value">' + shiftType + '</div></div>' +
+    '</div>' +
+    '<div class="pdf-kpis">' +
+      '<div class="pdf-kpi"><div class="pdf-kpi-label">הכנסה</div><div class="pdf-kpi-value">₪' + fmt(data.revenue) + '</div>' + (ppa ? '<div class="pdf-kpi-sub">₪' + ppa + ' לסועד</div>' : '') + '</div>' +
+      '<div class="pdf-kpi"><div class="pdf-kpi-label">סועדים</div><div class="pdf-kpi-value">' + fmt(data.covers) + '</div></div>' +
+      '<div class="pdf-kpi"><div class="pdf-kpi-label">משלוחים/TA</div><div class="pdf-kpi-value">' + ((data.deliveries || 0) + (data.takeaway || 0) || '—') + '</div></div>' +
+      '<div class="pdf-kpi"><div class="pdf-kpi-label">קופה</div><div class="pdf-kpi-value" style="color:' + (data.cash_diff && Number(data.cash_diff) !== 0 ? '#C45A4D' : '#7FB069') + '">' + (data.cash_diff != null ? '₪' + fmt(Number(data.cash_diff)) : '—') + '</div></div>' +
+    '</div>' +
+    sec('מהלך המשמרת', data.shift_narrative) +
+    sec('פלור', data.floor_notes) +
+    sec('מטבח', data.kitchen_notes) +
+    dishesHtml +
+    exHtml +
+    sec('תקלות טכניות', data.tech_issues) +
+    sec('חוסרים', data.shortages) +
+    sec('זיכויים', data.credits) +
+    sec('משימות יומיות', data.daily_tasks) +
+    '<div class="pdf-foot">UMINO MODERN SUSHI · נוצר ב-' + new Date().toLocaleString('he-IL') + '</div>';
 }
 
 async function downloadPDF() {
-  const data = getLastReportData();
+  const data = window._lastReportData;
   if (!data) { showToast('לא נמצא דוח לייצוא', 'err'); return; }
   if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
-    showToast('ספריות PDF נטענות, נסה שוב בעוד שנייה', 'err');
+    showToast('הספריות עדיין נטענות, נסה בעוד שנייה', 'err');
     return;
   }
   const loading = document.getElementById('pdfLoading');
@@ -878,10 +743,10 @@ async function downloadPDF() {
   try {
     const tpl = document.getElementById('pdfTemplate');
     tpl.innerHTML = buildPdfTemplate(data);
-    if (document.fonts?.ready) await document.fonts.ready;
-    await new Promise(r => setTimeout(r, 100));
-    const canvas = await html2canvas(tpl, { scale: 2, useCORS: true, backgroundColor: '#FCFAF4', logging: false });
-    const { jsPDF } = window.jspdf;
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    await new Promise(function(r) { setTimeout(r, 100); });
+    const canvas = await html2canvas(tpl, { scale: 2, useCORS: true, backgroundColor: '#FBF7F0', logging: false });
+    const jsPDF = window.jspdf.jsPDF;
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     const pdfWidth = 210, pdfHeight = 297;
     const imgWidth = pdfWidth;
@@ -902,7 +767,7 @@ async function downloadPDF() {
     }
     const dateStr = data.shift_date ? data.shift_date.replace(/-/g, '_') : 'unknown';
     const mgrStr = (data.manager_name || 'umino').replace(/[^\w\u0590-\u05FF]/g, '_');
-    pdf.save(`umino_shift_${dateStr}_${mgrStr}.pdf`);
+    pdf.save('umino_' + dateStr + '_' + mgrStr + '.pdf');
     tpl.innerHTML = '';
   } catch (e) {
     console.error('PDF error:', e);
@@ -912,34 +777,18 @@ async function downloadPDF() {
   }
 }
 
-function closeSuccess() {
-  document.getElementById('successModal').classList.remove('show');
-  document.getElementById('shiftForm').reset();
-  document.getElementById('dishesContainer').innerHTML = '';
-  const today = new Date();
-  document.getElementById('shift_date').value = today.toISOString().split('T')[0];
-  window._lastReportText = null;
-  window._lastReportData = null;
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-function showToast(msg, type = '') {
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(m) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]; }); }
+function showToast(msg, type) {
+  type = type || '';
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast show ' + type;
-  setTimeout(() => t.classList.remove('show'), type === 'err' ? 5000 : 2500);
+  setTimeout(function() { t.classList.remove('show'); }, type === 'err' ? 4500 : 2500);
 }
 function updateConnStatus() {
   const el = document.getElementById('connStatus');
-  if (navigator.onLine) {
-    el.textContent = 'מחובר';
-    el.classList.remove('offline');
-  } else {
-    el.textContent = 'לא מחובר';
-    el.classList.add('offline');
-  }
+  if (navigator.onLine) { el.textContent = 'מחובר'; el.classList.remove('offline'); }
+  else { el.textContent = 'לא מחובר'; el.classList.add('offline'); }
 }
 window.addEventListener('online', updateConnStatus);
 window.addEventListener('offline', updateConnStatus);
@@ -952,18 +801,17 @@ function openSettings() {
 }
 function closeSettings() { document.getElementById('settingsModal').classList.remove('show'); }
 function saveSettings() {
-  const cfg = {
+  setCfg({
     supabase_url: document.getElementById('cfg_supabase_url').value.trim().replace(/\/$/, ''),
     supabase_key: document.getElementById('cfg_supabase_key').value.trim()
-  };
-  setCfg(cfg);
+  });
   closeSettings();
   showToast('הגדרות נשמרו', 'ok');
 }
 
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(function() {});
   });
 }
 </script>
