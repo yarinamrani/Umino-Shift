@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0a0a0a">
+<meta name="color-scheme" content="dark">
 <title>היסטוריית סיכומי משמרת — אומינו</title>
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,6 +16,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root {
+    color-scheme: dark;
     --bg: #0a0a0a;
     --bg-elev: #161616;
     --bg-card: #1c1c1c;
@@ -60,8 +62,10 @@ display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;
 background: var(–bg-card); border: 1px solid var(–line);
 color: var(–ink); padding: 8px 12px; border-radius: 8px;
 font-family: inherit; font-size: 13px;
+-webkit-appearance: none; appearance: none;
 }
 .filter-bar input { flex: 1; min-width: 120px; }
+.pin-input { -webkit-appearance: none; appearance: none; }
 
 /* KPI strip */
 .kpi-grid {
