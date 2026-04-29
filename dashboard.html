@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   :root {
     --bg: #0a0a0a;
@@ -168,6 +170,53 @@ font-family: inherit; font-size: 24px; text-align: center;
 width: 200px; letter-spacing: 8px;
 }
 .pin-error { color: var(–err); font-size: 12px; height: 16px; }
+
+/* PDF print template — same as index.html */
+#pdfTemplate {
+position: fixed;
+left: -99999px;
+top: 0;
+width: 794px;
+background: #FDFBF7;
+color: #2C2C2C;
+font-family: ‘Heebo’, sans-serif;
+direction: rtl;
+padding: 60px 56px 60px;
+box-sizing: border-box;
+}
+#pdfTemplate * { box-sizing: border-box; }
+.pdf-header { text-align: center; padding-bottom: 28px; border-bottom: 1px solid #E5DED2; margin-bottom: 32px; }
+.pdf-logo-jp { font-family: ‘Noto Serif JP’, serif; font-size: 56px; color: #C0392B; line-height: 1; margin-bottom: 6px; font-weight: 700; }
+.pdf-logo-en { font-size: 12px; letter-spacing: 8px; color: #8B8578; text-transform: uppercase; margin-bottom: 18px; }
+.pdf-title { font-size: 22px; font-weight: 700; color: #2C2C2C; margin-bottom: 4px; }
+.pdf-subtitle { font-size: 13px; color: #8B8578; }
+.pdf-meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; padding: 18px 20px; background: #F5F0E8; border-radius: 8px; }
+.pdf-meta-item { text-align: center; }
+.pdf-meta-label { font-size: 10px; color: #8B8578; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
+.pdf-meta-value { font-size: 16px; font-weight: 600; color: #2C2C2C; }
+.pdf-kpi-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 28px; }
+.pdf-kpi { text-align: center; padding: 14px 8px; background: #fff; border: 1px solid #E5DED2; border-radius: 8px; }
+.pdf-kpi-label { font-size: 10px; color: #8B8578; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+.pdf-kpi-value { font-size: 18px; font-weight: 700; color: #C4A265; }
+.pdf-kpi-sub { font-size: 10px; color: #8B8578; margin-top: 2px; }
+.pdf-section { margin-bottom: 22px; }
+.pdf-section-title { font-size: 11px; letter-spacing: 2.5px; color: #C0392B; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #E5DED2; }
+.pdf-section-content { font-size: 13px; line-height: 1.7; color: #2C2C2C; white-space: pre-wrap; word-wrap: break-word; }
+.pdf-sub-section { margin-bottom: 14px; }
+.pdf-sub-title { font-size: 12px; color: #6B5B4E; font-weight: 600; margin-bottom: 4px; }
+.pdf-dishes-list { list-style: none; padding: 0; }
+.pdf-dishes-list li { padding: 8px 12px; background: #fff; border-right: 3px solid #C0392B; margin-bottom: 6px; font-size: 13px; border-radius: 4px; }
+.pdf-dishes-list strong { color: #2C2C2C; }
+.pdf-dishes-list .reason { color: #8B8578; margin-right: 4px; }
+.pdf-footer { margin-top: 36px; padding-top: 18px; border-top: 1px solid #E5DED2; text-align: center; font-size: 10px; color: #8B8578; letter-spacing: 1px; }
+.pdf-loading {
+position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+z-index: 2000; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 14px;
+}
+.pdf-loading.show { display: flex; }
+.pdf-loading-spinner { width: 48px; height: 48px; border: 3px solid var(–line-strong); border-top-color: var(–accent-2); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.pdf-loading-text { color: var(–accent-2); font-size: 14px; letter-spacing: 1px; }
 </style>
 
 </head>
@@ -220,6 +269,17 @@ width: 200px; letter-spacing: 8px;
     <div id="detailContent"></div>
   </div>
 </div>
+
+<!-- PDF loading overlay -->
+
+<div class="pdf-loading" id="pdfLoading">
+  <div class="pdf-loading-spinner"></div>
+  <div class="pdf-loading-text">מייצר PDF...</div>
+</div>
+
+<!-- Hidden PDF template -->
+
+<div id="pdfTemplate"></div>
 
 <script>
 const SUPABASE_URL = 'https://vzeowbriddhvhpishmhn.supabase.co';
@@ -493,6 +553,8 @@ function showDetail(idx) {
     ${sec('🎁 זיכויים', r.credits)}
     ${sec('✅ משימות יומיות', r.daily_tasks)}
     <div style="text-align:center;margin-top:14px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+      <button onclick="downloadDetailPDF(${idx})" style="background:#C4A265;border:none;color:#2C2C2C;padding:10px 18px;border-radius:10px;font-family:inherit;font-weight:700;cursor:pointer;">📄 PDF</button>
+      <button onclick="shareDetailWhatsApp(${idx})" style="background:#25D366;border:none;color:#fff;padding:10px 18px;border-radius:10px;font-family:inherit;font-weight:700;cursor:pointer;">💬 וואטסאפ</button>
       <button onclick="copyDetail(${idx})" style="background:var(--bg-card);border:1px solid var(--line-strong);color:var(--ink);padding:10px 18px;border-radius:10px;font-family:inherit;cursor:pointer;">📋 העתק</button>
       <button onclick="editReport(${idx})" style="background:var(--bg-card);border:1px solid var(--accent-2);color:var(--accent-2);padding:10px 18px;border-radius:10px;font-family:inherit;cursor:pointer;">✏️ ערוך</button>
       <button onclick="deleteReport(${idx})" style="background:rgba(239,68,68,0.1);border:1px solid var(--err);color:var(--err);padding:10px 18px;border-radius:10px;font-family:inherit;cursor:pointer;">🗑️ מחק</button>
@@ -512,6 +574,129 @@ async function copyDetail(idx) {
     alert('הועתק ✓');
   } catch (e) {
     alert('ההעתקה נכשלה');
+  }
+}
+
+function shareDetailWhatsApp(idx) {
+  const r = window._renderedReports[idx];
+  const text = buildTextReport(r);
+  const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+}
+
+// ============== PDF GENERATION ==============
+function escapePdfText(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function buildPdfTemplate(data) {
+  const fmt = (n) => (n === null || n === undefined || n === '') ? '—' : new Intl.NumberFormat('he-IL').format(n);
+  const dateStr = data.shift_date
+    ? new Date(data.shift_date).toLocaleDateString('he-IL', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })
+    : '—';
+  const shiftType = { evening: 'ערב', morning: 'בוקר', full_day: 'יום מלא' }[data.shift_type] || '';
+  const ppa = (data.covers && data.revenue) ? Math.round(Number(data.revenue) / Number(data.covers)) : null;
+
+  const sec = (title, content) => {
+    if (!content || (typeof content === 'string' && (content.trim() === '' || content.trim() === '0'))) return '';
+    return `<div class="pdf-section"><div class="pdf-section-title">${title}</div><div class="pdf-section-content">${escapePdfText(content)}</div></div>`;
+  };
+
+  const dishes = (data.returned_dishes || []).filter(d => d.name);
+  let dishesHtml = '';
+  if (dishes.length) {
+    dishesHtml = `<div class="pdf-section"><div class="pdf-section-title">↩ מנות חוזרות (${dishes.length})</div><ul class="pdf-dishes-list">${dishes.map(d => `<li><strong>${escapePdfText(d.name)}</strong>${d.reason ? `<span class="reason"> — ${escapePdfText(d.reason)}</span>` : ''}</li>`).join('')}</ul></div>`;
+  }
+
+  let exceptionsHtml = '';
+  const hasExceptions = (data.discipline_issues && data.discipline_issues !== '0') ||
+                        (data.wait_times && data.wait_times !== '0') ||
+                        (data.late_arrivals && data.late_arrivals !== '0');
+  if (hasExceptions) {
+    exceptionsHtml = `<div class="pdf-section"><div class="pdf-section-title">חריגים</div>`;
+    if (data.discipline_issues && data.discipline_issues !== '0')
+      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">בעיות משמעת</div><div class="pdf-section-content">${escapePdfText(data.discipline_issues)}</div></div>`;
+    if (data.wait_times && data.wait_times !== '0')
+      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">זמני המתנה</div><div class="pdf-section-content">${escapePdfText(data.wait_times)}</div></div>`;
+    if (data.late_arrivals && data.late_arrivals !== '0')
+      exceptionsHtml += `<div class="pdf-sub-section"><div class="pdf-sub-title">איחורים</div><div class="pdf-section-content">${escapePdfText(data.late_arrivals)}</div></div>`;
+    exceptionsHtml += `</div>`;
+  }
+
+  return `
+    <div class="pdf-header">
+      <div class="pdf-logo-jp">海味</div>
+      <div class="pdf-logo-en">UMINO</div>
+      <div class="pdf-title">סיכום משמרת</div>
+      <div class="pdf-subtitle">${dateStr} · ${shiftType}</div>
+    </div>
+    <div class="pdf-meta">
+      <div class="pdf-meta-item"><div class="pdf-meta-label">אחמ"ש</div><div class="pdf-meta-value">${escapePdfText(data.manager_name || '—')}</div></div>
+      <div class="pdf-meta-item"><div class="pdf-meta-label">תאריך</div><div class="pdf-meta-value">${data.shift_date ? new Date(data.shift_date).toLocaleDateString('he-IL') : '—'}</div></div>
+      <div class="pdf-meta-item"><div class="pdf-meta-label">משמרת</div><div class="pdf-meta-value">${shiftType}</div></div>
+    </div>
+    <div class="pdf-kpi-strip">
+      <div class="pdf-kpi"><div class="pdf-kpi-label">הכנסה</div><div class="pdf-kpi-value">₪${fmt(data.revenue)}</div>${ppa ? `<div class="pdf-kpi-sub">₪${ppa} לסועד</div>` : ''}</div>
+      <div class="pdf-kpi"><div class="pdf-kpi-label">סועדים</div><div class="pdf-kpi-value">${fmt(data.covers)}</div></div>
+      <div class="pdf-kpi"><div class="pdf-kpi-label">משלוחים / TA</div><div class="pdf-kpi-value">${(data.deliveries || 0) + (data.takeaway || 0) || '—'}</div></div>
+      <div class="pdf-kpi"><div class="pdf-kpi-label">קופה</div><div class="pdf-kpi-value" style="color:${data.cash_diff && Number(data.cash_diff) !== 0 ? '#C0392B' : '#5B7A5E'}">${data.cash_diff != null ? '₪' + fmt(Number(data.cash_diff)) : '—'}</div></div>
+    </div>
+    ${sec('מהלך המשמרת', data.shift_narrative)}
+    ${sec('פלור', data.floor_notes)}
+    ${sec('מטבח', data.kitchen_notes)}
+    ${dishesHtml}
+    ${exceptionsHtml}
+    ${sec('תקלות טכניות', data.tech_issues)}
+    ${sec('חוסרים', data.shortages)}
+    ${sec('זיכויים', data.credits)}
+    ${sec('משימות יומיות', data.daily_tasks)}
+    <div class="pdf-footer">海味 UMINO · נוצר ב-${new Date().toLocaleString('he-IL')}</div>
+  `;
+}
+
+async function downloadDetailPDF(idx) {
+  const data = window._renderedReports[idx];
+  if (!data) return;
+  if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+    alert('ספריות PDF עדיין נטענות, נסה שוב בעוד שנייה');
+    return;
+  }
+  const loading = document.getElementById('pdfLoading');
+  loading.classList.add('show');
+  try {
+    const tpl = document.getElementById('pdfTemplate');
+    tpl.innerHTML = buildPdfTemplate(data);
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    await new Promise(r => setTimeout(r, 100));
+    const canvas = await html2canvas(tpl, { scale: 2, useCORS: true, backgroundColor: '#FDFBF7', logging: false });
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pdfWidth = 210, pdfHeight = 297;
+    const imgWidth = pdfWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
+    if (imgHeight <= pdfHeight) {
+      pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+    } else {
+      let position = 0, remaining = imgHeight;
+      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+      remaining -= pdfHeight;
+      while (remaining > 0) {
+        position -= pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+        remaining -= pdfHeight;
+      }
+    }
+    const dateStr = data.shift_date ? data.shift_date.replace(/-/g, '_') : 'unknown';
+    const mgrStr = (data.manager_name || 'umino').replace(/[^\w\u0590-\u05FF]/g, '_');
+    pdf.save(`umino_shift_${dateStr}_${mgrStr}.pdf`);
+    tpl.innerHTML = '';
+  } catch (e) {
+    console.error('PDF error:', e);
+    alert('יצירת PDF נכשלה: ' + e.message);
+  } finally {
+    loading.classList.remove('show');
   }
 }
 
