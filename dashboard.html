@@ -9,7 +9,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -44,14 +44,11 @@
 .header {
 background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
 border-bottom: 1px solid var(–line);
-padding: 18px 16px 14px;
-position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
+padding: 18px 16px; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
 }
-.brand-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.brand { display: flex; align-items: baseline; gap: 8px; }
-.brand-logo { height: 38px; width: auto; display: block; }
-.header h1 { font-size: 13px; font-weight: 500; color: var(–ink-dim); margin-top: 6px; letter-spacing: 0.5px; }
-.back-link { color: var(–ink-faint); text-decoration: none; font-size: 18px; padding: 4px 8px; }
+.brand-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.page-title { font-size: 17px; font-weight: 600; color: var(–ink); margin: 0; }
+.back-link { color: var(–ink-dim); text-decoration: none; font-size: 14px; padding: 6px 10px; border: 1px solid var(–line); border-radius: 8px; }
 
 .container { padding: 16px; max-width: 900px; margin: 0 auto; }
 
@@ -168,7 +165,7 @@ display: flex; align-items: center; justify-content: center; z-index: 9999;
 flex-direction: column; gap: 16px;
 }
 .pin-gate.hidden { display: none; }
-.pin-gate h2 { color: var(–accent-2); font-family: ‘Noto Serif JP’, serif; }
+.pin-gate h2 { color: var(–accent-2); font-family: inherit; font-weight: 600; }
 .pin-input {
 background: var(–bg-card); border: 1px solid var(–line);
 color: var(–ink); padding: 14px 20px; border-radius: 12px;
@@ -192,7 +189,7 @@ box-sizing: border-box;
 }
 #pdfTemplate * { box-sizing: border-box; }
 .pdf-header { text-align: center; padding-bottom: 28px; border-bottom: 1px solid #E5DED2; margin-bottom: 32px; }
-.pdf-brand-logo { height: 60px; width: auto; display: block; margin: 0 auto 18px; }
+.pdf-brand { font-size: 13px; letter-spacing: 6px; color: #8B8578; text-transform: uppercase; margin-bottom: 18px; font-weight: 600; }
 .pdf-title { font-size: 22px; font-weight: 700; color: #2C2C2C; margin-bottom: 4px; }
 .pdf-subtitle { font-size: 13px; color: #8B8578; }
 .pdf-meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; padding: 18px 20px; background: #F5F0E8; border-radius: 8px; }
@@ -230,7 +227,7 @@ z-index: 2000; display: none; align-items: center; justify-content: center; flex
 <!-- PIN gate -->
 
 <div class="pin-gate" id="pinGate">
-  <img src="logo-white.png" alt="UMINO" style="height:60px;width:auto;">
+  <div style="font-size:11px;letter-spacing:6px;color:var(--ink-dim);text-transform:uppercase;font-weight:600;">UMINO</div>
   <h2>היסטוריית משמרות</h2>
   <p style="color:var(--ink-faint);font-size:13px;">הזן קוד גישה</p>
   <input type="password" inputmode="numeric" maxlength="4" class="pin-input" id="pinInput" autofocus>
@@ -239,12 +236,9 @@ z-index: 2000; display: none; align-items: center; justify-content: center; flex
 
 <header class="header">
   <div class="brand-row">
-    <div class="brand">
-      <img src="logo-white.png" alt="UMINO" class="brand-logo">
-    </div>
-    <a href="index.html" class="back-link">←</a>
+    <h1 class="page-title">היסטוריית משמרות</h1>
+    <a href="index.html" class="back-link">← חזרה</a>
   </div>
-  <h1>היסטוריית סיכומי משמרת</h1>
 </header>
 
 <div class="container" id="mainContent" style="display:none;">
@@ -646,7 +640,7 @@ function buildPdfTemplate(data) {
 
   return `
     <div class="pdf-header">
-      <img src="logo-dark.png" alt="UMINO" class="pdf-brand-logo">
+      <div class="pdf-brand">UMINO MODERN SUSHI</div>
       <div class="pdf-title">סיכום משמרת</div>
       <div class="pdf-subtitle">${dateStr} · ${shiftType}</div>
     </div>
